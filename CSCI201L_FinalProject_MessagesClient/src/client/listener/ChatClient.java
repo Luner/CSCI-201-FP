@@ -58,7 +58,5 @@ public class ChatClient extends Thread {
 		}
 	}
 	
-	public static void main(String [] args) {
-		new ChatClient("localhost", 6789);
-	}
+	
 }
