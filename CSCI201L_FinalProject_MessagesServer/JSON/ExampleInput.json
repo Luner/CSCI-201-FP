@@ -1,0 +1,23 @@
+{
+	"users": [{
+		"username": "Jonathan",
+		"password": "computers",
+		"uid": "1"
+		},
+		{
+		"username": "Cristopher",
+		"password": "programming",
+		"uid": "2"
+		},
+		{
+		"username": "Derek",
+		"password": "usc",
+		"uid": "3"
+		},
+		{
+		"username": "Siu",
+		"password": "school",
+		"uid": "4"
+		}
+	}]
+}
