@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import objects.ChatMessage;
+import objects.Message;
 import objects.User;
 import objects.VerificationMessage;
 
@@ -17,6 +18,7 @@ public class ServerThread extends Thread {
 	private Server cs;
 	private ArrayList<User> users;
 	String username; 
+	int uid;
 	
 	public ServerThread(Socket s, Server cs) {
 		users = cs.getData().getUsers();
@@ -24,8 +26,7 @@ public class ServerThread extends Thread {
 			this.cs = cs;
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
-			login();
-			this.start();
+			this.start();			
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
@@ -39,7 +40,8 @@ public class ServerThread extends Thread {
 				if(message instanceof VerificationMessage) {
 					for(User user : users) {
 						if(user.verify(((VerificationMessage) message).getUsername(), ((VerificationMessage) message).getPassword())) {
-							this.username = ((VerificationMessage) message).getUsername();
+							this.username = user.getUsername();
+							this.uid = user.getUid();
 							verified = true;
 							break;
 						}
@@ -55,7 +57,7 @@ public class ServerThread extends Thread {
 		}
 	}
 	
-	public void sendMessage(ChatMessage message) {
+	public void sendMessage(Message message) {
 		try {
 			oos.writeObject(message);
 			oos.flush();
@@ -65,9 +67,10 @@ public class ServerThread extends Thread {
 	}
 
 	public void run() {
+		login();
 		try {
 			while(true) {
-				ChatMessage message = (ChatMessage)ois.readObject();
+				Message message = (ChatMessage)ois.readObject();
 				cs.sendMessageToAllClients(message);
 			}
 		} catch (ClassNotFoundException cnfe) {
