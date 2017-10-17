@@ -7,31 +7,54 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import objects.ChatMessage;
+import objects.Message;
+import objects.StringMessage;
 
 public class ChatClient extends Thread {
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
+	private int uid;
 
 	public ChatClient(String hostname, int port) {
 		Socket s = null;
 		Scanner scan = null;
+		uid = -1;
 
 		try {
-			s = new Socket(hostname, port);
-			oos = new ObjectOutputStream(s.getOutputStream());
+			//Attempts to connect to the Socket
+			s = new Socket(hostname, port);	
+			
+			/*If successful, will create ObjectStreams to allow for the sending of 
+			  objects to and from the server*/
+			oos = new ObjectOutputStream(s.getOutputStream()); 
 			ois = new ObjectInputStream(s.getInputStream());
+			
+			//Starts the thread and calls the run() method
 			this.start();
+			
+			//Creates a new scanner to receive information from the console
 			scan = new Scanner(System.in);
+			
+			/*//////////////////////////////////////////////////////////
+			 *TODO : MUST UPDATE UID AND PREFORM A USER VERIFICATION FIRST  
+			 *///////////////////////////////////////////////////////////
+			
+			//An infinite loop that will constantly look for a line from the console
 			while(true) {
 				String line = scan.nextLine();
-				ChatMessage message = new ChatMessage("Jonathan Luner", line);
+				
+				//Creates a ChatMessage with the input
+				Message message = new ChatMessage(uid, line);
+				
+				//Sends the ChatMessage Object to the server
 				oos.writeObject(message);
 				oos.flush();
 			}
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		} finally {
+			//Checks if the sockets and the scanner still exist and closes them
 			try {
 				if (s != null) {
 					s.close();
@@ -47,9 +70,18 @@ public class ChatClient extends Thread {
 	
 	public void run() {
 		try {
+			//Loop consistently looking for an object to be sent from the server
 			while(true) {
-				ChatMessage message = (ChatMessage)ois.readObject();
-				System.out.println(message.getName() + ": " + message.getMessage());
+				//Receives the object
+				Object message = ois.readObject();
+				
+				//checks if the object is an instance of StringMessage and prints out
+				if(message instanceof StringMessage) {
+					System.out.println(message + ": " +((StringMessage) message).getMessage());
+				} else {
+					System.out.println("Exception in ChatClient run(): Expecting StringMessage");
+				}
+				
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("cnfe: " + cnfe.getMessage());
