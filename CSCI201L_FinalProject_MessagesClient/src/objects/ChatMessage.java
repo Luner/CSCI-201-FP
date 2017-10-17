@@ -5,18 +5,13 @@ public class ChatMessage extends Message{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String name;
-	private String message;
-	public ChatMessage(String name, String message) {
-		this.name = name;
-		this.message = message;
+	private int uid;
+	
+	public ChatMessage(int uid, String message) {
+		this.uid = uid;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public String getMessage() {
-		return message;
+	public int getUid() {
+		return uid;
 	}
 }
