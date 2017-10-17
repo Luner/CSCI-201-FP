@@ -47,6 +47,10 @@ public class Server {
 			st.sendMessage(message);
 		}
 	}
+	
+	public DataContainer getData() {
+		return data;
+	}
 }
 
 
