@@ -20,6 +20,7 @@ public class ChatClient extends Thread {
 		Socket s = null;
 		Scanner scan = null;
 		uid = -1;
+		
 
 		try {
 			//Attempts to connect to the Socket
@@ -32,6 +33,9 @@ public class ChatClient extends Thread {
 			
 			//Starts the thread and calls the run() method
 			this.start();
+			
+			//Handles the Sending of information
+			//May want to call a separate funciton in future
 			
 			//Creates a new scanner to receive information from the console
 			scan = new Scanner(System.in);
@@ -68,8 +72,16 @@ public class ChatClient extends Thread {
 		}
 	}
 	
+	
+	//Handles the receiving of information
 	public void run() {
 		try {
+
+			/*//////////////////////////////////////////////////////////
+			 *TODO : MUST BE PREPAIRED TO RECIEVE A MESSAGE WITH UID TO SET  
+			 *///////////////////////////////////////////////////////////
+		
+			
 			//Loop consistently looking for an object to be sent from the server
 			while(true) {
 				//Receives the object
