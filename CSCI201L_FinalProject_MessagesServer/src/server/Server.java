@@ -2,12 +2,10 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Vector;
 
-import objects.ChatMessage;
 import objects.DataContainer;
-import objects.User;
+import objects.Message;
 
 public class Server {
 
@@ -42,7 +40,7 @@ public class Server {
 		}
 	}
 	
-	public void sendMessageToAllClients(ChatMessage message) {
+	public void sendMessageToAllClients(Message message) {
 		for (ServerThread st : serverThreads) {
 			st.sendMessage(message);
 		}
