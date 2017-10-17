@@ -1,8 +1,6 @@
 package objects;
 
-import java.io.Serializable;
-
-public class ChatMessage implements Serializable {
+public class ChatMessage extends Message {
 	public static final long serialVersionUID = 1;
 	
 	private String name;
