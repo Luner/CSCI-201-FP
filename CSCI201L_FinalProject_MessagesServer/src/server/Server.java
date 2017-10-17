@@ -2,14 +2,22 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import objects.ChatMessage;
+import objects.DataContainer;
+import objects.User;
 
 public class Server {
 
 	private Vector<ServerThread> serverThreads;
-	public Server(int port) {
+	private DataContainer data;
+	
+	public Server(DataContainer data, int port) {
+		
+		this.data = data;
+		
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
 		try {
@@ -38,10 +46,6 @@ public class Server {
 		for (ServerThread st : serverThreads) {
 			st.sendMessage(message);
 		}
-	}
-	
-	public static void main(String [] args) {
-		new Server(6789);
 	}
 }
 
