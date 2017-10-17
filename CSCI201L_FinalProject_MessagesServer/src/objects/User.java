@@ -42,4 +42,13 @@ public class User {
 	      
 	    return false;
 	}
+	
+	public boolean verify(String username, String password) {
+	    
+	    if(this.username.equals(username) && this.password.equals(password)) {
+	    		return true;
+	    }
+	      
+	    return false;
+	}
 }
