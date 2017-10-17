@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import message.ChatMessage;
+
 public class ServerThread extends Thread {
 
 	private ObjectInputStream ois;

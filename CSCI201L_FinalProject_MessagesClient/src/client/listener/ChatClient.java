@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+import message.ChatMessage;
+
 public class ChatClient extends Thread {
 
 	private ObjectInputStream ois;

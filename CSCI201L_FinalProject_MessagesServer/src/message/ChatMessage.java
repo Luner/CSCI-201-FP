@@ -1,4 +1,4 @@
-package client.listener;
+package message;
 
 import java.io.Serializable;
 
