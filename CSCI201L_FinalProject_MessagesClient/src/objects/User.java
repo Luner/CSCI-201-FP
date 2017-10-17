@@ -3,7 +3,7 @@ package objects;
 public class User {
 	private String username;
 	private String password;
-	private int uid; //user id
+	private int uid; //user id 
 	
 	public User(String username, String password, int uid) {
 		this.username = username;
