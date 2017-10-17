@@ -12,4 +12,13 @@ public class DataContainer {
 	public ArrayList<User> getUsers(){
 		return this.users;
 	}
+	
+	public User findUserByUid(int uid) {
+		for(User user : users) {
+			if(user.getUid() == uid) {
+				return user;
+			}
+		}
+		return null;
+	}
 }
