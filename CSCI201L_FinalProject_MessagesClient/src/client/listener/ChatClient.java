@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-import message.ChatMessage;
+import objects.ChatMessage;
 
 public class ChatClient extends Thread {
 
@@ -25,7 +25,7 @@ public class ChatClient extends Thread {
 			scan = new Scanner(System.in);
 			while(true) {
 				String line = scan.nextLine();
-				ChatMessage message = new ChatMessage("Prof. Miller", line);
+				ChatMessage message = new ChatMessage("Jonathan Luner", line);
 				oos.writeObject(message);
 				oos.flush();
 			}

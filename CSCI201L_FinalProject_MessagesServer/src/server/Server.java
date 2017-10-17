@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import message.ChatMessage;
+import objects.ChatMessage;
 
 public class Server {
 
