@@ -2,12 +2,11 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Vector;
 
-import objects.ChatMessage;
 import objects.DataContainer;
-import objects.User;
+import objects.message.ChatMessage;
+import objects.message.Message;
 
 public class Server {
 
@@ -42,10 +41,15 @@ public class Server {
 		}
 	}
 	
-	public void sendMessageToAllClients(ChatMessage message) {
+	//TODO: not send message to client that sent it
+	public void sendMessageToAllClients(Message message) {
 		for (ServerThread st : serverThreads) {
-			st.sendMessage(message);
+			st.sendStringMessage((ChatMessage)message);
 		}
+	}
+	
+	public DataContainer getData() {
+		return data;
 	}
 }
 
