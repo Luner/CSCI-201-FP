@@ -35,7 +35,7 @@ public class ChatClient extends Thread {
 			this.start();
 			
 			//Handles the Sending of information
-			//May want to call a separate funciton in future
+			//May want to call a separate function in future
 			
 			//Creates a new scanner to receive information from the console
 			scan = new Scanner(System.in);
