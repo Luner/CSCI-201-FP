@@ -10,6 +10,7 @@ import objects.ChatMessage;
 import objects.Message;
 import objects.User;
 import objects.VerificationMessage;
+import objects.VerificationResponseMessage;
 
 public class ServerThread extends Thread {
 
@@ -22,6 +23,7 @@ public class ServerThread extends Thread {
 	
 	public ServerThread(Socket s, Server cs) {
 		users = cs.getData().getUsers();
+		
 		try {
 			this.cs = cs;
 			oos = new ObjectOutputStream(s.getOutputStream());
@@ -33,17 +35,25 @@ public class ServerThread extends Thread {
 	}
 	
 	private void login() {
-		boolean verified = false;
 		try {
-			while(!verified) {
+			//loops until connected user is verified
+			while(true) {
 				Object message = ois.readObject();
 				if(message instanceof VerificationMessage) {
 					for(User user : users) {
 						if(user.verify(((VerificationMessage) message).getUsername(), ((VerificationMessage) message).getPassword())) {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
-							verified = true;
-							break;
+							//Send VerificationResponseMessage
+							VerificationResponseMessage response;
+							response = new VerificationResponseMessage(true, uid);
+							try {
+								oos.writeObject(response);
+								oos.flush();
+							} catch (IOException ioe) {
+								System.out.println("ioe: " + ioe.getMessage());
+							}
+							return;
 						}
 					}
 				} else {
