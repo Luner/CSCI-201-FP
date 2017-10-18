@@ -27,4 +27,9 @@ public class ChatMessage extends Message{
 	public int getUid() {
 		return uid;
 	}
+	
+	public String toString() { 
+	    return "ChatMessage| uid:" + this.uid + ", message: " + this.message;
+	    
+	} 
 }

@@ -19,4 +19,8 @@ public class VerificationResponseMessage extends Message{
 	public int getUid() {
 		return this.uid;
 	}
+	
+	public String toString() { 
+	    return "VerificationResponseMessage| verified?:" + this.verified + ", uid: " + this.uid;
+	} 
 }

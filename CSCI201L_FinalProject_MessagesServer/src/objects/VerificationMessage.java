@@ -24,4 +24,8 @@ public class VerificationMessage extends Message{
 	public String getPassword() {
 		return password;
 	}
+	
+	public String toString() { 
+	    return "VerificationMessage| username:" + this.username + ", password: " + this.password;
+	} 
 }
