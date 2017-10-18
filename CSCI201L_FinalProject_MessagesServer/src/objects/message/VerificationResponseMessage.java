@@ -1,4 +1,4 @@
-package objects;
+package objects.message;
 
 public class VerificationResponseMessage extends Message{
 

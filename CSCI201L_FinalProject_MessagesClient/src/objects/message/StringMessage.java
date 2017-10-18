@@ -1,4 +1,4 @@
-package objects;
+package objects.message;
 
 
 //A StringMessage is a Message that only contains a string

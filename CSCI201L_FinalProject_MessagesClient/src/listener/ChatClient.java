@@ -1,4 +1,4 @@
-package client.listener;
+package listener;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,11 +6,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-import objects.ChatMessage;
-import objects.Message;
-import objects.StringMessage;
-import objects.VerificationMessage;
-import objects.VerificationResponseMessage;
+import objects.message.ChatMessage;
+import objects.message.Message;
+import objects.message.StringMessage;
+import objects.message.VerificationMessage;
+import objects.message.VerificationResponseMessage;
 
 public class ChatClient extends Thread {
 
@@ -130,7 +130,7 @@ public class ChatClient extends Thread {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 		
-	System.out.println("verification failed");
+	System.out.println("verification missed");
 	return false;
 }
 	

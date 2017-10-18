@@ -1,4 +1,4 @@
-package objects;
+package objects.message;
 
 //A message meant to be sent to the server for verification
 public class VerificationMessage extends Message{

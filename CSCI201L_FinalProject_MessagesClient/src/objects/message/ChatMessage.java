@@ -1,4 +1,4 @@
-package objects;
+package objects.message;
 
 
 //As of right now meant to only be sent from the Client to the Server
