@@ -40,6 +40,7 @@ public class Server {
 		}
 	}
 	
+	//TODO: not send message to client that sent it
 	public void sendMessageToAllClients(Message message) {
 		for (ServerThread st : serverThreads) {
 			st.sendMessage(message);
