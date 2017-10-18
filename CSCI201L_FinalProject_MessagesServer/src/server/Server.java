@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.Vector;
 
 import objects.DataContainer;
+import objects.message.ChatMessage;
 import objects.message.Message;
 
 public class Server {
@@ -43,7 +44,7 @@ public class Server {
 	//TODO: not send message to client that sent it
 	public void sendMessageToAllClients(Message message) {
 		for (ServerThread st : serverThreads) {
-			st.sendMessage(message);
+			st.sendStringMessage((ChatMessage)message);
 		}
 	}
 	

@@ -2,8 +2,9 @@ package objects.message;
 
 
 //A StringMessage is a Message that only contains a string
-public class StringMessage {
+public class StringMessage extends Message{
 	
+	private static final long serialVersionUID = 1L;
 	//The contents of the message
 	private String message;
 	

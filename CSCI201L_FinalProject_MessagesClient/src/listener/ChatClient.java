@@ -146,7 +146,7 @@ public class ChatClient extends Thread {
 				
 				//checks if the object is an instance of StringMessage and prints out
 				if(message instanceof StringMessage) {
-					System.out.println(message + ": " +((StringMessage) message).getMessage());
+					System.out.println(((StringMessage) message).getMessage());
 				} else {
 					System.out.println("Exception in ChatClient run(): Expecting StringMessage");
 				}

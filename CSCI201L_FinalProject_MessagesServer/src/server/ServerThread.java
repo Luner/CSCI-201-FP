@@ -6,11 +6,12 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import objects.ChatMessage;
-import objects.Message;
 import objects.User;
-import objects.VerificationMessage;
-import objects.VerificationResponseMessage;
+import objects.message.ChatMessage;
+import objects.message.Message;
+import objects.message.StringMessage;
+import objects.message.VerificationMessage;
+import objects.message.VerificationResponseMessage;
 
 public class ServerThread extends Thread {
 
@@ -40,31 +41,36 @@ public class ServerThread extends Thread {
 			while(true) {
 				Object message = ois.readObject();
 				if(message instanceof VerificationMessage) {
+					logReceivedMessage((Message)message);
 					for(User user : users) {
 						if(user.verify(((VerificationMessage) message).getUsername(), ((VerificationMessage) message).getPassword())) {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
+							
 							//Send VerificationResponseMessage
 							VerificationResponseMessage response;
 							response = new VerificationResponseMessage(true, uid);
 							try {
 								oos.writeObject(response);
 								oos.flush();
-							} catch (IOException ioe) {
-								System.out.println("ioe: " + ioe.getMessage());
-							}
-							return;
-						} else {
-							VerificationResponseMessage response;
-							response = new VerificationResponseMessage(false, -1);
-							try {
-								oos.writeObject(response);
-								oos.flush();
+								logSentMessage(response);
+								return;
 							} catch (IOException ioe) {
 								System.out.println("ioe: " + ioe.getMessage());
 							}
 						}
 					}
+					
+					VerificationResponseMessage response;
+					response = new VerificationResponseMessage(false, -1);
+					try {
+						oos.writeObject(response);
+						oos.flush();
+							logSentMessage(response);
+					} catch (IOException ioe) {
+						System.out.println("ioe: " + ioe.getMessage());
+					}
+						
 				} else {
 					System.out.println("Exception: Expecting an instanceof VerificationMessage!");
 				}
@@ -76,20 +82,32 @@ public class ServerThread extends Thread {
 		}
 	}
 	
-	public void sendMessage(Message message) {
+	public void sendStringMessage(ChatMessage message) {
 		try {
-			oos.writeObject(message);
+			StringMessage sMessage = new StringMessage(cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage());
+			oos.writeObject(sMessage);
 			oos.flush();
+			logSentMessage(sMessage);
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
+	}
+	
+	private void logSentMessage(Message message) {
+		System.out.println("LOG:: Sent: " + message.toString());
+	}
+	
+	private void logReceivedMessage(Message message) {
+		System.out.println("LOG:: Recieved: " + message.toString());
 	}
 
 	public void run() {
 		login();
 		try {
+			
 			while(true) {
 				Message message = (ChatMessage)ois.readObject();
+				logReceivedMessage(message);
 				cs.sendMessageToAllClients(message);
 			}
 		} catch (ClassNotFoundException cnfe) {
