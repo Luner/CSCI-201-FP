@@ -14,7 +14,6 @@ import objects.message.VerificationResponseMessage;
 
 public class ChatClient extends Thread {
 
-	public static final Integer TIMEOUT_SECONDS = 10;
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private int uid;
@@ -51,6 +50,9 @@ public class ChatClient extends Thread {
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}	
+		
+		//Close the Socket and the Scanner
+		cleanUp();
 	}
 	
 	//handles the sending of information to the Server
@@ -96,6 +98,7 @@ public class ChatClient extends Thread {
 				oos.writeObject(message);
 				oos.flush();
 				
+				//prepares to listen for the response from the server
 				verified = verificationResponse();
 				
 			} catch (IOException ioe) {
@@ -118,10 +121,11 @@ public class ChatClient extends Thread {
 					uid = ((VerificationResponseMessage) message).getUid();
 					return true;
 				}
-				System.out.println("verification failed");
-				System.out.println(""); //used for formatting
+				//Let the user know the Verification Failed
+				System.out.println("\nVerification failed\n");
 				return false;
 			} else {
+				//Recieved a message that was not a VerificationResponseMessage
 				System.out.println("Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
 			}
 		} catch (ClassNotFoundException cnfe) {
@@ -130,7 +134,7 @@ public class ChatClient extends Thread {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 		
-	System.out.println("verification missed");
+	System.out.println("\nverification failed\n");
 	return false;
 }
 	
@@ -159,7 +163,7 @@ public class ChatClient extends Thread {
 		}
 	}
 	
-	public void cleanUp() {
+	private void cleanUp() {
 		try {
 			if (s != null) {
 				s.close();
