@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.Vector;
 
 import objects.DataContainer;
-import objects.Message;
+import objects.message.Message;
 
 public class Server {
 

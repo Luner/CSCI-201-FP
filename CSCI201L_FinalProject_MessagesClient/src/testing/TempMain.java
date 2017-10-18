@@ -1,6 +1,6 @@
 package testing;
 
-import client.listener.ChatClient;
+import listener.ChatClient;
 
 public class TempMain {
 	
