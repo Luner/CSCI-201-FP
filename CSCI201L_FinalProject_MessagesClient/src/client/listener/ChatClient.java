@@ -28,6 +28,8 @@ public class ChatClient extends Thread {
 		try {
 			//Attempts to connect to the Socket
 			s = new Socket(hostname, port);	
+			//Creates a new scanner to receive information from the console
+			scan = new Scanner(System.in);
 				
 			/*If successful, will create ObjectStreams to allow for the sending of 
 			  objects to and from the server*/
@@ -54,8 +56,6 @@ public class ChatClient extends Thread {
 	//handles the sending of information to the Server
 	public void sender() {
 
-		//Creates a new scanner to receive information from the console
-		scan = new Scanner(System.in);
 		
 		//An infinite loop that will constantly look for a line from the console
 		//And send a ChatMessage to the Server
@@ -102,39 +102,35 @@ public class ChatClient extends Thread {
 				System.out.println("ioe: " + ioe.getMessage());
 			}	
 		}
+		System.out.println("logged In");
 	}
 	
 	private boolean verificationResponse() {
-		for(int i = 0; i < TIMEOUT_SECONDS; i++) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			try {
+		try {
+
+			//Receives the object
+			Object message = ois.readObject();
 				
-				//Receives the object
-				Object message = ois.readObject();
-				
-				//checks if the object is an instance of VerificationResponseMessage
-				//If it is and user exists, set uid and return true
-				if(message instanceof VerificationResponseMessage) {
-					if(((VerificationResponseMessage) message).isVerified()) {
-						uid = ((VerificationResponseMessage) message).getUid();
-						return true;
-					}
-					System.out.println("\n"); //used for formatting
-					return false;
-				} else {
-					System.out.println("Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
+			//checks if the object is an instance of VerificationResponseMessage
+			//If it is and user exists, set uid and return true
+			if(message instanceof VerificationResponseMessage) {
+				if(((VerificationResponseMessage) message).isVerified()) {
+					uid = ((VerificationResponseMessage) message).getUid();
+					return true;
 				}
-			} catch (ClassNotFoundException cnfe) {
-				System.out.println("cnfe: " + cnfe.getMessage());
-			} catch (IOException ioe) {
-				System.out.println("ioe: " + ioe.getMessage());
+				System.out.println("verification failed");
+				System.out.println(""); //used for formatting
+				return false;
+			} else {
+				System.out.println("Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
 			}
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("cnfe: " + cnfe.getMessage());
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
 		}
-	System.out.println("verification timed out!");
+		
+	System.out.println("verification failed");
 	return false;
 }
 	

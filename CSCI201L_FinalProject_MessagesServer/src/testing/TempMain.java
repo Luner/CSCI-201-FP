@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import parsing.Parser;
 import server.Server;
 import objects.DataContainer;
+import objects.User;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -29,6 +30,11 @@ public class TempMain {
 		}
 		
 		data = parser.getData();
+		//Print all users
+		for(User user : data.getUsers()) {
+			System.out.println("UID: " + user.getUid()  + "  Username: " + user.getUsername() + "  Password: " + user.getPassword());
+		}
+			
 		new Server(data, 6789);
 	}
 	

@@ -54,6 +54,15 @@ public class ServerThread extends Thread {
 								System.out.println("ioe: " + ioe.getMessage());
 							}
 							return;
+						} else {
+							VerificationResponseMessage response;
+							response = new VerificationResponseMessage(false, -1);
+							try {
+								oos.writeObject(response);
+								oos.flush();
+							} catch (IOException ioe) {
+								System.out.println("ioe: " + ioe.getMessage());
+							}
 						}
 					}
 				} else {
