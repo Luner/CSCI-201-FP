@@ -83,6 +83,7 @@ public class ChatClient extends Thread {
 				String usernameInput;
 				String passwordInput;
 
+				//Ask for username and password
 				System.out.println("Please enter username: ");
 				usernameInput = scan.nextLine();
 				System.out.println("Please enter password: ");
