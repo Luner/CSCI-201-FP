@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 import objects.message.ChatMessage;
 import objects.message.Message;
@@ -32,11 +31,7 @@ public class ChatClient extends Thread {
 			  objects to and from the server*/
 			oos = new ObjectOutputStream(s.getOutputStream()); 
 			ois = new ObjectInputStream(s.getInputStream());
-						
-			//BEGIN CHATTING
-	
-			//Starts the thread and calls the run() method (receiver)
-			//this.start();
+
 			
 			//Calls the sender, which handles the sending of data from the client to the server
 			//sender();
@@ -46,27 +41,30 @@ public class ChatClient extends Thread {
 		}	
 	}
 	
-	//handles the sending of information to the Server
-	/*public void sender() {
-
+	public void startChatThread() {
+		//BEGIN CHATTING
 		
-		//An infinite loop that will constantly look for a line from the console
+		//Starts the thread and calls the run() method (receiver)
+		this.start();
+	}
+	
+	//handles the sending of information to the Server
+	public void send(String text) {
+	
 		//And send a ChatMessage to the Server
-		while(true) {
-			try {
-				String line = scan.nextLine();
-				
-				//Creates a ChatMessage with the input
-				Message message = new ChatMessage(uid, line);
-				
-				//Sends the ChatMessage Object to the server
-				oos.writeObject(message);
-				oos.flush();
-			} catch (IOException ioe) {
-				System.out.println("ioe: " + ioe.getMessage());
-			}	
-		}
-	} */
+		
+		try {	
+			//Creates a ChatMessage with the input
+			Message message = new ChatMessage(uid, text);
+			
+			//Sends the ChatMessage Object to the server
+			oos.writeObject(message);
+			oos.flush();
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
+		}	
+		
+	} 
 	
 	public boolean login(String username, String password) {
 		try {
@@ -78,7 +76,9 @@ public class ChatClient extends Thread {
 			oos.writeObject(message);
 			oos.flush();
 			
-			return verificationResponse();
+			boolean response = verificationResponse();
+			System.out.println("response: " + response);
+			return response;
 			
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
@@ -95,6 +95,8 @@ public class ChatClient extends Thread {
 				
 			//checks if the object is an instance of VerificationResponseMessage
 			//If it is and user exists, set uid and return true
+			System.out.println("checking response: " + message);
+
 			if(message instanceof VerificationResponseMessage) {
 				if(((VerificationResponseMessage) message).isVerified()) {
 					uid = ((VerificationResponseMessage) message).getUid();
@@ -129,6 +131,7 @@ public class ChatClient extends Thread {
 				//checks if the object is an instance of StringMessage and prints out
 				if(message instanceof StringMessage) {
 					System.out.println(((StringMessage) message).getMessage());
+					//add to 
 				} else {
 					System.out.println("Exception in ChatClient run(): Expecting StringMessage");
 				}
