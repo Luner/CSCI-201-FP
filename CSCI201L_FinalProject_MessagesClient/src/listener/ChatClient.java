@@ -19,34 +19,27 @@ public class ChatClient extends Thread {
 	private ObjectOutputStream oos;
 	private int uid;
 	Socket s;
-	Scanner scan;
-
+	
 	public ChatClient(String hostname, int port) {
 		s = null;
-		scan = null;
 		uid = -1;
 		try {
 			//Attempts to connect to the Socket
 			s = new Socket(hostname, port);	
 			//Creates a new scanner to receive information from the console
-			scan = new Scanner(System.in);
 				
 			/*If successful, will create ObjectStreams to allow for the sending of 
 			  objects to and from the server*/
 			oos = new ObjectOutputStream(s.getOutputStream()); 
 			ois = new ObjectInputStream(s.getInputStream());
-			
-			
-			//first get the user to login and then set the uid
-			login();
 						
 			//BEGIN CHATTING
 	
 			//Starts the thread and calls the run() method (receiver)
-			this.start();
+			//this.start();
 			
 			//Calls the sender, which handles the sending of data from the client to the server
-			sender();
+			//sender();
 			
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
@@ -54,7 +47,7 @@ public class ChatClient extends Thread {
 	}
 	
 	//handles the sending of information to the Server
-	public void sender() {
+	/*public void sender() {
 
 		
 		//An infinite loop that will constantly look for a line from the console
@@ -73,38 +66,27 @@ public class ChatClient extends Thread {
 				System.out.println("ioe: " + ioe.getMessage());
 			}	
 		}
-	} 
+	} */
 	
-	private void login() {
-		boolean verified = false;
-		
-		while(!verified) {
-			try {
-				String usernameInput;
-				String passwordInput;
-
-				//Ask for username and password
-				System.out.println("Please enter username: ");
-				usernameInput = scan.nextLine();
-				System.out.println("Please enter password: ");
-				passwordInput = scan.nextLine();
-				
-				//Creates a VerificationMessage with the username and password inputs
-				Message message = new VerificationMessage(usernameInput, passwordInput);
-				
-				//Sends the VerificationMessage Object to the server
-				oos.writeObject(message);
-				oos.flush();
-				
-				verified = verificationResponse();
-				
-			} catch (IOException ioe) {
-				System.out.println("ioe: " + ioe.getMessage());
-			}	
+	public boolean login(String username, String password) {
+		try {
+			
+			//Creates a VerificationMessage with the username and password inputs
+			Message message = new VerificationMessage(username, password);
+			
+			//Sends the VerificationMessage Object to the server
+			oos.writeObject(message);
+			oos.flush();
+			
+			return verificationResponse();
+			
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
 		}
-		System.out.println("logged In");
+		return false;
 	}
 	
+
 	private boolean verificationResponse() {
 		try {
 
@@ -163,9 +145,6 @@ public class ChatClient extends Thread {
 		try {
 			if (s != null) {
 				s.close();
-			}
-			if (scan != null) {
-				scan.close();
 			}
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
