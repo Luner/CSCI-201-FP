@@ -29,7 +29,7 @@ public class ChatMessage extends Message{
 	}
 	
 	public String toString() { 
-	    return "ChatMessage| uid:" + this.uid + ", message: " + this.message;
+	    return "ChatMessage| uid: " + this.uid + ", message: " + this.message;
 	    
 	} 
 }

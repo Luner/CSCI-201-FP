@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import objects.User;
 import objects.message.ChatMessage;
+import objects.message.CommandMessage;
 import objects.message.Message;
 import objects.message.StringMessage;
 import objects.message.VerificationMessage;
@@ -105,11 +106,15 @@ public class ServerThread extends Thread {
 		try {
 			
 			while(true) {
-				Message message = (ChatMessage)ois.readObject();
-				
+				Message message = (Message)ois.readObject();
 				//Log the received Message
 				Log.recieved(message);
-				cs.sendMessageToAllClients(message);
+				
+				if(message instanceof ChatMessage) {					
+					cs.sendMessageToAllClients(message);
+				} else if (message instanceof CommandMessage) {
+					cs.receiveCommand((CommandMessage) message);
+				}
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("cnfe in run: " + cnfe.getMessage());

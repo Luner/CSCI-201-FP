@@ -28,6 +28,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import objects.message.ChatMessage;
+import objects.message.CommandMessage;
 import objects.message.Message;
 import objects.message.StringMessage;
 import objects.message.VerificationMessage;
@@ -67,7 +68,7 @@ public class ChatClient extends Application {
 	
 	
 	
-	
+
 	
 //////////CHAT WINDOW//////////
 	
@@ -94,7 +95,7 @@ public class ChatClient extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		setUpChatClient("localhost", 6789);
+		setUpChatClient("10.14.112.127", 6789);
 		initializeLoginPage();
 		
 		//Set what happens on button press
@@ -213,7 +214,12 @@ public class ChatClient extends Application {
 		//And send a ChatMessage to the Server
 		try {	
 			//Creates a ChatMessage with the input
-			Message message = new ChatMessage(uid, text);
+			Message message;
+			if(text.startsWith("/")) {
+				message = new CommandMessage(uid, text);
+			} else {
+				message = new ChatMessage(uid, text);
+			}
 			
 			//Sends the ChatMessage Object to the server
 			oos.writeObject(message);

@@ -8,6 +8,7 @@ import java.util.Vector;
 import botThread.BotClient;
 import objects.DataContainer;
 import objects.message.ChatMessage;
+import objects.message.CommandMessage;
 import objects.message.Message;
 
 public class Server extends Thread{
@@ -55,6 +56,18 @@ public class Server extends Thread{
 	
 	public DataContainer getData() {
 		return data;
+	}
+	
+	public void receiveCommand(CommandMessage message) {
+		System.out.println("COMMAND RECIEVED");
+		if(data.isAdmin(message.getUid())) {
+			String command = message.getCommand();
+			Log.command(message);
+			if(command.startsWith("/add bot")) {
+				Integer number = Integer.parseInt(command.substring(9, 10));
+				new BotClient("localhost", 6789, number);
+			} 
+		}
 	}
 	
 	

@@ -11,11 +11,17 @@ public class User {
 	//User_id: used to identify a user
 	private int uid;
 	
+	private String type;
+	
 	//Constructor: Initializes all variables
 	public User(String username, String password, int uid) {
 		this.username = username;
 		this.password = password;
 		this.uid = uid;
+	}
+	
+	public String getType() {
+		return this.type;
 	}
 	
 	//Getter for username

@@ -2,46 +2,55 @@
 	"users": [{
 		"username": "Jonathan",
 		"password": "computers",
-		"uid": "1"
+		"uid": "1",
+		"type": "Admin"
 		},
 		{
 		"username": "Cristopher",
 		"password": "programming",
-		"uid": "2"
+		"uid": "2",
+		"type": "Admin"
 		},
 		{
 		"username": "Derek",
 		"password": "usc",
-		"uid": "3"
+		"uid": "3",
+		"type": "Admin"
 		},
 		{
 		"username": "Sid",
 		"password": "school",
-		"uid": "4"
+		"uid": "4",
+		"type": "Admin"
 		},
 		{
 		"username": "William",
 		"password": "Overwatch",
-		"uid": "5"
+		"uid": "5",
+		"type": "Admin"
 		},
 		{
 		"username": "Bot1",
 		"password": "Bot1_password",
-		"uid": "100"
+		"uid": "100",
+		"type": "Bot"
 		},
 		{
 		"username": "Bot2",
 		"password": "Bot2_password",
-		"uid": "101"
+		"uid": "101",
+		"type": "Bot"
 		},
 		{
 		"username": "Bot3",
 		"password": "Bot3_password",
-		"uid": "102"
+		"uid": "102",
+		"type": "Bot"
 		},
 		{
 		"username": "Bot4",
 		"password": "Bot4_password",
-		"uid": "103"
+		"uid": "103",
+		"type": "Bot"
 		}]
 }
