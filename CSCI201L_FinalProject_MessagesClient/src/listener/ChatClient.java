@@ -1,10 +1,8 @@
 package listener;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 import java.net.Socket;
 
 import javafx.application.Application;
@@ -127,11 +125,8 @@ public class ChatClient extends Application {
 			//sender();
 			
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+			System.out.println("ioe in set-up: " + ioe.getMessage());
 		}	
-		
-		//Close the Socket and the Scanner
-		cleanUp();
 	}
 	
 	
@@ -149,7 +144,7 @@ public class ChatClient extends Application {
 			return response;
 			
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+			System.out.println("ioe in login : " + ioe.getMessage());
 		}
 		return false;
 	}
@@ -240,6 +235,9 @@ public class ChatClient extends Application {
         		} catch (IOException ioe) {
         			System.out.println("ioe: " + ioe.getMessage());
         		}
+
+        		//Close the Socket and the Scanner
+        		cleanUp();
             	return null;
             }
     };

@@ -69,7 +69,7 @@ public class ChatClient extends Thread {
 		//And send a ChatMessage to the Server
 		while(true) {
 			try {
-				if(rand.nextInt(2000000000) == 1)
+				if(rand.nextInt(1000000000) == 1)
 					counter ++;
 				if(counter == amount) {
 					String line = "";
