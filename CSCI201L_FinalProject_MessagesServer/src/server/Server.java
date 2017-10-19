@@ -10,7 +10,6 @@ import objects.DataContainer;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.Message;
-import objects.message.StringMessage;
 
 public class Server extends Thread{
 

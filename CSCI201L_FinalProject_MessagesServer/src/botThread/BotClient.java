@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 import objects.message.ChatMessage;
 import objects.message.Message;
-import objects.message.StringMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
