@@ -1,5 +1,7 @@
 SERVER
 - handle when a user disconnects, closing the socket
+- create user functionality
+- Switch from json reader to a database reader
 
 Client
 - Create a better window for chat messages
