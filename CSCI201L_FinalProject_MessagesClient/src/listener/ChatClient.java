@@ -33,6 +33,7 @@ import objects.message.StringMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
+
 public class ChatClient extends Application {
 	
 //GRAPHICAL USER INTERFACE ------------------
@@ -148,7 +149,7 @@ public class ChatClient extends Application {
 			//sender();
 			
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+			System.out.println("ioe in set-up: " + ioe.getMessage());
 		}	
 	}
 	
@@ -167,7 +168,7 @@ public class ChatClient extends Application {
 			return response;
 			
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+			System.out.println("ioe in login : " + ioe.getMessage());
 		}
 		return false;
 	}
@@ -187,10 +188,11 @@ public class ChatClient extends Application {
 					uid = ((VerificationResponseMessage) message).getUid();
 					return true;
 				}
-				System.out.println("verification failed");
-				System.out.println(""); //used for formatting
+				//Let the user know the Verification Failed
+				System.out.println("\nVerification failed\n");
 				return false;
 			} else {
+				//Recieved a message that was not a VerificationResponseMessage
 				System.out.println("Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
 			}
 		} catch (ClassNotFoundException cnfe) {
@@ -202,6 +204,7 @@ public class ChatClient extends Application {
 		System.out.println("verification missed");
 		return false;
 	}
+
 	
 	public void send(String text) {
 		
@@ -218,7 +221,7 @@ public class ChatClient extends Application {
 		}	
 	} 
 	
-	public void cleanUp() {
+	private void cleanUp() {
 		try {
 			if (s != null) {
 				s.close();
@@ -256,6 +259,9 @@ public class ChatClient extends Application {
         		} catch (IOException ioe) {
         			System.out.println("ioe: " + ioe.getMessage());
         		}
+
+        		//Close the Socket and the Scanner
+        		cleanUp();
             	return null;
             }
     };
