@@ -1,4 +1,4 @@
-package listener;
+package botThread;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,7 +13,7 @@ import objects.message.StringMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
-public class ChatClient extends Thread {
+public class BotClient extends Thread {
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -23,7 +23,7 @@ public class ChatClient extends Thread {
 	Random rand;
 	Integer amount;
 
-	public ChatClient(String hostname, int port) {
+	public BotClient(String hostname, int port, Integer amount){
 		rand = new Random();
 		s = null;
 		scan = null;
@@ -38,27 +38,13 @@ public class ChatClient extends Thread {
 			  objects to and from the server*/
 			oos = new ObjectOutputStream(s.getOutputStream()); 
 			ois = new ObjectInputStream(s.getInputStream());
-			
-			
-			//ask what bot number it should be
-			System.out.println("What number bot (1-4)");
-			amount = Integer.parseInt(scan.nextLine());
+			this.amount = amount;
 			login(amount);
-						
-			//BEGIN CHATTING
 	
-			//Starts the thread and calls the run() method (receiver)
-			this.start();
-			
-			//Calls the sender, which handles the sending of data from the client to the server
-			sender();
-			
+						
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
-		}	
-		
-		//Close the Socket and the Scanner
-		cleanUp();
+			System.out.println("BOT :: ioe: " + ioe.getMessage());
+		}
 	}
 	
 	//handles the sending of information to the Server
@@ -95,33 +81,34 @@ public class ChatClient extends Thread {
 						oos.flush();
 					}
 			} catch (IOException ioe) {
-				System.out.println("ioe: " + ioe.getMessage());
+				System.out.println("BOT :: ioe: " + ioe.getMessage());
 			}	
 		}
 	} 
 	
 	private void login(int number) {
-		boolean verified = false;
 		
-		while(!verified) {
-			try {
-				String usernameInput = "Bot" + number;
-				String passwordInput = "Bot" + number + "_password";
-				
-				//Creates a VerificationMessage with the username and password inputs
-				Message message = new VerificationMessage(usernameInput, passwordInput);
-				
-				//Sends the VerificationMessage Object to the server
-				oos.writeObject(message);
-				oos.flush();
-				
-				//prepares to listen for the response from the server
-				verified = verificationResponse();
-				
-			} catch (IOException ioe) {
-				System.out.println("ioe: " + ioe.getMessage());
-			}	
-		}
+		try {
+			String usernameInput = "Bot" + number;
+			String passwordInput = "Bot" + number + "_password";
+			
+			//Creates a VerificationMessage with the username and password inputs
+			Message message = new VerificationMessage(usernameInput, passwordInput);
+			
+			//Sends the VerificationMessage Object to the server
+			oos.writeObject(message);
+			oos.flush();
+			
+			//prepares to listen for the response from the server
+			if(verificationResponse()) {
+				//Runs Bot Sender
+				this.start();
+			}
+			
+		} catch (IOException ioe) {
+			System.out.println("BOT :: ioe: " + ioe.getMessage());
+		}	
+	
 	}
 	
 	private boolean verificationResponse() {
@@ -138,46 +125,27 @@ public class ChatClient extends Thread {
 					return true;
 				}
 				//Let the user know the Verification Failed
-				System.out.println("\nVerification failed\n");
+				System.out.println("Could Not Verify Bot\n");
 				return false;
 			} else {
 				//Recieved a message that was not a VerificationResponseMessage
-				System.out.println("Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
+				System.out.println("BOT :: Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
 			}
 		} catch (ClassNotFoundException cnfe) {
-			System.out.println("cnfe: " + cnfe.getMessage());
+			System.out.println("BOT :: cnfe: " + cnfe.getMessage());
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+			System.out.println("BOT :: ioe: " + ioe.getMessage());
 		}
-		
-	System.out.println("\nverification failed\n");
+
+		System.out.println("Could Not Verify Bot\n");
 	return false;
 }
 	
 	
 	//Handles the receiving of information
 	public void run() {
-		try {
-
-			//Loop consistently looking for an object to be sent from the server
-			while(true) {
-				//Receives the object
-				Object message = ois.readObject();
-				
-				//checks if the object is an instance of StringMessage and prints out
-				if(message instanceof StringMessage) {
-					System.out.println(((StringMessage) message).getMessage());
-				} else {
-					System.out.println("Exception in ChatClient run(): Expecting StringMessage");
-				}
-				
-			}
-				
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("cnfe: " + cnfe.getMessage());
-		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
-		}
+		sender();
+		cleanUp();
 	}
 	
 	private void cleanUp() {
@@ -192,6 +160,5 @@ public class ChatClient extends Thread {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
-	
 	
 }

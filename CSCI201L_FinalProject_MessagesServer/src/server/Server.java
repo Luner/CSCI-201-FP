@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.Vector;
 
-import botClient.BotClient;
+import botThread.BotClient;
 import objects.DataContainer;
 import objects.message.ChatMessage;
 import objects.message.Message;
@@ -44,9 +44,10 @@ public class Server extends Thread{
 			}
 		}
 	}
-	
-	//TODO: not send message to client that sent it
+
+
 	public void sendMessageToAllClients(Message message) {
+		Log.sent(message);
 		for (ServerThread st : serverThreads) {
 			st.sendStringMessage((ChatMessage)message);
 		}
@@ -56,14 +57,23 @@ public class Server extends Thread{
 		return data;
 	}
 	
+	
+	//Allows for Server Commands
 	public void run() {
 		scan = new Scanner(System.in);
 		while(true) {
 			String command = scan.nextLine();
-			if(command.equals("Add Bot")) {
+			if(command.equals("add bot")) {
 				System.out.println("What Bot Number would you like?");
 				Integer number = Integer.parseInt(scan.nextLine());
 				new BotClient("localhost", 6789, number);
+			} else if(command.equals("help")) {
+				System.out.println("\n\n///HELP MENU///");
+				System.out.println("Commands: ");
+				System.out.println("\"add bot\" - begins the add bot process");
+				System.out.println("\"help\" - brings up the help menu\n\n");
+			} else {
+				System.out.println("SERVER :: INVALID COMMAND");
 			}
 		}
 	}

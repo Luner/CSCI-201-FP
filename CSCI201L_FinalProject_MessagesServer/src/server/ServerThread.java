@@ -39,7 +39,7 @@ public class ServerThread extends Thread {
 				Object message = ois.readObject();
 				if(message instanceof VerificationMessage) {
 					//if the message is a VerificationMessagessage, Log the message received
-					logReceivedMessage((Message)message);
+					Log.recieved((Message) message);
 					
 					//Check the information sent against every user that exists
 					for(User user : cs.getData().getUsers()) {
@@ -55,7 +55,7 @@ public class ServerThread extends Thread {
 							try {
 								oos.writeObject(response);
 								oos.flush();
-								logSentMessage(response);
+								Log.sent(response);
 								return;
 							} catch (IOException ioe) {
 								System.out.println("ioe: " + ioe.getMessage());
@@ -70,7 +70,7 @@ public class ServerThread extends Thread {
 						oos.flush();
 						
 						//Log the message that was sent
-						logSentMessage(response);
+						Log.sent(response);
 					} catch (IOException ioe) {
 						System.out.println("ioe: " + ioe.getMessage());
 					}
@@ -93,24 +93,11 @@ public class ServerThread extends Thread {
 			StringMessage sMessage = new StringMessage(cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage());
 			oos.writeObject(sMessage);
 			oos.flush();
-			
-			//Log the Message that was sent
-			logSentMessage(sMessage);
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
-	
-	//To log Sent messages
-	private void logSentMessage(Message message) {
-		System.out.println("LOG:: Sent: " + message.toString());
-	}
-	
-	//To log Received Messages
-	private void logReceivedMessage(Message message) {
-		System.out.println("LOG:: Recieved: " + message.toString());
-	}
-	
+		
 
 	//Handles consistently listening for chatMessages from client
 	public void run() {
@@ -121,7 +108,7 @@ public class ServerThread extends Thread {
 				Message message = (ChatMessage)ois.readObject();
 				
 				//Log the received Message
-				logReceivedMessage(message);
+				Log.recieved(message);
 				cs.sendMessageToAllClients(message);
 			}
 		} catch (ClassNotFoundException cnfe) {
