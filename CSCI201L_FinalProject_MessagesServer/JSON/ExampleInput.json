@@ -18,5 +18,25 @@
 		"username": "Siu",
 		"password": "school",
 		"uid": "4"
+		},
+		{
+		"username": "Bot1",
+		"password": "Bot1_password",
+		"uid": "100"
+		},
+		{
+		"username": "Bot2",
+		"password": "Bot2_password",
+		"uid": "101"
+		},
+		{
+		"username": "Bot3",
+		"password": "Bot3_password",
+		"uid": "102"
+		},
+		{
+		"username": "Bot4",
+		"password": "Bot4_password",
+		"uid": "103"
 		}]
 }
