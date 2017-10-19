@@ -71,6 +71,8 @@ public class ChatClient extends Application {
 	
 //////////CHAT WINDOW//////////
 	
+	//22 messages on screen
+	int onScreen = 0;
 	Button sendMessage;
 	TextField chatText;
 	Scene chat;
@@ -245,6 +247,11 @@ public class ChatClient extends Application {
         					Platform.runLater(new Runnable() {
         		    	        @Override
         		    	        public void run() {
+        		    	        	if(onScreen == 22) {
+        		    	        		chatLayout.getChildren().remove(2);
+        		    	        	} else {
+        		    	        		onScreen++;
+        		    	        	}
         		    	        	chatLayout.getChildren().add(new Text(((StringMessage) message).getMessage()));
         		    	        }
         		    	      });
