@@ -1,0 +1,11 @@
+SERVER
+- handle when a user disconnects, closing the socket
+
+Client
+- Create a better window for chat messages
+- Fix the different window sizes issue
+	- On my desktop it looks perfect
+	- Otherwise fonts get messed up
+
+SERVER/CLIENT
+- Command from chat

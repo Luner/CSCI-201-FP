@@ -20,6 +20,11 @@
 		"uid": "4"
 		},
 		{
+		"username": "William",
+		"password": "Overwatch",
+		"uid": "5"
+		},
+		{
 		"username": "Bot1",
 		"password": "Bot1_password",
 		"uid": "100"
