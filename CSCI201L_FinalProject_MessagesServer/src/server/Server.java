@@ -10,6 +10,7 @@ import objects.DataContainer;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.Message;
+import objects.message.StringMessage;
 
 public class Server extends Thread{
 
@@ -46,6 +47,9 @@ public class Server extends Thread{
 		}
 	}
 
+	public void removeServerThread(ServerThread st) {
+		serverThreads.remove(st);
+	}
 
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
@@ -58,15 +62,20 @@ public class Server extends Thread{
 		return data;
 	}
 	
-	public void receiveCommand(CommandMessage message) {
-		System.out.println("COMMAND RECIEVED");
+	public void receiveCommand(CommandMessage message, ServerThread st) {
 		if(data.isAdmin(message.getUid())) {
 			String command = message.getCommand();
 			Log.command(message);
 			if(command.startsWith("/add bot")) {
 				Integer number = Integer.parseInt(command.substring(9, 10));
 				new BotClient("localhost", 6789, number);
-			} 
+			} else if(command.equals("/gamemode 0")) {
+				st.sendStringMessage("You are now in Creative Mode!");
+			} else if(command.equals("/gamemode 1")) {
+				st.sendStringMessage("You are now in Survival Mode!");
+			} else if(command.equals("/help")) {
+				st.sendStringMessage("--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
+			}
 		}
 	}
 	

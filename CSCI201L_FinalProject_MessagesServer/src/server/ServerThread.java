@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ConcurrentModificationException;
 
 import objects.User;
 import objects.message.ChatMessage;
@@ -20,6 +21,7 @@ public class ServerThread extends Thread {
 	private Server cs;
 	String username; 
 	int uid;
+	boolean running = true;
 	
 	public ServerThread(Socket s, Server cs) {
 		//Initialize the Object streams for the socket
@@ -95,7 +97,24 @@ public class ServerThread extends Thread {
 			oos.writeObject(sMessage);
 			oos.flush();
 		} catch (IOException ioe) {
+			cs.removeServerThread(this);
 			System.out.println("ioe: " + ioe.getMessage());
+			running = false;
+			
+		}
+	}
+	
+	public void sendStringMessage(String message) {
+		//Send out a StringMessage to the user
+		try {
+			StringMessage sMessage = new StringMessage(message);
+			oos.writeObject(sMessage);
+			oos.flush();
+		} catch (IOException ioe) {
+			cs.removeServerThread(this);
+			System.out.println("ioe: " + ioe.getMessage());
+			running = false;
+			
 		}
 	}
 		
@@ -105,7 +124,7 @@ public class ServerThread extends Thread {
 		login();
 		try {
 			
-			while(true) {
+			while(running) {
 				Message message = (Message)ois.readObject();
 				//Log the received Message
 				Log.recieved(message);
@@ -113,13 +132,15 @@ public class ServerThread extends Thread {
 				if(message instanceof ChatMessage) {					
 					cs.sendMessageToAllClients(message);
 				} else if (message instanceof CommandMessage) {
-					cs.receiveCommand((CommandMessage) message);
+					cs.receiveCommand((CommandMessage) message, this);
 				}
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("cnfe in run: " + cnfe.getMessage());
 		} catch (IOException ioe) {
 			System.out.println("ioe in run: " + ioe.getMessage());
+		} catch (ConcurrentModificationException cme) {
+			
 		}
 	}
 }
