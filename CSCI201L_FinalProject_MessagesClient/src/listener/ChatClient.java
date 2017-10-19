@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import objects.message.ChatMessage;
 import objects.message.Message;
@@ -35,7 +36,8 @@ import objects.message.VerificationResponseMessage;
 public class ChatClient extends Application {
 	
 //GRAPHICAL USER INTERFACE ------------------
-	
+
+//////////LOGIN WINDOW//////////
 	//LogInPage
 	Scene loginScene;
 	VBox loginLayout;
@@ -61,17 +63,19 @@ public class ChatClient extends Application {
 	
 	//Decoration
 	ArrayList<Circle> circles;
+	
+	
+	
+	
+	
+//////////CHAT WINDOW//////////
+	
+	Button sendMessage;
+	TextField chatText;
+	Scene chat;
+	VBox chatLayout;
+	
 //-------------------------------------------
-	
-	
-	//Button login;
-	//Button sendMessage;
-	//TextField chatText;
-	//Scene chat;
-	//Stage window;
-	//VBox chatLayout;
-	
-	
 	
 	//SERVER CLIENT COMMUNICATION
 	private ObjectInputStream ois;
@@ -95,36 +99,35 @@ public class ChatClient extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				System.out.println("Pressed");
 				if(login(username.getText(), password.getText())) {
-					System.out.println("Logged In");
-					//primaryStage.setScene(chat);
-					//Thread th = new Thread(task);
-					//th.setDaemon(true);
-					//th.start();
+					primaryStage.setScene(chat);
+					Thread th = new Thread(task);
+					th.setDaemon(true);
+					th.start();
 				} 				
 			}
 		});
 		
 		primaryStage.setTitle("Messaging Application");
 		
-		
-		//sendMessage = new Button();
-		//sendMessage.setText("Send Message");
-		//sendMessage.setOnAction(e -> {
-		//	send(chatText.getText());
-		//	chatText.setText("");
-		//});
+		//SetUp chat
+		chatText = new TextField();
+		sendMessage = new Button();
+		sendMessage.setText("Send Message");
+		sendMessage.setOnAction(e -> {
+			send(chatText.getText());
+			chatText.setText("");
+		});
 		
 
-		//chatLayout = new VBox();
-		//chatLayout.getChildren().add(chatText);	
-		//chatLayout.getChildren().add(sendMessage);
-		//chat = new Scene(chatLayout, 600, 400);
+		chatLayout = new VBox();
+		chatLayout.getChildren().add(chatText);	
+		chatLayout.getChildren().add(sendMessage);
+		
+		
+		chat = new Scene(chatLayout, 600, 400);
 		primaryStage.setScene(loginScene);
 		primaryStage.show();
-
-		//setUpChatClient("localhost", 6789);	
 	}
 	
 	private void setUpChatClient(String hostname, int port) {
@@ -239,7 +242,7 @@ public class ChatClient extends Application {
         					Platform.runLater(new Runnable() {
         		    	        @Override
         		    	        public void run() {
-        		    	        	//chatLayout.getChildren().add(new Text(((StringMessage) message).getMessage()));
+        		    	        	chatLayout.getChildren().add(new Text(((StringMessage) message).getMessage()));
         		    	        }
         		    	      });
         					
