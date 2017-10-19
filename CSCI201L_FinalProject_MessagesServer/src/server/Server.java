@@ -2,23 +2,27 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.Vector;
 
+import botClient.BotClient;
 import objects.DataContainer;
 import objects.message.ChatMessage;
 import objects.message.Message;
 
-public class Server {
+public class Server extends Thread{
 
 	private Vector<ServerThread> serverThreads;
 	private DataContainer data;
+	Scanner scan;
 	
-	public Server(DataContainer data, int port) {
+	public Server(DataContainer data, int port)  {
 		
 		this.data = data;
-		
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
+		this.start();
+		
 		try {
 			ss = new ServerSocket(port);
 			while (true) {
@@ -50,6 +54,18 @@ public class Server {
 	
 	public DataContainer getData() {
 		return data;
+	}
+	
+	public void run() {
+		scan = new Scanner(System.in);
+		while(true) {
+			String command = scan.nextLine();
+			if(command.equals("Add Bot")) {
+				System.out.println("What Bot Number would you like?");
+				Integer number = Integer.parseInt(scan.nextLine());
+				new BotClient("localhost", 6789, number);
+			}
+		}
 	}
 }
 
