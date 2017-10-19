@@ -9,6 +9,7 @@ import java.util.ConcurrentModificationException;
 import objects.User;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
+import objects.message.CreateUserMessage;
 import objects.message.Message;
 import objects.message.StringMessage;
 import objects.message.VerificationMessage;
@@ -78,6 +79,12 @@ public class ServerThread extends Thread {
 						System.out.println("ioe: " + ioe.getMessage());
 					}
 						
+				}  else if (message instanceof CreateUserMessage) {
+					String username = ((CreateUserMessage) message).getUsername();
+					String password = ((CreateUserMessage) message).getPassword();
+					System.out.println("username: " + username + "  password: " + password
+							+ "  nextId: " + cs.getData().getNextID());
+					cs.addUser(new User(username, password, cs.getData().getNextID()), this);
 				} else {
 					//If the Message recieved was not an instance of Verification Messages
 					System.out.println("Exception: Expecting an instanceof VerificationMessage!");

@@ -1,5 +1,29 @@
 {
 	"users": [{
+		"username": "Bot1",
+		"password": "Bot1_password",
+		"uid": "-10",
+		"type": "Bot"
+		},
+		{
+		"username": "Bot2",
+		"password": "Bot2_password",
+		"uid": "-11",
+		"type": "Bot"
+		},
+		{
+		"username": "Bot3",
+		"password": "Bot3_password",
+		"uid": "-12",
+		"type": "Bot"
+		},
+		{
+		"username": "Bot4",
+		"password": "Bot4_password",
+		"uid": "-13",
+		"type": "Bot"
+		},
+		{
 		"username": "Jonathan",
 		"password": "computers",
 		"uid": "1",
@@ -28,29 +52,5 @@
 		"password": "Overwatch",
 		"uid": "5",
 		"type": "Admin"
-		},
-		{
-		"username": "Bot1",
-		"password": "Bot1_password",
-		"uid": "100",
-		"type": "Bot"
-		},
-		{
-		"username": "Bot2",
-		"password": "Bot2_password",
-		"uid": "101",
-		"type": "Bot"
-		},
-		{
-		"username": "Bot3",
-		"password": "Bot3_password",
-		"uid": "102",
-		"type": "Bot"
-		},
-		{
-		"username": "Bot4",
-		"password": "Bot4_password",
-		"uid": "103",
-		"type": "Bot"
 		}]
 }

@@ -7,18 +7,23 @@ import java.util.Vector;
 
 import botThread.BotClient;
 import objects.DataContainer;
+import objects.User;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.Message;
+import parsing.DataWriter;
+import parsing.Parser;
 
 public class Server extends Thread{
 
 	private Vector<ServerThread> serverThreads;
 	private DataContainer data;
 	Scanner scan;
+	DataWriter dataWriter;
 	
 	public Server(DataContainer data, int port)  {
 		
+		dataWriter = new DataWriter();
 		this.data = data;
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
@@ -48,6 +53,17 @@ public class Server extends Thread{
 
 	public void removeServerThread(ServerThread st) {
 		serverThreads.remove(st);
+	}
+	
+	public void addUser(User user, ServerThread st) {
+		if(data.addUser(user)) {
+			System.out.println(data);
+			dataWriter.saveData(data, "JSON/Input.json");	
+			st.sendStringMessage("User Created, Please Log In");
+			Log.log("User Created");
+		} else {
+			st.sendStringMessage("User Already Exists");
+		}
 	}
 
 	public void sendMessageToAllClients(Message message) {

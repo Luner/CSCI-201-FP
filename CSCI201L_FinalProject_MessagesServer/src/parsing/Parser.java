@@ -18,5 +18,8 @@ public class Parser {
 		data = gson.fromJson(bf, DataContainer.class);
 	}
 	
-	public DataContainer getData(){ return data; }
+	public DataContainer getData(){ 
+		return data; 
+		}
+	
 }

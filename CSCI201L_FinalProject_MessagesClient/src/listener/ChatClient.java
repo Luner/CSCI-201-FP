@@ -29,6 +29,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
+import objects.message.CreateUserMessage;
 import objects.message.Message;
 import objects.message.StringMessage;
 import objects.message.VerificationMessage;
@@ -62,6 +63,7 @@ public class ChatClient extends Application {
 	
 	//Login Button
 	Button login;
+	Button createUser;
 	
 	//Decoration
 	ArrayList<Circle> circles;
@@ -94,8 +96,8 @@ public class ChatClient extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
-		setUpChatClient("10.14.112.127", 6789);
+		//10.14.112.127
+		setUpChatClient("localhost", 6789);
 		initializeLoginPage();
 		
 		//Set what happens on button press
@@ -110,6 +112,10 @@ public class ChatClient extends Application {
 					th.start();
 				} 				
 			}
+		});
+		
+		createUser.setOnAction(e -> {
+			createUser(username.getText(), password.getText());
 		});
 		
 		primaryStage.setTitle("Messaging Application");
@@ -154,6 +160,21 @@ public class ChatClient extends Application {
 		} catch (IOException ioe) {
 			System.out.println("ioe in set-up: " + ioe.getMessage());
 		}	
+	}
+	
+	public void createUser(String username, String password) {
+		try {
+			
+			//Creates a VerificationMessage with the username and password inputs
+			Message message = new CreateUserMessage(username, password);
+			
+			//Sends the VerificationMessage Object to the server
+			oos.writeObject(message);
+			oos.flush();
+			
+		} catch (IOException ioe) {
+			System.out.println("ioe in login : " + ioe.getMessage());
+		}
 	}
 	
 	
@@ -350,12 +371,21 @@ public class ChatClient extends Application {
 		
 		//LoginButton
 		login = new Button();
-		login.setLayoutX(278.0);
+		login.setLayoutX(230.0);
 		login.setLayoutY(202.0);
 		login.setMnemonicParsing(false);
 		login.setPrefWidth(62.0);
 		login.setStyle("-fx-background-color: #59f429;");
 		login.setText("LogIn");
+		
+		//LoginButton
+		createUser = new Button();
+		createUser.setLayoutX(310.0);
+		createUser.setLayoutY(202.0);
+		createUser.setMnemonicParsing(false);
+		createUser.setPrefWidth(100.0);
+		createUser.setStyle("-fx-background-color: #59f429;");
+		createUser.setText("Create User");
 		
 		
 		//Circles
@@ -396,7 +426,7 @@ public class ChatClient extends Application {
 		
 		temp = circles.get(5);
 		temp.setLayoutX(415.0);
-		temp.setLayoutY(240.0);
+		temp.setLayoutY(280.0);
 		temp.setRadius(22);
 		
 		temp = circles.get(6);
@@ -437,6 +467,8 @@ public class ChatClient extends Application {
 		loginPane.getChildren().add(username);
 		loginPane.getChildren().add(password);
 		loginPane.getChildren().add(login);
+		loginPane.getChildren().add(createUser);
+		
 		for(Circle circle : circles){
 			loginPane.getChildren().add(circle);
 		}

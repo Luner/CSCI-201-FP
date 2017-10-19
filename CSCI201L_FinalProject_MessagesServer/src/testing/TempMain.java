@@ -39,7 +39,7 @@ public class TempMain {
 		try {
 			System.out.println("What is the name of the input file?");
 			//parser = new Parser(br.readLine());
-			parser = new Parser("JSON/ExampleInput.json");
+			parser = new Parser("JSON/Input.json");
 			
 			//check we something in the data
 			if (parser.getData() == null){

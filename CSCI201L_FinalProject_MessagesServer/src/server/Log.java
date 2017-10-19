@@ -14,4 +14,8 @@ public class Log {
 	public static void command(Message message) {
 		System.out.println("LOG:: Command: " + message.toString());
 	}
+	
+	public static void log(String message) {
+		System.out.println("LOG:: " + message);
+	}
 }

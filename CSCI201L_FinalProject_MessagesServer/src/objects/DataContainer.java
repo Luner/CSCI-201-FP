@@ -34,4 +34,19 @@ public class DataContainer {
 		}
 		return false;
 	}
+	
+	public boolean addUser(User user) {
+		for(User user1 : users) {
+			if(user.getUsername().equals(user1.getUsername())){
+				return false;
+			}
+		}
+		users.add(user);
+		return true;
+	}	
+	
+	public Integer getNextID() {
+		Integer id = users.get(users.size() -1).getUid() + 1;
+		return id;
+	}
 }
