@@ -2,6 +2,8 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
@@ -25,6 +27,17 @@ public class Database {
 		} catch (SQLException sqle) {
 			System.out.println("Unable to connect to database with specified paramters.");
 			return false;
+		}
+	}
+
+	public void registerUser(String username, String password) {
+		String insertQuery = "INSERT users SET username = ? , password = ?";
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ps.executeUpdate();
+		} catch (SQLException sqle) {
+			System.out.println("Failed to create user with username: " + username);
 		}
 	}
 }
