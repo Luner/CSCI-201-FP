@@ -10,17 +10,17 @@ import com.google.gson.GsonBuilder;
 import objects.DataContainer;
 
 public class DataWriter {
-	
-	public DataWriter(){
+
+	public DataWriter() {
 	}
-	
+
 	public void saveData(DataContainer data, String filename) {
 		try (Writer writer = new FileWriter(filename)) {
-		    Gson gson = new GsonBuilder().create();
-		    gson.toJson(data, writer);
+			Gson gson = new GsonBuilder().create();
+			gson.toJson(data, writer);
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
-	
+
 }

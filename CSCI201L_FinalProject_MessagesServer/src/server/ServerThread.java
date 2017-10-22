@@ -20,41 +20,42 @@ public class ServerThread extends Thread {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private Server cs;
-	String username; 
+	String username;
 	int uid;
 	boolean running = true;
-	
+
 	public ServerThread(Socket s, Server cs) {
-		//Initialize the Object streams for the socket
+		// Initialize the Object streams for the socket
 		try {
 			this.cs = cs;
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
-			this.start();			
+			this.start();
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
-	
+
 	private void login() {
 		try {
-			//loops until connected user is verified
-			while(true) {
+			// loops until connected user is verified
+			while (true) {
 				Object message = ois.readObject();
-				if(message instanceof VerificationMessage) {
-					//if the message is a VerificationMessagessage, Log the message received
+				if (message instanceof VerificationMessage) {
+					// if the message is a VerificationMessagessage, Log the message received
 					Log.recieved((Message) message);
-					
-					//Check the information sent against every user that exists
-					for(User user : cs.getData().getUsers()) {
-						if(user.verify(((VerificationMessage) message).getUsername(), ((VerificationMessage) message).getPassword())) {
+
+					// Check the information sent against every user that exists
+					for (User user : cs.getData().getUsers()) {
+						if (user.verify(((VerificationMessage) message).getUsername(),
+								((VerificationMessage) message).getPassword())) {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
-							
-							//Send VerificationResponseMessage
+
+							// Send VerificationResponseMessage
 							VerificationResponseMessage response;
-							
-							//Send a verificationResponseMessage with true and the corresponding User ID
+
+							// Send a verificationResponseMessage with true and the corresponding User ID
 							response = new VerificationResponseMessage(true, uid);
 							try {
 								oos.writeObject(response);
@@ -66,27 +67,28 @@ public class ServerThread extends Thread {
 							}
 						}
 					}
-					//If the user was not found, send a verificationResponseMessage with false and a User ID or -1
+					// If the user was not found, send a verificationResponseMessage with false and
+					// a User ID or -1
 					VerificationResponseMessage response;
 					response = new VerificationResponseMessage(false, -1);
 					try {
 						oos.writeObject(response);
 						oos.flush();
-						
-						//Log the message that was sent
+
+						// Log the message that was sent
 						Log.sent(response);
 					} catch (IOException ioe) {
 						System.out.println("ioe: " + ioe.getMessage());
 					}
-						
-				}  else if (message instanceof CreateUserMessage) {
+
+				} else if (message instanceof CreateUserMessage) {
 					String username = ((CreateUserMessage) message).getUsername();
 					String password = ((CreateUserMessage) message).getPassword();
-					System.out.println("username: " + username + "  password: " + password
-							+ "  nextId: " + cs.getData().getNextID());
+					System.out.println("username: " + username + "  password: " + password + "  nextId: "
+							+ cs.getData().getNextID());
 					cs.addUser(new User(username, password, cs.getData().getNextID()), this);
 				} else {
-					//If the Message recieved was not an instance of Verification Messages
+					// If the Message recieved was not an instance of Verification Messages
 					System.out.println("Exception: Expecting an instanceof VerificationMessage!");
 				}
 			}
@@ -96,23 +98,24 @@ public class ServerThread extends Thread {
 			System.out.println("ioe in run: " + ioe.getMessage());
 		}
 	}
-	
+
 	public void sendStringMessage(ChatMessage message) {
-		//Send out a StringMessage to the user
+		// Send out a StringMessage to the user
 		try {
-			StringMessage sMessage = new StringMessage(cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage());
+			StringMessage sMessage = new StringMessage(
+					cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage());
 			oos.writeObject(sMessage);
 			oos.flush();
 		} catch (IOException ioe) {
 			cs.removeServerThread(this);
 			System.out.println("ioe: " + ioe.getMessage());
 			running = false;
-			
+
 		}
 	}
-	
+
 	public void sendStringMessage(String message) {
-		//Send out a StringMessage to the user
+		// Send out a StringMessage to the user
 		try {
 			StringMessage sMessage = new StringMessage(message);
 			oos.writeObject(sMessage);
@@ -121,22 +124,21 @@ public class ServerThread extends Thread {
 			cs.removeServerThread(this);
 			System.out.println("ioe: " + ioe.getMessage());
 			running = false;
-			
+
 		}
 	}
-		
 
-	//Handles consistently listening for chatMessages from client
+	// Handles consistently listening for chatMessages from client
 	public void run() {
 		login();
 		try {
-			
-			while(running) {
-				Message message = (Message)ois.readObject();
-				//Log the received Message
+
+			while (running) {
+				Message message = (Message) ois.readObject();
+				// Log the received Message
 				Log.recieved(message);
-				
-				if(message instanceof ChatMessage) {					
+
+				if (message instanceof ChatMessage) {
 					cs.sendMessageToAllClients(message);
 				} else if (message instanceof CommandMessage) {
 					cs.receiveCommand((CommandMessage) message, this);
@@ -147,7 +149,7 @@ public class ServerThread extends Thread {
 		} catch (IOException ioe) {
 			System.out.println("ioe in run: " + ioe.getMessage());
 		} catch (ConcurrentModificationException cme) {
-			
+
 		}
 	}
 }

@@ -1,35 +1,34 @@
 package objects.message;
 
-
 //As of right now meant to only be sent from the Client to the Server
-public class CommandMessage extends Message{
-	
+public class CommandMessage extends Message {
+
 	private static final long serialVersionUID = 1L;
-	
-	//The UserID
+
+	// The UserID
 	private int uid;
-	
-	//The Message
+
+	// The Message
 	private String command;
-	
-	//Constructor for ChatMessages (Just sets variables)
+
+	// Constructor for ChatMessages (Just sets variables)
 	public CommandMessage(int uid, String message) {
 		this.uid = uid;
 		this.command = message;
 	}
-	
-	//Getter for Message
+
+	// Getter for Message
 	public String getCommand() {
 		return this.command;
 	}
-	
-	//Getter for Uid
+
+	// Getter for Uid
 	public int getUid() {
 		return uid;
 	}
-	
-	public String toString() { 
-	    return "CommandMessage| uid: " + this.uid + ", Command: " + this.command;
-	    
-	} 
+
+	public String toString() {
+		return "CommandMessage| uid: " + this.uid + ", Command: " + this.command;
+
+	}
 }

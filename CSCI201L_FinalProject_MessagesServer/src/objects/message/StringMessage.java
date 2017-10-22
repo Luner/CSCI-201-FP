@@ -20,5 +20,5 @@ public class StringMessage extends Message{
 	
 	public String toString() { 
 	    return "StringMessage| message: " + this.message;
-	} 
+	}
 }

@@ -1,4 +1,5 @@
 package server;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,21 +15,21 @@ import objects.message.Message;
 import parsing.DataWriter;
 import parsing.Parser;
 
-public class Server extends Thread{
+public class Server extends Thread {
 
 	private Vector<ServerThread> serverThreads;
 	private DataContainer data;
 	Scanner scan;
 	DataWriter dataWriter;
-	
-	public Server(DataContainer data, int port)  {
-		
+
+	public Server(DataContainer data, int port) {
+
 		dataWriter = new DataWriter();
 		this.data = data;
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
 		this.start();
-		
+
 		try {
 			ss = new ServerSocket(port);
 			while (true) {
@@ -54,11 +55,11 @@ public class Server extends Thread{
 	public void removeServerThread(ServerThread st) {
 		serverThreads.remove(st);
 	}
-	
+
 	public void addUser(User user, ServerThread st) {
-		if(data.addUser(user)) {
+		if (data.addUser(user)) {
 			System.out.println(data);
-			dataWriter.saveData(data, "JSON/Input.json");	
+			dataWriter.saveData(data, "JSON/Input.json");
 			st.sendStringMessage("User Created, Please Log In");
 			Log.log("User Created");
 		} else {
@@ -69,42 +70,42 @@ public class Server extends Thread{
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
 		for (ServerThread st : serverThreads) {
-			st.sendStringMessage((ChatMessage)message);
+			st.sendStringMessage((ChatMessage) message);
 		}
 	}
-	
+
 	public DataContainer getData() {
 		return data;
 	}
-	
+
 	public void receiveCommand(CommandMessage message, ServerThread st) {
-		if(data.isAdmin(message.getUid())) {
+		if (data.isAdmin(message.getUid())) {
 			String command = message.getCommand();
 			Log.command(message);
-			if(command.startsWith("/add bot")) {
+			if (command.startsWith("/add bot")) {
 				Integer number = Integer.parseInt(command.substring(9, 10));
 				new BotClient("localhost", 6789, number);
-			} else if(command.equals("/gamemode 0")) {
+			} else if (command.equals("/gamemode 0")) {
 				st.sendStringMessage("You are now in Creative Mode!");
-			} else if(command.equals("/gamemode 1")) {
+			} else if (command.equals("/gamemode 1")) {
 				st.sendStringMessage("You are now in Survival Mode!");
-			} else if(command.equals("/help")) {
-				st.sendStringMessage("--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
+			} else if (command.equals("/help")) {
+				st.sendStringMessage(
+						"--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
 			}
 		}
 	}
-	
-	
-	//Allows for Server Commands
+
+	// Allows for Server Commands
 	public void run() {
 		scan = new Scanner(System.in);
-		while(true) {
+		while (true) {
 			String command = scan.nextLine();
-			if(command.equals("add bot")) {
+			if (command.equals("add bot")) {
 				System.out.println("What Bot Number would you like?");
 				Integer number = Integer.parseInt(scan.nextLine());
 				new BotClient("localhost", 6789, number);
-			} else if(command.equals("help")) {
+			} else if (command.equals("help")) {
 				System.out.println("\n\n///HELP MENU///");
 				System.out.println("Commands: ");
 				System.out.println("\"add bot\" - begins the add bot process");
@@ -115,12 +116,3 @@ public class Server extends Thread{
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
