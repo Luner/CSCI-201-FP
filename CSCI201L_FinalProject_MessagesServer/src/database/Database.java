@@ -10,7 +10,6 @@ public class Database {
 	private String username;
 	private String password;
 	private String database;
-	@SuppressWarnings("unused")
 	private Connection conn;
 
 	public Database(String username, String password, String database) {
@@ -39,5 +38,9 @@ public class Database {
 		} catch (SQLException sqle) {
 			System.out.println("Failed to create user with username: " + username);
 		}
+	}
+
+	public void loginUser(String uername, String password) {
+		
 	}
 }
