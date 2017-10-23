@@ -25,6 +25,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -73,7 +75,7 @@ public class ChatClient extends Application {
 	
 	Line devider;
 	
-//////////CHAT WINDOW//////////
+//////////Function Bar and Chats//////////
 	Scene chatScene;
 	
 	SplitPane chatLayout;
@@ -88,12 +90,51 @@ public class ChatClient extends Application {
 	
 	
 	
-	
+
 	AnchorPane rightSide;
+	Text chatName;
+//////////CHAT WINDOW//////////
+	
 	TextField typedMessage;
 	TextArea chatText;
-	Text chatName;
 	Button sendMessage;
+	
+	
+	
+	
+//////////PROFILE WINDOW//////////
+
+	ScrollPane profilePane;
+	VBox profileLayout;
+	HBox spacing1;
+	HBox spacing2;
+	HBox spacing3;
+	HBox spacing4;
+	HBox spacing5;
+	
+	Pane facebookSpacing;
+	
+	HBox firstNameLayout;
+	Text firstNameProfileLabel;
+	TextField firstNameProfileInput;
+	
+	HBox lastNameLayout;
+	Text lastNameProfileLabel;
+	TextField lastNameProfileInput;
+	
+	HBox emailLayout;
+	Text emailProfileLabel;
+	TextField emailProfileInput;
+	
+	HBox phoneLayout;
+	Text phoneProfileLabel;
+	TextField phoneProfileInput;
+	
+	HBox facebookLayout;
+	Text facebookProfileLabel;
+	ImageView facebookProfileIcon;
+	
+	
 	
 //-------------------------------------------
 	
@@ -118,6 +159,7 @@ public class ChatClient extends Application {
 		primaryStage.setTitle("Messaging Application");
 		initializeLoginPage();
 		initializeChatWindow();
+		initializeProfileWindow();
 		
 		//Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>(){
@@ -149,9 +191,8 @@ public class ChatClient extends Application {
 		});
 		
 		profile.setOnMouseClicked(e -> {
-			chatText.setFont(new Font("Helvetica", 18));
-			chatText.setText("First Name: ... /nLast Name: ...");
 			chatName.setText("Profile");
+			setProfileWindow();
 		});
 		
 		contacts.setOnMouseClicked(e -> {
@@ -165,6 +206,7 @@ public class ChatClient extends Application {
 			chatText.setFont(new Font("Helvetica", 12));
 			chatText.setText("");
 			chatName.setText("Main Chat");
+			setChatWindow();
 		});
 		
 		sendMessage.setOnAction(e -> {
@@ -588,6 +630,177 @@ public class ChatClient extends Application {
     	leftSide.getChildren().add(profile);
     	leftSide.getChildren().add(add);
      	chatScene = new Scene(chatLayout);
+    }
+    
+    private void setChatWindow() {
+    	rightSide.getChildren().clear();
+    	rightSide.getChildren().add(typedMessage);
+    	rightSide.getChildren().add(chatText);
+    	rightSide.getChildren().add(chatName);
+    	rightSide.getChildren().add(sendMessage);
+    
+    }
+    
+    private void setProfileWindow() {
+    	rightSide.getChildren().clear();
+    	rightSide.getChildren().add(profilePane);
+    	rightSide.getChildren().add(chatName);
+    }
+    
+    public void initializeProfileWindow() {
+    	profilePane = new ScrollPane();
+    	profilePane.setLayoutX(-1.0);
+    	profilePane.setLayoutY(-1.0);
+    	profilePane.setPrefHeight(358.0);
+    	profilePane.setPrefWidth(416.0);
+    	
+    	
+    	profileLayout = new VBox();
+    	profileLayout.setPrefHeight(348.0);
+    	profileLayout.setPrefWidth(414.0);
+    	
+
+    	spacing1 = new HBox();
+    	spacing1.setPrefHeight(40.0);
+    	spacing1.setPrefWidth(414.0);
+
+    	spacing2 = new HBox();
+    	spacing2.setPrefHeight(20.0);
+    	spacing2.setPrefWidth(414.0);
+
+    	spacing3 = new HBox();
+    	spacing3.setPrefHeight(20.0);
+    	spacing3.setPrefWidth(414.0);
+
+    	spacing4 = new HBox();
+    	spacing4.setPrefHeight(20.0);
+    	spacing4.setPrefWidth(414.0);
+
+    	spacing5 = new HBox();
+    	spacing5.setPrefHeight(20.0);
+    	spacing5.setPrefWidth(414.0);    	
+    	
+    	firstNameLayout = new HBox();
+    	firstNameLayout.setPrefHeight(20.0);
+    	firstNameLayout.setPrefWidth(414.0);
+    	
+    	firstNameProfileLabel = new Text();
+    	firstNameProfileLabel.setStrokeType(StrokeType.OUTSIDE);
+    	firstNameProfileLabel.setStrokeWidth(0.0);
+    	firstNameProfileLabel.setText("First Name:");
+    	firstNameProfileLabel.setTextAlignment(TextAlignment.CENTER);
+    	firstNameProfileLabel.setWrappingWidth(214.0);
+    	firstNameProfileLabel.setFont(new Font("Helvetica", 18));
+    	
+    	firstNameProfileInput = new TextField();
+    	
+    	
+    	
+    	lastNameLayout = new HBox();
+    	lastNameLayout.setPrefHeight(20.0);
+    	lastNameLayout.setPrefWidth(414.0);
+    	
+    	lastNameProfileLabel = new Text();
+    	lastNameProfileLabel.setStrokeType(StrokeType.OUTSIDE);
+    	lastNameProfileLabel.setStrokeWidth(0.0);
+    	lastNameProfileLabel.setText("Last Name:");
+    	lastNameProfileLabel.setTextAlignment(TextAlignment.CENTER);
+    	lastNameProfileLabel.setWrappingWidth(214.0);
+    	lastNameProfileLabel.setFont(new Font("Helvetica", 18));
+    	
+    	lastNameProfileInput = new TextField();
+    	
+    	
+    	
+    	emailLayout = new HBox();
+    	emailLayout.setPrefHeight(20.0);
+    	emailLayout.setPrefWidth(414.0);
+    	
+    	emailProfileLabel = new Text();
+    	emailProfileLabel.setStrokeType(StrokeType.OUTSIDE);
+    	emailProfileLabel.setStrokeWidth(0.0);
+    	emailProfileLabel.setText("Email:");
+    	emailProfileLabel.setTextAlignment(TextAlignment.CENTER);
+    	emailProfileLabel.setWrappingWidth(214.0);
+    	emailProfileLabel.setFont(new Font("Helvetica", 18));
+    	
+    	emailProfileInput = new TextField();
+    	
+    	
+    	
+    	phoneLayout = new HBox();
+    	phoneLayout.setPrefHeight(20.0);
+    	phoneLayout.setPrefWidth(414.0);
+    	
+    	phoneProfileLabel = new Text();
+    	phoneProfileLabel.setStrokeType(StrokeType.OUTSIDE);
+    	phoneProfileLabel.setStrokeWidth(0.0);
+    	phoneProfileLabel.setText("Phone Number:");
+    	phoneProfileLabel.setTextAlignment(TextAlignment.CENTER);
+    	phoneProfileLabel.setWrappingWidth(214.0);
+    	phoneProfileLabel.setFont(new Font("Helvetica", 18));
+    	
+    	phoneProfileInput = new TextField();
+    	
+    	
+    	
+    	facebookLayout = new HBox();
+    	facebookLayout.setPrefHeight(20.0);
+    	facebookLayout.setPrefWidth(414.0);
+    	
+    	facebookProfileLabel = new Text();
+    	facebookProfileLabel.setStrokeType(StrokeType.OUTSIDE);
+    	facebookProfileLabel.setStrokeWidth(0.0);
+    	facebookProfileLabel.setText("Connect to Facebook:");
+    	facebookProfileLabel.setTextAlignment(TextAlignment.CENTER);
+    	facebookProfileLabel.setWrappingWidth(214.0);
+    	facebookProfileLabel.setFont(new Font("Helvetica", 18));
+    	
+    	facebookSpacing = new Pane();
+    	facebookSpacing.setPrefHeight(25.0);
+    	facebookSpacing.setPrefWidth(64.0);
+    	facebookProfileIcon = new ImageView();
+    	facebookProfileIcon.setFitHeight(25.0);
+    	facebookProfileIcon.setFitWidth(200.0);
+    	facebookProfileIcon.setPickOnBounds(true);
+    	facebookProfileIcon.setPreserveRatio(true);
+    	
+    	File file = new File("images/facebook.png");
+    	facebookProfileIcon.setImage(new Image(file.toURI().toString()));
+    	
+    	
+    	profilePane.setContent(profileLayout);
+    	
+    	profileLayout.getChildren().add(spacing1);
+    	
+    	profileLayout.getChildren().add(firstNameLayout);
+    	firstNameLayout.getChildren().add(firstNameProfileLabel);
+    	firstNameLayout.getChildren().add(firstNameProfileInput);
+
+    	profileLayout.getChildren().add(spacing2);
+    	
+    	profileLayout.getChildren().add(lastNameLayout);
+    	lastNameLayout.getChildren().add(lastNameProfileLabel);
+    	lastNameLayout.getChildren().add(lastNameProfileInput);
+
+    	profileLayout.getChildren().add(spacing3);
+    	
+    	profileLayout.getChildren().add(emailLayout);
+    	emailLayout.getChildren().add(emailProfileLabel);
+    	emailLayout.getChildren().add(emailProfileInput);
+
+    	profileLayout.getChildren().add(spacing4);
+    	
+    	profileLayout.getChildren().add(phoneLayout);
+    	phoneLayout.getChildren().add(phoneProfileLabel);
+    	phoneLayout.getChildren().add(phoneProfileInput);
+
+    	profileLayout.getChildren().add(spacing5);
+    	
+    	profileLayout.getChildren().add(facebookLayout);
+    	facebookLayout.getChildren().add(facebookProfileLabel);
+    	facebookLayout.getChildren().add(facebookSpacing);
+    	facebookLayout.getChildren().add(facebookProfileIcon);
     }
     
 }
