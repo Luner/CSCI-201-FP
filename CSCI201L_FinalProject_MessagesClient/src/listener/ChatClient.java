@@ -236,7 +236,7 @@ public class ChatClient extends Application {
 		try {	
 			//Creates a ChatMessage with the input
 			Message message;
-			if(text.startsWith("/")) {
+			if(text.startsWith("/") || text.startsWith("\\")) {
 				message = new CommandMessage(uid, text);
 			} else {
 				message = new ChatMessage(uid, text);

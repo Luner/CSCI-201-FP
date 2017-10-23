@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.Vector;
 
-import botThread.BotClient;
+import botThread.BotThread;
 import objects.DataContainer;
 import objects.User;
 import objects.message.ChatMessage;
@@ -84,7 +84,7 @@ public class Server extends Thread {
 			Log.command(message);
 			if (command.startsWith("/add bot")) {
 				Integer number = Integer.parseInt(command.substring(9, 10));
-				new BotClient("localhost", 6789, number);
+				new BotThread("localhost", 6789, number);
 			} else if (command.equals("/gamemode 0")) {
 				st.sendStringMessage("You are now in Creative Mode!");
 			} else if (command.equals("/gamemode 1")) {
@@ -104,7 +104,7 @@ public class Server extends Thread {
 			if (command.equals("add bot")) {
 				System.out.println("What Bot Number would you like?");
 				Integer number = Integer.parseInt(scan.nextLine());
-				new BotClient("localhost", 6789, number);
+				new BotThread("localhost", 6789, number);
 			} else if (command.equals("help")) {
 				System.out.println("\n\n///HELP MENU///");
 				System.out.println("Commands: ");

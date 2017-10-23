@@ -12,7 +12,7 @@ import objects.message.Message;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
-public class BotClient extends Thread {
+public class BotThread extends Thread {
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -22,7 +22,7 @@ public class BotClient extends Thread {
 	Random rand;
 	Integer amount;
 
-	public BotClient(String hostname, int port, Integer amount) {
+	public BotThread(String hostname, int port, Integer amount) {
 		rand = new Random();
 		s = null;
 		scan = null;
