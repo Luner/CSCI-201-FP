@@ -3,6 +3,10 @@ SERVER
 - Add Useful Commands for debugging
   - remove user userid command
   - show user (username) -> uid command
+- Server JavaFX console
+	- Start
+	- Restart
+	- Choose port
 
 Client
 - Create a better window for chat messages
@@ -16,3 +20,5 @@ SERVER/CLIENT
  	- all commands will be run directly on server;
 - Multiple Chats for users where user chooses to join a chat
 	- Eventually include chat histories
+
+Work with dataBases
