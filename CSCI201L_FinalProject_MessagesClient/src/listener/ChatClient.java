@@ -484,6 +484,8 @@ public class ChatClient extends Application {
     	chatText.setLayoutY(33.0);
     	chatText.setPrefHeight(336.0);
     	chatText.setPrefWidth(416.0);
+    	chatText.setEditable(false);
+    	chatText.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
     
     	chatName = new Text();
     	chatName.setLayoutX(2.0);
