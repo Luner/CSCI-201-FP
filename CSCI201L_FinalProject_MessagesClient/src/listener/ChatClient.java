@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
@@ -27,6 +29,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
@@ -66,17 +69,17 @@ public class ChatClient extends Application {
 	
 	Line devider;
 	
-	
-
-	
 //////////CHAT WINDOW//////////
+	Scene chatScene;
 	
-	//22 messages on screen
-	int onScreen = 0;
+	SplitPane chatLayout;
+	AnchorPane leftSide;
+	AnchorPane rightSide;
+	
+	TextField typedMessage;
+	TextArea chatText;
+	Text chatName;
 	Button sendMessage;
-	TextField chatText;
-	Scene chat;
-	VBox chatLayout;
 	
 //-------------------------------------------
 	
@@ -94,16 +97,20 @@ public class ChatClient extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		//10.14.112.127
-		setUpChatClient("localhost", 6789);
+		
+		if(!setUpChatClient("localhost", 6789)) {
+			System.out.println("Failed to initialize object Streams");
+		}
+		primaryStage.setTitle("Messaging Application");
 		initializeLoginPage();
+		initializeChatWindow();
 		
 		//Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>(){
-
 			@Override
 			public void handle(ActionEvent event) {
 				if(login(username.getText(), password.getText())) {
-					primaryStage.setScene(chat);
+					primaryStage.setScene(chatScene);
 					Thread th = new Thread(task);
 					th.setDaemon(true);
 					th.start();
@@ -115,29 +122,16 @@ public class ChatClient extends Application {
 			createUser(username.getText(), password.getText());
 		});
 		
-		primaryStage.setTitle("Messaging Application");
-		
-		//SetUp chat
-		chatText = new TextField();
-		sendMessage = new Button();
-		sendMessage.setText("Send Message");
 		sendMessage.setOnAction(e -> {
-			send(chatText.getText());
-			chatText.setText("");
+			send(typedMessage.getText());
+			typedMessage.setText("");
 		});
 		
-
-		chatLayout = new VBox();
-		chatLayout.getChildren().add(chatText);	
-		chatLayout.getChildren().add(sendMessage);
-		
-		
-		chat = new Scene(chatLayout, 600, 400);
 		primaryStage.setScene(loginScene);
 		primaryStage.show();
 	}
 	
-	private void setUpChatClient(String hostname, int port) {
+	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
 		try {
@@ -149,7 +143,7 @@ public class ChatClient extends Application {
 			  objects to and from the server*/
 			oos = new ObjectOutputStream(s.getOutputStream()); 
 			ois = new ObjectInputStream(s.getInputStream());
-
+			return true;
 			
 			//Calls the sender, which handles the sending of data from the client to the server
 			//sender();
@@ -157,6 +151,7 @@ public class ChatClient extends Application {
 		} catch (IOException ioe) {
 			System.out.println("ioe in set-up: " + ioe.getMessage());
 		}	
+		return false;
 	}
 	
 	public void createUser(String username, String password) {
@@ -271,12 +266,12 @@ public class ChatClient extends Application {
         					Platform.runLater(new Runnable() {
         		    	        @Override
         		    	        public void run() {
-        		    	        	if(onScreen == 22) {
-        		    	        		chatLayout.getChildren().remove(2);
+        		    	        	if(chatText.getText().length() > 0) {
+        		    	        		chatText.setText(chatText.getText() + "\n" + ((StringMessage) message).getMessage());
+        		    	        		chatText.setScrollTop(Double.MAX_VALUE);
         		    	        	} else {
-        		    	        		onScreen++;
+        		    	        		chatText.setText(((StringMessage) message).getMessage());
         		    	        	}
-        		    	        	chatLayout.getChildren().add(new Text(((StringMessage) message).getMessage()));
         		    	        }
         		    	      });
         					
@@ -404,6 +399,70 @@ public class ChatClient extends Application {
 
 		loginScene = new Scene(loginLayout);
 	}
+    
+    public void initializeChatWindow() {
+   
+    	
+    	SplitPane chatLayout = new SplitPane();
+    	chatLayout.setDividerPositions(0.3);
+    	chatLayout.setMaxHeight(Double.NEGATIVE_INFINITY);
+    	chatLayout.setMaxWidth(Double.NEGATIVE_INFINITY);
+    	chatLayout.setMinHeight(Double.NEGATIVE_INFINITY);
+    	chatLayout.setMinWidth(Double.NEGATIVE_INFINITY);
+    	chatLayout.setPrefHeight(400.0);
+    	chatLayout.setPrefWidth(600.0);
+
+    	leftSide = new AnchorPane();
+    	leftSide.setMinHeight(0.0);
+    	leftSide.setMinWidth(0.0);
+    	leftSide.setPrefHeight(160.0);
+    	leftSide.setPrefWidth(100.0);
+    	
+    	rightSide = new AnchorPane();
+    	rightSide.setMinHeight(0.0);
+    	rightSide.setMinWidth(0.0);
+    	leftSide.setPrefHeight(160.0);
+    	rightSide.setPrefWidth(100.0);
+    	
+    	chatLayout.getItems().add(leftSide);
+    	chatLayout.getItems().add(rightSide);
+    	
+    	typedMessage = new TextField();
+    	typedMessage.setLayoutX(2.0);
+    	typedMessage.setLayoutY(371.0);
+    	typedMessage.setPrefHeight(25.0);
+    	typedMessage.setPrefWidth(345.0);
+    	
+    	
+    	chatText = new TextArea();
+    	chatText.setLayoutX(2.0);
+    	chatText.setLayoutY(33.0);
+    	chatText.setPrefHeight(336.0);
+    	chatText.setPrefWidth(416.0);
+    
+    	chatName = new Text();
+    	chatName.setLayoutX(2.0);
+    	chatName.setLayoutY(21.0);
+    	chatName.setStrokeType(StrokeType.OUTSIDE);
+    	chatName.setStrokeWidth(0.0);
+    	chatName.setTextAlignment(TextAlignment.CENTER);
+    	chatName.setWrappingWidth(416.0);
+    	
+    	sendMessage = new Button();
+    	sendMessage.setLayoutX(350.0);
+    	sendMessage.setLayoutY(371.0);
+    	sendMessage.setMnemonicParsing(false);
+    	sendMessage.setPrefHeight(25.0);
+    	sendMessage.setPrefWidth(62.0);
+    	sendMessage.setText("Send");
+
+    	rightSide.getChildren().add(typedMessage);
+    	rightSide.getChildren().add(chatText);
+    	rightSide.getChildren().add(chatName);
+    	rightSide.getChildren().add(sendMessage);
+    	
+     	chatScene = new Scene(chatLayout);
+    }
     
 }
 	
