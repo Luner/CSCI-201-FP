@@ -1,5 +1,6 @@
 package listener;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,9 +18,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -74,8 +78,18 @@ public class ChatClient extends Application {
 	
 	SplitPane chatLayout;
 	AnchorPane leftSide;
-	AnchorPane rightSide;
+	ScrollPane chatsPane;
+	VBox chatsButtonsLayout;
+	ArrayList<Button> chatsButtons;
+	ImageView settings;
+	ImageView contacts;
+	ImageView profile;
+	ImageView add;
 	
+	
+	
+	
+	AnchorPane rightSide;
 	TextField typedMessage;
 	TextArea chatText;
 	Text chatName;
@@ -120,6 +134,37 @@ public class ChatClient extends Application {
 		
 		createUser.setOnAction(e -> {
 			createUser(username.getText(), password.getText());
+		});
+		
+		add.setOnMouseClicked(e -> {
+			chatText.setFont(new Font("Helvetica", 18));
+			chatText.setText("Enter the users you want to add");
+			chatName.setText("Creating Chat");
+		});
+		
+		settings.setOnMouseClicked(e -> {
+			chatText.setFont(new Font("Helvetica", 18));
+			chatText.setText("What color would you like");
+			chatName.setText("Settings");
+		});
+		
+		profile.setOnMouseClicked(e -> {
+			chatText.setFont(new Font("Helvetica", 18));
+			chatText.setText("First Name: ... /nLast Name: ...");
+			chatName.setText("Profile");
+		});
+		
+		contacts.setOnMouseClicked(e -> {
+			chatText.setFont(new Font("Helvetica", 18));
+			chatText.setText("Bot1 \nBot2");
+			chatName.setText("Contacts");
+		});
+		
+		chatsButtons.get(0).setOnAction(e -> {
+
+			chatText.setFont(new Font("Helvetica", 12));
+			chatText.setText("");
+			chatName.setText("Main Chat");
 		});
 		
 		sendMessage.setOnAction(e -> {
@@ -447,6 +492,8 @@ public class ChatClient extends Application {
     	chatName.setStrokeWidth(0.0);
     	chatName.setTextAlignment(TextAlignment.CENTER);
     	chatName.setWrappingWidth(416.0);
+    	chatName.setFont(new Font("Helvetica", 20));
+		chatName.setText("Main Chat");
     	
     	sendMessage = new Button();
     	sendMessage.setLayoutX(350.0);
@@ -460,7 +507,84 @@ public class ChatClient extends Application {
     	rightSide.getChildren().add(chatText);
     	rightSide.getChildren().add(chatName);
     	rightSide.getChildren().add(sendMessage);
+    
+    	chatsPane = new ScrollPane();
+    	chatsPane.setPrefHeight(367.0);
+    	chatsPane.setPrefWidth(176.0);
     	
+    	chatsButtonsLayout = new VBox();
+    	chatsButtonsLayout.setPrefHeight(365.0);
+    	chatsButtonsLayout.setPrefWidth(174.0);
+    	
+    	chatsButtons = new ArrayList<Button>();
+    	
+    	chatsButtons.add(new Button());
+    	chatsButtons.get(0).setMnemonicParsing(false);
+    	chatsButtons.get(0).setPrefHeight(50.0);
+    	chatsButtons.get(0).setPrefWidth(174.0);
+    	chatsButtons.get(0).setText("Open Chat");  	
+    	
+    	
+        
+    	settings = new ImageView();
+    	settings.setFitHeight(30.0);
+    	settings.setFitWidth(40.0);
+    	settings.setLayoutX(6.0);
+    	settings.setLayoutY(368.0);
+    	settings.setPickOnBounds(true);
+    	settings.setPreserveRatio(true);
+    	
+    	File file = new File("images/Settings.png");
+    	settings.setImage(new Image(file.toURI().toString()));
+    	
+    	
+    	contacts = new ImageView();
+    	contacts.setFitHeight(30.0);
+    	contacts.setFitWidth(40.0);
+    	contacts.setLayoutX(50.0);
+    	contacts.setLayoutY(368.0);
+    	contacts.setPickOnBounds(true);
+    	contacts.setPreserveRatio(true);
+    	
+    	file = new File("images/contacts.png");
+    	contacts.setImage(new Image(file.toURI().toString()));
+    	
+    	
+    	profile = new ImageView();
+    	profile.setFitHeight(30.0);
+    	profile.setFitWidth(40.0);
+    	profile.setLayoutX(94.0);
+    	profile.setLayoutY(368.0);
+    	profile.setPickOnBounds(true);
+    	profile.setPreserveRatio(true);
+    	
+    	file = new File("images/profile.png");
+    	profile.setImage(new Image(file.toURI().toString()));
+    	
+    	
+    	add = new ImageView();
+    	add.setFitHeight(30.0);
+    	add.setFitWidth(40.0);
+    	add.setLayoutX(139.0);
+    	add.setLayoutY(368.0);
+    	add.setPickOnBounds(true);
+    	add.setPreserveRatio(true);
+    	
+    	file = new File("images/add.png");
+    	add.setImage(new Image(file.toURI().toString()));
+    	
+    	
+    	chatsPane.setContent(chatsButtonsLayout);
+    	for(Button button : chatsButtons) {
+    		chatsButtonsLayout.getChildren().add(button);
+    	}
+    	
+    	
+    	leftSide.getChildren().add(chatsPane);
+    	leftSide.getChildren().add(settings);
+    	leftSide.getChildren().add(contacts);
+    	leftSide.getChildren().add(profile);
+    	leftSide.getChildren().add(add);
      	chatScene = new Scene(chatLayout);
     }
     
