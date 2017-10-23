@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import botThread.BotThread;
+import database.Database;
 import objects.DataContainer;
 import objects.User;
 import objects.message.ChatMessage;
@@ -21,6 +22,7 @@ public class Server extends Thread {
 	private DataContainer data;
 	Scanner scan;
 	DataWriter dataWriter;
+	private Database db;
 
 	public Server(DataContainer data, int port) {
 

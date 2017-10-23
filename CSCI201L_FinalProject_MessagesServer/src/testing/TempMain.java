@@ -30,7 +30,6 @@ public class TempMain {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
 		}
-
 		new Server(data, 6789);
 	}
 
