@@ -12,3 +12,6 @@ https://docs.google.com/document/d/1m0r2SM_np8ssuFfxEp2LEBoICXgIjSmk_wgs9GOAd6I/
 
 ## Detailed Design
 https://docs.google.com/document/d/1M7J_AllLMBSD4hVqzwjgjCG8a205czhMc0e0Mj9fQi4/
+
+## Other Notes (regarding project requirements)
+https://docs.google.com/document/d/1Cet2LoFJennYTA2sHRzlYTEWrZRf4reA9awHcOQfIIA/
