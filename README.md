@@ -1,5 +1,5 @@
-# CSCI-201-FP
-Final Project for CSCI-201
+# CSCI-201 Final Project
+This repository will serve as our CSCI-201 final project Eclipse workspace.
 
 ## Project Proposal
 https://docs.google.com/document/d/1hYJ1lZPp1DbsV3ik214rDbVdWRV8ZqRSl3UydNMi8Wc/
