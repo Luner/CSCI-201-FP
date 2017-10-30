@@ -16,5 +16,8 @@ https://docs.google.com/document/d/1M7J_AllLMBSD4hVqzwjgjCG8a205czhMc0e0Mj9fQi4/
 ## Testing Document
 https://docs.google.com/document/d/1GOQr0og_DiYKPP5RJ18pf4mXM6f6x5Mx9veuPNiiGpI/
 
+## Deployment Document
+https://docs.google.com/document/d/1z6RWEwwBSQqdSRSMrkCT01RCETPsFrRDqtt0KE_gtXE/
+
 ## Other Notes (regarding project requirements)
 https://docs.google.com/document/d/1Cet2LoFJennYTA2sHRzlYTEWrZRf4reA9awHcOQfIIA/
