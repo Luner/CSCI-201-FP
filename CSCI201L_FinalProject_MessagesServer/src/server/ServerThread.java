@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ConcurrentModificationException;
 
+import database.Database;
 import objects.User;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
@@ -23,11 +24,14 @@ public class ServerThread extends Thread {
 	String username;
 	int uid;
 	boolean running = true;
+	@SuppressWarnings("unused")
+	private Database db;
 
-	public ServerThread(Socket s, Server cs) {
+	public ServerThread(Socket s, Server cs, Database db) {
 		// Initialize the Object streams for the socket
 		try {
 			this.cs = cs;
+			this.db = db;
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 			this.start();

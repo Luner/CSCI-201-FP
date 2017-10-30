@@ -53,8 +53,17 @@ public class Database {
 			rs.next();
 			return rs.getInt(1);
 		} catch (SQLException sqle) {
-			System.out.println("Failed to create user with username: " + username);
+			System.out.println("Failed to login user with username: " + username);
 			return -1;
+		}
+	}
+
+	public void updateUser(int userID) {
+		String updateQuery = "UPDATE users";
+		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+
+		} catch (SQLException sqle) {
+			System.out.println("Failed to update user with UID: " + userID);
 		}
 	}
 }

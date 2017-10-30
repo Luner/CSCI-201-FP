@@ -14,7 +14,6 @@ import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.Message;
 import parsing.DataWriter;
-import parsing.Parser;
 
 public class Server extends Thread {
 
@@ -38,7 +37,7 @@ public class Server extends Thread {
 				System.out.println("waiting for connection...");
 				Socket s = ss.accept();
 				System.out.println("connection from " + s.getInetAddress());
-				ServerThread st = new ServerThread(s, this);
+				ServerThread st = new ServerThread(s, this, db);
 				serverThreads.add(st);
 			}
 		} catch (IOException ioe) {
