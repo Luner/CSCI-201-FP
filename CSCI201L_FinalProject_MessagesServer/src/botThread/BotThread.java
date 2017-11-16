@@ -74,7 +74,7 @@ public class BotThread extends Thread {
 					}
 
 					// Creates a ChatMessage with the input
-					Message message = new ChatMessage(uid, line);
+					Message message = new ChatMessage(uid, 0, line);
 
 					// Sends the ChatMessage Object to the server
 					oos.writeObject(message);

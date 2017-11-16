@@ -7,19 +7,27 @@ public class ChatMessage extends Message {
 
 	// The UserID
 	private int uid;
+	
+	// Chat ID
+	private int cid;
 
 	// The Message
 	private String message;
 
 	// Constructor for ChatMessages (Just sets variables)
-	public ChatMessage(int uid, String message) {
+	public ChatMessage(int uid, int cid, String message) {
 		this.uid = uid;
+		this.cid = cid;
 		this.message = message;
 	}
 
 	// Getter for Message
 	public String getMessage() {
 		return this.message;
+	}
+	
+	public int getCid() {
+		return cid;
 	}
 
 	// Getter for Uid

@@ -23,14 +23,13 @@ public class TempMain {
 		while (!gotFile) {
 			gotFile = getFilename();
 		}
-
 		data = parser.getData();
 //		 Print all users
 		for (User user : data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
 		}
-//		new Server(data, 6789);
+		new Server(data, 6789);
 	}
 
 	// method that queries for an input file and parses it
@@ -38,7 +37,8 @@ public class TempMain {
 		try {
 			System.out.println("What is the name of the input file?");
 			// parser = new Parser(br.readLine());
-			parser = new Parser("JSON/Input.json");
+
+			parser = new Parser("JSON/ExampleInput.json");
 
 			// check we something in the data
 			if (parser.getData() == null) {

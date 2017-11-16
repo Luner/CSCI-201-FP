@@ -6,11 +6,15 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Vector;
 
 import botThread.BotThread;
 import database.Database;
+import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
 import objects.message.ChatMessage;
@@ -20,17 +24,31 @@ import parsing.DataWriter;
 
 public class Server extends Thread {
 
+	private Map<Integer, Conversation> conversationMap;
 	private Vector<ServerThread> serverThreads;
 	private DataContainer data;
 	Scanner scan;
 	DataWriter dataWriter;
 	private Database db;
+	
+	//Currently Hardcoded
+	
+	public void InitializeConversations(ArrayList<User> users) {
+		conversationMap = new HashMap<Integer, Conversation>();
+		conversationMap.put(new Integer(0), new Conversation(users));
+		//conversationMap.put(new Integer(1), new Conversation());
+		//conversationMap.put(new Integer(2), new Conversation());
+		//conversationMap.put(new Integer(3), new Conversation());
+		//conversationMap.put(new Integer(4), new Conversation());
+	}
 
-	public Server(int port) {
-		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
+	public Server(DataContainer data, int port) {
+		this.data = data;
+		InitializeConversations(data.getUsers());
+		//db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
 		dataWriter = new DataWriter();
-		ArrayList<User> foundUsers = db.getUsers();
-		this.data = new DataContainer(foundUsers);
+		//ArrayList<User> foundUsers = db.getUsers();
+		//this.data = new DataContainer(foundUsers);
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
 		this.start();
@@ -74,8 +92,9 @@ public class Server extends Thread {
 
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
-		for (ServerThread st : serverThreads) {
-			st.sendStringMessage((ChatMessage) message);
+		if(message instanceof ChatMessage){
+			Conversation conversation = conversationMap.get(((ChatMessage) message).getCid());
+			conversation.sendMessageToConversation(message);
 		}
 	}
 
@@ -118,6 +137,14 @@ public class Server extends Thread {
 			} else {
 				System.out.println("SERVER :: INVALID COMMAND");
 			}
+		}
+	}
+
+	public void logOn(User user, ServerThread st) {
+		user.logOn(st);
+		for (Entry<Integer, Conversation> entry : conversationMap.entrySet())
+		{
+		   entry.getValue().addActiveUser(user);
 		}
 	}
 }

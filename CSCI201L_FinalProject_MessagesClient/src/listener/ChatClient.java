@@ -37,6 +37,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import objects.Conversation;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.CreateUserMessage;
@@ -143,6 +144,7 @@ public class ChatClient extends Application {
 	private ObjectOutputStream oos;
 	private int uid;
 	private Socket s;
+	private int selectedChat;
 	
 	public static void main(String [] args) {
 		launch(args);
@@ -202,7 +204,6 @@ public class ChatClient extends Application {
 		});
 		
 		chatsButtons.get(0).setOnAction(e -> {
-
 			chatText.setFont(new Font("Helvetica", 12));
 			chatText.setText("");
 			chatName.setText("Main Chat");
@@ -221,6 +222,7 @@ public class ChatClient extends Application {
 	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
+		selectedChat = 0; // default
 		try {
 			//Attempts to connect to the Socket
 			s = new Socket(hostname, port);	
@@ -318,7 +320,7 @@ public class ChatClient extends Application {
 			if(text.startsWith("/") || text.startsWith("\\")) {
 				message = new CommandMessage(uid, text);
 			} else {
-				message = new ChatMessage(uid, text);
+				message = new ChatMessage(uid, selectedChat, text);
 			}
 			
 			//Sends the ChatMessage Object to the server
@@ -338,6 +340,8 @@ public class ChatClient extends Application {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
+	
+	
 	
 	
 	Task<Void> task = new Task<Void>() {
@@ -362,8 +366,10 @@ public class ChatClient extends Application {
         		    	        }
         		    	      });
         					
+        				} else if(message instanceof conversationsMessage) {
+        					
         				} else {
-        					System.out.println("Exception in ChatClient run(): Expecting StringMessage");
+        					System.out.println("Exception in ChatClient run(): Expecting certain messages");
         				}
         				
         			}

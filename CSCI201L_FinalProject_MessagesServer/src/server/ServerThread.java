@@ -55,6 +55,9 @@ public class ServerThread extends Thread {
 								((VerificationMessage) message).getPassword())) {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
+							
+							//Tell Server User logged on
+							cs.logOn(user, this);
 
 							// Send VerificationResponseMessage
 							VerificationResponseMessage response;
@@ -103,6 +106,18 @@ public class ServerThread extends Thread {
 		}
 	}
 
+	public void sendMessage(Message message) {
+		try {
+			oos.writeObject(message);
+			oos.flush();
+		} catch (IOException ioe) {
+			cs.removeServerThread(this);
+			System.out.println("ioe: " + ioe.getMessage());
+			running = false;
+
+		}
+	}
+	
 	public void sendStringMessage(ChatMessage message) {
 		// Send out a StringMessage to the user
 		try {
