@@ -25,12 +25,12 @@ public class TempMain {
 		}
 
 		data = parser.getData();
-		// Print all users
+//		 Print all users
 		for (User user : data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
 		}
-		new Server(data, 6789);
+//		new Server(data, 6789);
 	}
 
 	// method that queries for an input file and parses it

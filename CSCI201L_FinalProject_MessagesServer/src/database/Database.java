@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import objects.User;
 
 public class Database {
 	private String hostname;
@@ -29,8 +32,8 @@ public class Database {
 
 	public boolean connect() {
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database + "?useSSL=false&user="
-					+ username + "&password=" + password);
+			conn = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database
+					+ "?useSSL=false&user=" + username + "&password=" + password);
 			return true;
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -39,7 +42,7 @@ public class Database {
 	}
 
 	public void registerUser(String username, String password) {
-		String insertQuery = "INSERT users SET Username = ? , Password = ?";
+		String insertQuery = "INSERT users SET Username = ? , UserPassword = ?";
 		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
 			ps.setString(1, username);
 			ps.setString(2, password);
@@ -50,7 +53,7 @@ public class Database {
 	}
 
 	public int loginUser(String username, String password) {
-		String selectQuery = "SELECT ID FROM users WHERE Username = ? , Password = ?";
+		String selectQuery = "SELECT UserID FROM CSCI201.users WHERE Username = ? AND UserPassword = ?";
 		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
 			ps.setString(1, username);
 			ps.setString(2, password);
@@ -60,6 +63,24 @@ public class Database {
 		} catch (SQLException sqle) {
 			System.out.println("Failed to login user with username: " + username);
 			return -1;
+		}
+	}
+
+	public ArrayList<User> getUsers() {
+		String selectQuery = "SELECT * FROM CSCI201.users";
+		ArrayList<User> foundUsers = new ArrayList<User>();
+		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int userID = rs.getInt(1);
+				String username = rs.getString(2);
+				String password = rs.getString(6);
+				foundUsers.add(new User(username, password, userID));
+			}
+			return foundUsers;
+		} catch (SQLException sqle) {
+			System.out.println("Failed to fetch users.");
+			return foundUsers;
 		}
 	}
 

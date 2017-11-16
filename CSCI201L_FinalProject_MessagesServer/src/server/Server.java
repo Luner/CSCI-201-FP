@@ -3,6 +3,9 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -23,13 +26,13 @@ public class Server extends Thread {
 	DataWriter dataWriter;
 	private Database db;
 
-	public Server(DataContainer data, int port) {
-
+	public Server(int port) {
+		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
 		dataWriter = new DataWriter();
-		this.data = data;
+		ArrayList<User> foundUsers = db.getUsers();
+		this.data = new DataContainer(foundUsers);
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
-		db = new Database("localhost",3306,"demo","demo","CSCI201");
 		this.start();
 
 		try {
