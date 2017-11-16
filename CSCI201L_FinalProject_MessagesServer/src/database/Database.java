@@ -7,28 +7,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
-	private String hostname;
-	private int port;
 	private String username;
 	private String password;
 	private String database;
+	private String instance;
 	private Connection conn;
 
-	public Database(String hostname, int port, String username, String password, String database) {
-		this.hostname = hostname;
-		this.port = port;
+	public Database(String username, String password, String database, String instance) {
 		this.username = username;
 		this.password = password;
 		this.database = database;
+		this.instance = instance;
+		if (connect()) {
+			System.out.println("Database initialized.");
+		} else {
+			System.out.println("Database connection error.");
+		}
 	}
 
 	public boolean connect() {
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database + "?user="
-					+ username + "&password=" + password);
+			String jdbcUrl = String.format("jdbc:mysql://google/%s?cloudSqlInstance=%s&"
+					+ "socketFactory=com.google.cloud.sql.mysql.SocketFactory", database, instance);
+			conn = DriverManager.getConnection(jdbcUrl, username, password);
 			return true;
 		} catch (SQLException sqle) {
-			System.out.println("Unable to connect to database with specified paramters.");
 			return false;
 		}
 	}

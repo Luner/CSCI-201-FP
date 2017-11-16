@@ -29,6 +29,7 @@ public class Server extends Thread {
 		this.data = data;
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
+		db = new Database("demo","demo","CSCI201","csci-201-fp:us-west1:csci201");
 		this.start();
 
 		try {
