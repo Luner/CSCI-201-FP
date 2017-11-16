@@ -21,3 +21,6 @@ https://docs.google.com/document/d/1z6RWEwwBSQqdSRSMrkCT01RCETPsFrRDqtt0KE_gtXE/
 
 ## Other Notes (regarding project requirements)
 https://docs.google.com/document/d/1Cet2LoFJennYTA2sHRzlYTEWrZRf4reA9awHcOQfIIA/
+
+## Presentation
+https://www.icloud.com/keynote/0niAYYzrQwi7-NbXtf09nPTRg#CSCI-201_FP
