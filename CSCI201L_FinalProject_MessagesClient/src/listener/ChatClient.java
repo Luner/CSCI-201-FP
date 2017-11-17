@@ -39,7 +39,6 @@ import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
-import objects.message.StringMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 

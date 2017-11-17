@@ -32,8 +32,9 @@ public class Server extends Thread {
 	DataWriter dataWriter;
 	private Database db;
 	
-	//Currently Hardcoded
+	//////////Currently Hardcoded/////////////
 	
+	//Guest Must have Uid of 0
 	public void InitializeConversations(ArrayList<User> users) {
 		
 		//The list users is the list of users who are a part of the conversation
@@ -54,6 +55,8 @@ public class Server extends Thread {
 		conversationMap.put(new Integer(11), new Conversation(userNoGuest, new Integer(11)));
 	}
 	
+	
+	//Removes Guest from list
 	public ArrayList<User> getUsersWithoutGuest(ArrayList<User> users){
 		ArrayList<User> result = new ArrayList<User>(users);
 		User guest = null;
@@ -68,6 +71,8 @@ public class Server extends Thread {
 		}
 		return result;
 	}
+	
+	////////HardCoded End/////////
 
 	public Server(DataContainer data, int port) {
 		this.data = data;
