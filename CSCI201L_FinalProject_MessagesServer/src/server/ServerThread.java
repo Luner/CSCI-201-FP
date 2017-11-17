@@ -11,6 +11,7 @@ import database.Database;
 import objects.ClientConversation;
 import objects.User;
 import objects.message.ChatMessage;
+import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateUserMessage;
@@ -126,11 +127,11 @@ public class ServerThread extends Thread {
 		}
 	}
 	
-	public void sendStringMessage(ChatMessage message) {
+	public void sendChatStringMessage(ChatMessage message) {
 		// Send out a StringMessage to the user
 		try {
-			StringMessage sMessage = new StringMessage(
-					cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage());
+			ChatStringMessage sMessage = new ChatStringMessage(
+					cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage(), message.getCid());
 			oos.writeObject(sMessage);
 			oos.flush();
 		} catch (IOException ioe) {

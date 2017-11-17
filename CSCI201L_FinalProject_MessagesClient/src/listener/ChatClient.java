@@ -33,6 +33,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.ClientConversation;
+import objects.message.ChatStringMessage;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
@@ -131,7 +132,7 @@ public class ChatClient extends Application {
 	private ObjectOutputStream oos;
 	private int uid;
 	private Socket s;
-	private int selectedChat;
+	private Integer selectedChat;
 	private Map<Button, Integer> chatsMap;
 
 	public static void main(String[] args) {
@@ -190,18 +191,6 @@ public class ChatClient extends Application {
 			chatText.setText("Bot1 \nBot2");
 			chatName.setText("Contacts");
 		});
-
-		for(int i = 0; i < chatsButtons.size(); i++) { 
-			Button button = chatsButtons.get(i);
-			button.setOnAction(e -> {
-				chatText.setFont(new Font("Helvetica", 12));
-				chatText.setText("");
-				chatName.setText("Main Chat");
-				setChatWindow();
-				selectedChat = chatsMap.get(button);
-		});
-		
-		}
 
 		sendMessage.setOnAction(e -> {
 			send(typedMessage.getText());
@@ -346,16 +335,18 @@ public class ChatClient extends Application {
 					Object message = ois.readObject();
 
 					// checks if the object is an instance of StringMessage and prints out
-					if (message instanceof StringMessage) {
+					if (message instanceof ChatStringMessage) {
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
-								if (chatText.getText().length() > 0) {
-									chatText.setText(
-											chatText.getText() + "\n" + ((StringMessage) message).getMessage());
-									chatText.setScrollTop(Double.MAX_VALUE);
-								} else {
-									chatText.setText(((StringMessage) message).getMessage());
+								if (((ChatStringMessage) message).getChatID().equals(selectedChat)) {
+									if (chatText.getText().length() > 0) {
+										chatText.setText(
+												chatText.getText() + "\n" + ((ChatStringMessage) message).getMessage());
+										chatText.setScrollTop(Double.MAX_VALUE);
+									} else {
+										chatText.setText(((ChatStringMessage) message).getMessage());
+									}
 								}
 							}
 						});
@@ -363,18 +354,33 @@ public class ChatClient extends Application {
 					} else if (message instanceof ConversationsMessage) {
 						ArrayList<ClientConversation> chats = ((ConversationsMessage) message).getChats();
 						updateClientChats(chats);
-						
+
 						Platform.runLater(new Runnable() {
-						    @Override
-						    public void run() {
-						    	chatsButtonsLayout.getChildren().clear();
-								for(Button button : chatsButtons) {
+							@Override
+							public void run() {
+								chatsButtonsLayout.getChildren().clear();
+								for (Button button : chatsButtons) {
 									chatsButtonsLayout.getChildren().add(button);
 								}
-						    }
+								for (Integer i = 0; i < chatsButtons.size(); i++) {
+									Button button = chatsButtons.get(i);
+									button.setOnAction(e -> {
+										chatText.setFont(new Font("Helvetica", 12));
+										chatText.setText("");
+										int chatid = chatsMap.get(button);
+										if(chatid == 0) {
+											chatName.setText("Open Chat");
+										} else {
+											chatName.setText("Chat: " + chatid);
+										}
+										selectedChat = chatid;
+										
+										setChatWindow();
+									});
+								}
+							}
 						});
-						
-						
+
 					} else {
 						System.out.println("Exception in ChatClient run(): Expecting certain messages");
 					}
@@ -389,6 +395,7 @@ public class ChatClient extends Application {
 			// Close the Socket and the Scanner
 			cleanUp();
 			return null;
+
 		}
 	};
 
@@ -544,7 +551,7 @@ public class ChatClient extends Application {
 		chatName.setTextAlignment(TextAlignment.CENTER);
 		chatName.setWrappingWidth(416.0);
 		chatName.setFont(new Font("Helvetica", 20));
-		chatName.setText("Main Chat");
+		chatName.setText("Open Chat");
 
 		sendMessage = new Button();
 		sendMessage.setLayoutX(350.0);
@@ -633,7 +640,7 @@ public class ChatClient extends Application {
 	}
 
 	private void updateClientChats(ArrayList<ClientConversation> chats) {
-		
+
 		chatsButtons.clear();
 
 		// Add New

@@ -26,7 +26,7 @@ public class Conversation {
 	
 	public void sendMessageToConversation(Message message) {
 		for(User user : activeUsers) {
-			user.getServerThread().sendStringMessage((ChatMessage) message);
+			user.getServerThread().sendChatStringMessage((ChatMessage) message);
 		}
 	}
 	
