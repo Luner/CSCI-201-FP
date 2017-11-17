@@ -2,16 +2,18 @@ package objects.message;
 
 import java.util.ArrayList;
 
-import objects.Conversation;
+import objects.ClientConversation;
 
-public class ConversationsMessage {
-	private ArrayList<Conversation> chats;
+public class ConversationsMessage extends Message{
+	private static final long serialVersionUID = 1L;
 	
-	public ConversationsMessage(ArrayList<Conversation> chats) {
+	private ArrayList<ClientConversation> chats;
+	
+	public ConversationsMessage(ArrayList<ClientConversation> chats) {
 		this.chats = chats;
 	}
 	
-	public ArrayList<Conversation> getChats(){
+	public ArrayList<ClientConversation> getChats(){
 		return chats;
 	}
 }

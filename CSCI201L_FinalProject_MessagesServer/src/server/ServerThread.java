@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
 import database.Database;
+import objects.ClientConversation;
 import objects.User;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
+import objects.message.ConversationsMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
 import objects.message.StringMessage;
@@ -58,6 +61,7 @@ public class ServerThread extends Thread {
 							
 							//Tell Server User logged on
 							cs.logOn(user, this);
+							
 
 							// Send VerificationResponseMessage
 							VerificationResponseMessage response;
@@ -68,6 +72,10 @@ public class ServerThread extends Thread {
 								oos.writeObject(response);
 								oos.flush();
 								Log.sent(response);
+								ArrayList<ClientConversation> list = cs.getUserConversations(user);
+								oos.writeObject(new ConversationsMessage(list));
+								oos.flush();
+								//Log it?
 								return;
 							} catch (IOException ioe) {
 								System.out.println("ioe: " + ioe.getMessage());

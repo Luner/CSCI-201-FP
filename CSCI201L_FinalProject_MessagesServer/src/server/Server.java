@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import botThread.BotThread;
 import database.Database;
+import objects.ClientConversation;
 import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
@@ -34,12 +35,22 @@ public class Server extends Thread {
 	//Currently Hardcoded
 	
 	public void InitializeConversations(ArrayList<User> users) {
+		
+		//The list users is the list of users who are a part of the conversation
+		//Mostly passing in all users for testing
 		conversationMap = new HashMap<Integer, Conversation>();
-		conversationMap.put(new Integer(0), new Conversation(users));
-		//conversationMap.put(new Integer(1), new Conversation());
-		//conversationMap.put(new Integer(2), new Conversation());
-		//conversationMap.put(new Integer(3), new Conversation());
-		//conversationMap.put(new Integer(4), new Conversation());
+		conversationMap.put(new Integer(0), new Conversation(users, new Integer(0)));
+		conversationMap.put(new Integer(1), new Conversation(new ArrayList<User>(), new Integer(1)));
+		conversationMap.put(new Integer(2), new Conversation(users, new Integer(2)));
+		conversationMap.put(new Integer(3), new Conversation(users, new Integer(3)));
+		conversationMap.put(new Integer(4), new Conversation(users, new Integer(4)));
+		conversationMap.put(new Integer(5), new Conversation(users, new Integer(5)));
+		conversationMap.put(new Integer(6), new Conversation(users, new Integer(6)));
+		conversationMap.put(new Integer(7), new Conversation(users, new Integer(7)));
+		conversationMap.put(new Integer(8), new Conversation(users, new Integer(8)));
+		conversationMap.put(new Integer(9), new Conversation(users, new Integer(9)));
+		conversationMap.put(new Integer(10), new Conversation(users, new Integer(10)));
+		conversationMap.put(new Integer(11), new Conversation(users, new Integer(11)));
 	}
 
 	public Server(DataContainer data, int port) {
@@ -146,5 +157,16 @@ public class Server extends Thread {
 		{
 		   entry.getValue().addActiveUser(user);
 		}
+	}
+	
+	public ArrayList<ClientConversation> getUserConversations(User user){
+		ArrayList<ClientConversation> result = new ArrayList<ClientConversation>();
+		for (Entry<Integer, Conversation> entry : conversationMap.entrySet())
+		{
+		   if(entry.getValue().hasUser(user)) {
+			   result.add(new ClientConversation(entry.getValue().getConversationID()));
+		   }
+		}
+		return result;
 	}
 }

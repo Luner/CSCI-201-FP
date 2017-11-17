@@ -11,7 +11,9 @@ public class Conversation {
 	ArrayList<User> users;
 	ArrayList<User> activeUsers;
 	
-	public Conversation(ArrayList<User> users) {
+	//requires list of users and a Conversation id
+	public Conversation(ArrayList<User> users, Integer conversationID) {
+		this.conversationID = conversationID;
 		this.users = users;
 		activeUsers = new ArrayList<User>();
 	}
@@ -32,7 +34,18 @@ public class Conversation {
 		return this.conversationID;
 	}
 	
-	public void addActiveUser(User user) {
-		activeUsers.add(user);
+	public boolean addActiveUser(User user) {
+		if(users.contains(user)) {
+			activeUsers.add(user);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasUser(User user) {
+		if(users.contains(user)) {
+			return true;
+		}
+		return false;
 	}
 }
