@@ -24,6 +24,12 @@
 		"type": "Bot"
 		},
 		{
+		"username": "Guest",
+		"password": "None",
+		"uid": "0",
+		"type": "Guest"
+		},
+		{
 		"username": "Jonathan",
 		"password": "computers",
 		"uid": "1",

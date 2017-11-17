@@ -164,6 +164,15 @@ public class ChatClient extends Application {
 				}
 			}
 		});
+		
+		guest.setOnAction(e -> {
+			if (login("Guest", "None")) {
+				primaryStage.setScene(chatScene);
+				Thread th = new Thread(task);
+				th.setDaemon(true);
+				th.start();
+			}
+		});
 
 		createUser.setOnAction(e -> {
 			createUser(username.getText(), password.getText());

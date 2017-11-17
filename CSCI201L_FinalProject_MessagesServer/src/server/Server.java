@@ -38,30 +38,46 @@ public class Server extends Thread {
 		
 		//The list users is the list of users who are a part of the conversation
 		//Mostly passing in all users for testing
+		ArrayList<User> userNoGuest = getUsersWithoutGuest(users);
 		conversationMap = new HashMap<Integer, Conversation>();
 		conversationMap.put(new Integer(0), new Conversation(users, new Integer(0)));
 		conversationMap.put(new Integer(1), new Conversation(new ArrayList<User>(), new Integer(1)));
-		conversationMap.put(new Integer(2), new Conversation(users, new Integer(2)));
-		conversationMap.put(new Integer(3), new Conversation(users, new Integer(3)));
-		conversationMap.put(new Integer(4), new Conversation(users, new Integer(4)));
-		conversationMap.put(new Integer(5), new Conversation(users, new Integer(5)));
-		conversationMap.put(new Integer(6), new Conversation(users, new Integer(6)));
-		conversationMap.put(new Integer(7), new Conversation(users, new Integer(7)));
-		conversationMap.put(new Integer(8), new Conversation(users, new Integer(8)));
-		conversationMap.put(new Integer(9), new Conversation(users, new Integer(9)));
-		conversationMap.put(new Integer(10), new Conversation(users, new Integer(10)));
-		conversationMap.put(new Integer(11), new Conversation(users, new Integer(11)));
+		conversationMap.put(new Integer(2), new Conversation(userNoGuest, new Integer(2)));
+		conversationMap.put(new Integer(3), new Conversation(userNoGuest, new Integer(3)));
+		conversationMap.put(new Integer(4), new Conversation(userNoGuest, new Integer(4)));
+		conversationMap.put(new Integer(5), new Conversation(userNoGuest, new Integer(5)));
+		conversationMap.put(new Integer(6), new Conversation(userNoGuest, new Integer(6)));
+		conversationMap.put(new Integer(7), new Conversation(userNoGuest, new Integer(7)));
+		conversationMap.put(new Integer(8), new Conversation(userNoGuest, new Integer(8)));
+		conversationMap.put(new Integer(9), new Conversation(userNoGuest, new Integer(9)));
+		conversationMap.put(new Integer(10), new Conversation(userNoGuest, new Integer(10)));
+		conversationMap.put(new Integer(11), new Conversation(userNoGuest, new Integer(11)));
+	}
+	
+	public ArrayList<User> getUsersWithoutGuest(ArrayList<User> users){
+		ArrayList<User> result = new ArrayList<User>(users);
+		User guest = null;
+		for(User user : result) {
+			if(user.getUid() == 0) {
+				guest = user;
+			}
+		}
+		
+		if(guest != null) {
+			result.remove(guest);
+		}
+		return result;
 	}
 
 	public Server(DataContainer data, int port) {
 		this.data = data;
-		InitializeConversations(data.getUsers());
 		//db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
 		dataWriter = new DataWriter();
 		//ArrayList<User> foundUsers = db.getUsers();
 		//this.data = new DataContainer(foundUsers);
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
+		InitializeConversations(data.getUsers());
 		this.start();
 
 		try {
