@@ -157,6 +157,7 @@ public class ChatClient extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (login(username.getText(), password.getText())) {
+					addFunctions();
 					primaryStage.setScene(chatScene);
 					Thread th = new Thread(task);
 					th.setDaemon(true);
@@ -631,12 +632,16 @@ public class ChatClient extends Application {
 
 		chatsPane.setContent(chatsButtonsLayout);
 
+
 		leftSide.getChildren().add(chatsPane);
+		chatScene = new Scene(chatLayout);
+	}
+	
+	private void addFunctions() {
 		leftSide.getChildren().add(settings);
 		leftSide.getChildren().add(contacts);
 		leftSide.getChildren().add(profile);
 		leftSide.getChildren().add(add);
-		chatScene = new Scene(chatLayout);
 	}
 
 	private void setChatWindow() {
