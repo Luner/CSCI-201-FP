@@ -41,6 +41,8 @@ public class Server extends Thread {
 		//Mostly passing in all users for testing
 		ArrayList<User> userNoGuest = getUsersWithoutGuest(users);
 		conversationMap = new HashMap<Integer, Conversation>();
+		
+		//ConversationMap.put([ConversationID], new Conversation([ArrayList of Users apart of Chat], [ConversationId])
 		conversationMap.put(new Integer(0), new Conversation(users, new Integer(0)));
 		conversationMap.put(new Integer(1), new Conversation(new ArrayList<User>(), new Integer(1)));
 		conversationMap.put(new Integer(2), new Conversation(userNoGuest, new Integer(2)));

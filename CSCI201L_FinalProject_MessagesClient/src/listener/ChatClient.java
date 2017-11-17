@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -126,6 +127,42 @@ public class ChatClient extends Application {
 
 	// -------------------------------------------
 
+	////////// PROFILE WINDOW//////////
+
+	ScrollPane addConversationPane;
+	VBox addConversationLayout;
+	HBox addConversationspacing1;
+	HBox addConversationspacing2;
+	HBox addConversationspacing3;
+	HBox addConversationspacing4;
+	HBox addConversationspacing5;
+	HBox addConversationspacing6;
+
+
+	HBox User1Layout;
+	Text User1Label;
+	TextField User1Input;
+
+	HBox User2Layout;
+	Text User2Label;
+	TextField User2Input;
+
+	HBox User3Layout;
+	Text User3Label;
+	TextField User3Input;
+
+	HBox User4Layout;
+	Text User4Label;
+	TextField User4Input;
+
+	HBox addConversationBox;
+	Text addConversationText;
+	
+	HBox addConversationButtonBox;
+	Button addConversationButton;
+
+	// -------------------------------------------
+
 	// SERVER CLIENT COMMUNICATION
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
@@ -150,6 +187,7 @@ public class ChatClient extends Application {
 		initializeLoginPage();
 		initializeChatWindow();
 		initializeProfileWindow();
+		initializeAddConversationWindow();
 
 		// Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>() {
@@ -164,7 +202,7 @@ public class ChatClient extends Application {
 				}
 			}
 		});
-		
+
 		guest.setOnAction(e -> {
 			if (login("Guest", "None")) {
 				primaryStage.setScene(chatScene);
@@ -180,8 +218,8 @@ public class ChatClient extends Application {
 
 		add.setOnMouseClicked(e -> {
 			chatText.setFont(new Font("Helvetica", 18));
-			chatText.setText("Enter the users you want to add");
 			chatName.setText("Creating Chat");
+			setAddConversationWindow();
 		});
 
 		settings.setOnMouseClicked(e -> {
@@ -377,13 +415,13 @@ public class ChatClient extends Application {
 										chatText.setFont(new Font("Helvetica", 12));
 										chatText.setText("");
 										int chatid = chatsMap.get(button);
-										if(chatid == 0) {
+										if (chatid == 0) {
 											chatName.setText("Open Chat");
 										} else {
 											chatName.setText("Chat: " + chatid);
 										}
 										selectedChat = chatid;
-										
+
 										setChatWindow();
 									});
 								}
@@ -631,11 +669,10 @@ public class ChatClient extends Application {
 
 		chatsPane.setContent(chatsButtonsLayout);
 
-
 		leftSide.getChildren().add(chatsPane);
 		chatScene = new Scene(chatLayout);
 	}
-	
+
 	private void addFunctions() {
 		leftSide.getChildren().add(settings);
 		leftSide.getChildren().add(contacts);
@@ -826,6 +863,166 @@ public class ChatClient extends Application {
 		facebookLayout.getChildren().add(facebookProfileLabel);
 		facebookLayout.getChildren().add(facebookSpacing);
 		facebookLayout.getChildren().add(facebookProfileIcon);
+	}
+	
+	private void setAddConversationWindow() {
+		rightSide.getChildren().clear();
+		rightSide.getChildren().add(addConversationPane);
+		rightSide.getChildren().add(chatName);
+	}
+
+	public void initializeAddConversationWindow() {
+		addConversationPane = new ScrollPane();
+		addConversationPane.setLayoutX(-1.0);
+		addConversationPane.setLayoutY(-1.0);
+		addConversationPane.setPrefHeight(358.0);
+		addConversationPane.setPrefWidth(416.0);
+
+		addConversationLayout = new VBox();
+		addConversationLayout.setPrefHeight(348.0);
+		addConversationLayout.setPrefWidth(414.0);
+
+		addConversationspacing1 = new HBox();
+		addConversationspacing1.setPrefHeight(40.0);
+		addConversationspacing1.setPrefWidth(414.0);
+
+		addConversationspacing2 = new HBox();
+		addConversationspacing2.setPrefHeight(20.0);
+		addConversationspacing2.setPrefWidth(414.0);
+
+		addConversationspacing3 = new HBox();
+		addConversationspacing3.setPrefHeight(20.0);
+		addConversationspacing3.setPrefWidth(414.0);
+
+		addConversationspacing4 = new HBox();
+		addConversationspacing4.setPrefHeight(20.0);
+		addConversationspacing4.setPrefWidth(414.0);
+
+		addConversationspacing5 = new HBox();
+		addConversationspacing5.setPrefHeight(20.0);
+		addConversationspacing5.setPrefWidth(414.0);
+
+		addConversationspacing6 = new HBox();
+		addConversationspacing6.setPrefHeight(20.0);
+		addConversationspacing6.setPrefWidth(414.0);
+
+		User1Layout = new HBox();
+		User1Layout.setPrefHeight(20.0);
+		User1Layout.setPrefWidth(414.0);
+
+		User1Label = new Text();
+		User1Label.setStrokeType(StrokeType.OUTSIDE);
+		User1Label.setStrokeWidth(0.0);
+		User1Label.setText("User1:");
+		User1Label.setTextAlignment(TextAlignment.CENTER);
+		User1Label.setWrappingWidth(214.0);
+		User1Label.setFont(new Font("Helvetica", 18));
+
+		User1Input = new TextField();
+
+		User2Layout = new HBox();
+		User2Layout.setPrefHeight(20.0);
+		User2Layout.setPrefWidth(414.0);
+
+		User2Label = new Text();
+		User2Label.setStrokeType(StrokeType.OUTSIDE);
+		User2Label.setStrokeWidth(0.0);
+		User2Label.setText("User2:");
+		User2Label.setTextAlignment(TextAlignment.CENTER);
+		User2Label.setWrappingWidth(214.0);
+		User2Label.setFont(new Font("Helvetica", 18));
+
+		User2Input = new TextField();
+
+		User3Layout = new HBox();
+		User3Layout.setPrefHeight(20.0);
+		User3Layout.setPrefWidth(414.0);
+		
+		User3Label = new Text();
+		User3Label.setStrokeType(StrokeType.OUTSIDE);
+		User3Label.setStrokeWidth(0.0);
+		User3Label.setText("User3:");
+		User3Label.setTextAlignment(TextAlignment.CENTER);
+		User3Label.setWrappingWidth(214.0);
+		User3Label.setFont(new Font("Helvetica", 18));
+
+		User3Input = new TextField();
+
+		User4Layout = new HBox();
+		User4Layout.setPrefHeight(20.0);
+		User4Layout.setPrefWidth(414.0);
+
+		User4Label = new Text();
+		User4Label.setStrokeType(StrokeType.OUTSIDE);
+		User4Label.setStrokeWidth(0.0);
+		User4Label.setText("User4:");
+		User4Label.setTextAlignment(TextAlignment.CENTER);
+		User4Label.setWrappingWidth(214.0);
+		User4Label.setFont(new Font("Helvetica", 18));
+
+		User4Input = new TextField();
+
+		addConversationBox = new HBox();
+		addConversationBox.setPrefHeight(20.0);
+		addConversationBox.setPrefWidth(414.0);
+
+		addConversationText = new Text();
+		addConversationText.setStrokeType(StrokeType.OUTSIDE);
+		addConversationText.setStrokeWidth(0.0);
+		addConversationText.setText("Create a chat with up to four other users");
+		addConversationText.setTextAlignment(TextAlignment.CENTER);
+		addConversationText.setWrappingWidth(412.0);
+		addConversationText.setFont(new Font("Helvetica", 12));
+
+		
+		addConversationButtonBox = new HBox();
+		addConversationButtonBox.setPrefHeight(20.0);
+		addConversationButtonBox.setPrefWidth(414.0);
+		
+		
+		//TODO
+		addConversationButton = new Button();
+		addConversationButton.setMnemonicParsing(false);
+		addConversationButton.setText("Create");
+		HBox.setMargin(addConversationButton, new Insets(0,0,0,175));
+
+		addConversationPane.setContent(addConversationLayout);
+
+		addConversationLayout.getChildren().add(addConversationspacing1);
+
+		addConversationLayout.getChildren().add(User1Layout);
+		User1Layout.getChildren().add(User1Label);
+		User1Layout.getChildren().add(User1Input);
+
+		addConversationLayout.getChildren().add(addConversationspacing2);
+
+		addConversationLayout.getChildren().add(User2Layout);
+		User2Layout.getChildren().add(User2Label);
+		User2Layout.getChildren().add(User2Input);
+
+		addConversationLayout.getChildren().add(addConversationspacing3);
+
+		addConversationLayout.getChildren().add(User3Layout);
+		User3Layout.getChildren().add(User3Label);
+		User3Layout.getChildren().add(User3Input);
+
+		addConversationLayout.getChildren().add(addConversationspacing4);
+
+		addConversationLayout.getChildren().add(User4Layout);
+		User4Layout.getChildren().add(User4Label);
+		User4Layout.getChildren().add(User4Input);
+
+		addConversationLayout.getChildren().add(addConversationspacing5);
+
+		addConversationLayout.getChildren().add(addConversationBox);
+		addConversationBox.getChildren().add(addConversationText);
+
+		addConversationLayout.getChildren().add(addConversationspacing6);
+		
+		addConversationLayout.getChildren().add(addConversationButtonBox);
+		addConversationButtonBox.getChildren().add(addConversationButton);
+		
+		
 	}
 
 }
