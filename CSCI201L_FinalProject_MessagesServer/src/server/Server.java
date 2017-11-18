@@ -31,18 +31,19 @@ public class Server extends Thread {
 	Scanner scan;
 	DataWriter dataWriter;
 	private Database db;
-	
-	//////////Currently Hardcoded/////////////
-	
-	//Guest Must have Uid of 0
+
+	////////// Currently Hardcoded/////////////
+
+	// Guest Must have Uid of 0
 	public void InitializeConversations(ArrayList<User> users) {
-		
-		//The list users is the list of users who are a part of the conversation
-		//Mostly passing in all users for testing
+
+		// The list users is the list of users who are a part of the conversation
+		// Mostly passing in all users for testing
 		ArrayList<User> userNoGuest = getUsersWithoutGuest(users);
 		conversationMap = new HashMap<Integer, Conversation>();
-		
-		//ConversationMap.put([ConversationID], new Conversation([ArrayList of Users apart of Chat], [ConversationId])
+
+		// ConversationMap.put([ConversationID], new Conversation([ArrayList of Users
+		// apart of Chat], [ConversationId])
 		conversationMap.put(new Integer(0), new Conversation(users, new Integer(0)));
 		conversationMap.put(new Integer(1), new Conversation(new ArrayList<User>(), new Integer(1)));
 		conversationMap.put(new Integer(2), new Conversation(userNoGuest, new Integer(2)));
@@ -56,32 +57,31 @@ public class Server extends Thread {
 		conversationMap.put(new Integer(10), new Conversation(userNoGuest, new Integer(10)));
 		conversationMap.put(new Integer(11), new Conversation(userNoGuest, new Integer(11)));
 	}
-	
-	
-	//Removes Guest from list
-	public ArrayList<User> getUsersWithoutGuest(ArrayList<User> users){
+
+	// Removes Guest from list
+	public ArrayList<User> getUsersWithoutGuest(ArrayList<User> users) {
 		ArrayList<User> result = new ArrayList<User>(users);
 		User guest = null;
-		for(User user : result) {
-			if(user.getUid() == 0) {
+		for (User user : result) {
+			if (user.getUid() == 0) {
 				guest = user;
 			}
 		}
-		
-		if(guest != null) {
+
+		if (guest != null) {
 			result.remove(guest);
 		}
 		return result;
 	}
-	
-	////////HardCoded End/////////
+
+	//////// HardCoded End/////////
 
 	public Server(DataContainer data, int port) {
 		this.data = data;
-		//db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
+		// db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
 		dataWriter = new DataWriter();
-		//ArrayList<User> foundUsers = db.getUsers();
-		//this.data = new DataContainer(foundUsers);
+		// ArrayList<User> foundUsers = db.getUsers();
+		// this.data = new DataContainer(foundUsers);
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
 		InitializeConversations(data.getUsers());
@@ -126,7 +126,7 @@ public class Server extends Thread {
 
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
-		if(message instanceof ChatMessage){
+		if (message instanceof ChatMessage) {
 			Conversation conversation = conversationMap.get(((ChatMessage) message).getCid());
 			conversation.sendMessageToConversation(message);
 		}
@@ -176,19 +176,17 @@ public class Server extends Thread {
 
 	public void logOn(User user, ServerThread st) {
 		user.logOn(st);
-		for (Entry<Integer, Conversation> entry : conversationMap.entrySet())
-		{
-		   entry.getValue().addActiveUser(user);
+		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
+			entry.getValue().addActiveUser(user);
 		}
 	}
-	
-	public ArrayList<ClientConversation> getUserConversations(User user){
+
+	public ArrayList<ClientConversation> getUserConversations(User user) {
 		ArrayList<ClientConversation> result = new ArrayList<ClientConversation>();
-		for (Entry<Integer, Conversation> entry : conversationMap.entrySet())
-		{
-		   if(entry.getValue().hasUser(user)) {
-			   result.add(new ClientConversation(entry.getValue().getConversationID()));
-		   }
+		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
+			if (entry.getValue().hasUser(user)) {
+				result.add(new ClientConversation(entry.getValue().getConversationID()));
+			}
 		}
 		return result;
 	}

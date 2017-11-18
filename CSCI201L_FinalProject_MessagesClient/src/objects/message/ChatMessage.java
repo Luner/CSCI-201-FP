@@ -7,7 +7,7 @@ public class ChatMessage extends Message {
 
 	// The UserID
 	private int uid;
-	
+
 	// Chat ID
 	private int cid;
 
@@ -25,7 +25,7 @@ public class ChatMessage extends Message {
 	public String getMessage() {
 		return this.message;
 	}
-	
+
 	public int getCid() {
 		return cid;
 	}

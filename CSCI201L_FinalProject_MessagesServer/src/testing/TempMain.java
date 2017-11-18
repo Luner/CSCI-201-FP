@@ -24,7 +24,7 @@ public class TempMain {
 			gotFile = getFilename();
 		}
 		data = parser.getData();
-//		 Print all users
+		// Print all users
 		for (User user : data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());

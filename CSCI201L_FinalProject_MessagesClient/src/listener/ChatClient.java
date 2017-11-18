@@ -138,7 +138,6 @@ public class ChatClient extends Application {
 	HBox addConversationspacing5;
 	HBox addConversationspacing6;
 
-
 	HBox User1Layout;
 	Text User1Label;
 	TextField User1Input;
@@ -157,7 +156,7 @@ public class ChatClient extends Application {
 
 	HBox addConversationBox;
 	Text addConversationText;
-	
+
 	HBox addConversationButtonBox;
 	Button addConversationButton;
 
@@ -864,7 +863,7 @@ public class ChatClient extends Application {
 		facebookLayout.getChildren().add(facebookSpacing);
 		facebookLayout.getChildren().add(facebookProfileIcon);
 	}
-	
+
 	private void setAddConversationWindow() {
 		rightSide.getChildren().clear();
 		rightSide.getChildren().add(addConversationPane);
@@ -937,7 +936,7 @@ public class ChatClient extends Application {
 		User3Layout = new HBox();
 		User3Layout.setPrefHeight(20.0);
 		User3Layout.setPrefWidth(414.0);
-		
+
 		User3Label = new Text();
 		User3Label.setStrokeType(StrokeType.OUTSIDE);
 		User3Label.setStrokeWidth(0.0);
@@ -974,17 +973,14 @@ public class ChatClient extends Application {
 		addConversationText.setWrappingWidth(412.0);
 		addConversationText.setFont(new Font("Helvetica", 12));
 
-		
 		addConversationButtonBox = new HBox();
 		addConversationButtonBox.setPrefHeight(20.0);
 		addConversationButtonBox.setPrefWidth(414.0);
-		
-		
-		//TODO
+
 		addConversationButton = new Button();
 		addConversationButton.setMnemonicParsing(false);
 		addConversationButton.setText("Create");
-		HBox.setMargin(addConversationButton, new Insets(0,0,0,175));
+		HBox.setMargin(addConversationButton, new Insets(0, 0, 0, 175));
 
 		addConversationPane.setContent(addConversationLayout);
 
@@ -1018,11 +1014,10 @@ public class ChatClient extends Application {
 		addConversationBox.getChildren().add(addConversationText);
 
 		addConversationLayout.getChildren().add(addConversationspacing6);
-		
+
 		addConversationLayout.getChildren().add(addConversationButtonBox);
 		addConversationButtonBox.getChildren().add(addConversationButton);
-		
-		
+
 	}
 
 }

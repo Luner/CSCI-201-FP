@@ -59,10 +59,9 @@ public class ServerThread extends Thread {
 								((VerificationMessage) message).getPassword())) {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
-							
-							//Tell Server User logged on
+
+							// Tell Server User logged on
 							cs.logOn(user, this);
-							
 
 							// Send VerificationResponseMessage
 							VerificationResponseMessage response;
@@ -76,7 +75,7 @@ public class ServerThread extends Thread {
 								ArrayList<ClientConversation> list = cs.getUserConversations(user);
 								oos.writeObject(new ConversationsMessage(list));
 								oos.flush();
-								//Log it?
+								// Log it?
 								return;
 							} catch (IOException ioe) {
 								System.out.println("ioe: " + ioe.getMessage());
@@ -126,12 +125,13 @@ public class ServerThread extends Thread {
 
 		}
 	}
-	
+
 	public void sendChatStringMessage(ChatMessage message) {
 		// Send out a StringMessage to the user
 		try {
 			ChatStringMessage sMessage = new ChatStringMessage(
-					cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage(), message.getCid());
+					cs.getData().findUserByUid(message.getUid()).getUsername() + ": " + message.getMessage(),
+					message.getCid());
 			oos.writeObject(sMessage);
 			oos.flush();
 		} catch (IOException ioe) {

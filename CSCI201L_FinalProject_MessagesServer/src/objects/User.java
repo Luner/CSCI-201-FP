@@ -14,9 +14,9 @@ public class User {
 	private int uid;
 
 	private String type;
-	
-	//ServerThread if user is active
-		private transient ServerThread st;
+
+	// ServerThread if user is active
+	private transient ServerThread st;
 
 	// Constructor: Initializes all variables
 	public User(String username, String password, int uid) {
@@ -24,15 +24,15 @@ public class User {
 		this.password = password;
 		this.uid = uid;
 	}
-	
+
 	public void logOn(ServerThread st) {
 		this.st = st;
 	}
-	
+
 	public void logOff() {
 		this.st = null;
 	}
-	
+
 	public ServerThread getServerThread() {
 		return this.st;
 	}
