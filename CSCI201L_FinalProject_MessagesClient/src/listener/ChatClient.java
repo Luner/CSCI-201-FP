@@ -50,6 +50,8 @@ import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
+import objects.message.ProfileMessage;
+import objects.message.SettingsMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
@@ -219,6 +221,8 @@ public class ChatClient extends Application {
 	private Socket s;
 	private Integer selectedChat;
 	private Map<Button, Integer> chatsMap;
+	private Color fontColor;
+	private Font chatFont;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -287,7 +291,6 @@ public class ChatClient extends Application {
 		});
 
 		add.setOnMouseClicked(e -> {
-			chatText.setFont(new Font("Helvetica", 18));
 			chatName.setText("Creating Chat");
 			setAddConversationWindow();
 		});
@@ -302,7 +305,6 @@ public class ChatClient extends Application {
 		});
 
 		contacts.setOnMouseClicked(e -> {
-			chatText.setFont(new Font("Helvetica", 18));
 			chatText.setText("Bot1 \nBot2");
 			chatName.setText("Contacts");
 		});
@@ -312,6 +314,14 @@ public class ChatClient extends Application {
 			typedMessage.setText("");
 		});
 		
+		settingsUpdateButton.setOnMouseClicked(e -> {
+			fontColor = settingsDetailSettingsColorComboBox.getValue();
+			chatFont = settingsDetailSettingsFontComboBox.getValue();
+			chatText.setStyle("-fx-text-fill: "+fontColor.toString().replace("0x","#")+";");
+			chatText.setFont(chatFont);
+			sendMessage(new SettingsMessage(uid,fontColor,chatFont));
+			System.out.println("Color changed to: "+fontColor.toString()+", Font changed to: "+chatFont.getFamily());
+		});
 		
 		primaryStage.setScene(loginScene);
 		primaryStage.show();
@@ -491,7 +501,6 @@ public class ChatClient extends Application {
 								for (Integer i = 0; i < chatsButtons.size(); i++) {
 									Button button = chatsButtons.get(i);
 									button.setOnAction(e -> {
-										chatText.setFont(new Font("Helvetica", 12));
 										chatText.setText("");
 										int chatid = chatsMap.get(button);
 										if (chatid == 0) {
@@ -507,7 +516,21 @@ public class ChatClient extends Application {
 							}
 						});
 
-					} else {
+					} else if(message instanceof SettingsMessage) {
+						SettingsMessage sm = (SettingsMessage)message;
+						fontColor = sm.getColor();
+						chatFont = sm.getFont();
+						chatText.setStyle("-fx-text-fill: "+fontColor.toString().replace("0x","#")+";");
+						chatText.setFont(chatFont);
+					
+					}else if(message instanceof ProfileMessage) {
+						ProfileMessage pm = (ProfileMessage)message;
+						firstNameProfileLabel.setText(pm.getFName());
+						lastNameProfileLabel.setText(pm.getLName());
+						emailProfileLabel.setText(pm.getEmail());
+						phoneProfileLabel.setText(pm.getPhone());
+					
+					}else{
 						System.out.println("Exception in ChatClient run(): Expecting certain messages");
 					}
 
@@ -630,6 +653,10 @@ public class ChatClient extends Application {
 	}
 
 	public void initializeChatWindow() {
+		
+		// default color and font
+		fontColor = Color.BLACK;
+		chatFont = Font.font("Arial");
 
 		SplitPane chatLayout = new SplitPane();
 		chatLayout.setDividerPositions(0.3);
@@ -667,7 +694,8 @@ public class ChatClient extends Application {
 		chatText.setPrefHeight(336.0);
 		chatText.setPrefWidth(416.0);
 		chatText.setEditable(false);
-		chatText.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+		chatText.setFont(chatFont);
+		chatText.setStyle("-fx-text-fill: "+fontColor.toString().replace("0x", "#")+";");
 
 		chatName = new Text();
 		chatName.setLayoutX(2.0);
@@ -749,7 +777,7 @@ public class ChatClient extends Application {
 		chatsPane.setContent(chatsButtonsLayout);
 
 		leftSide.getChildren().add(chatsPane);
-		chatScene = new Scene(chatLayout);
+		chatScene = new Scene(chatLayout);		
 	}
 
 	private void addFunctions() {
@@ -1208,40 +1236,87 @@ public class ChatClient extends Application {
     															Color.CRIMSON,
     															Color.ROYALBLUE);
     	
-    	settingsDetailSettingsColorComboBox.setCellFactory(new Callback<ListView<Color>, ListCell<Color> > (){
-    				@Override 
-    				public ListCell<Color> call(ListView<Color> p){
-    					return new ListCell<Color>() {
-    						private final Rectangle rectangle;
-    						{
-    							setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-    							rectangle = new Rectangle(180,26);
-    							
-    						}
-    						
-    						@Override
-    						protected void updateItem(Color item, boolean empty) {
-    							super.updateItem(item, empty);
-    							
-    							if(item==null || empty) {
-    								setGraphic(null);
-    							}else {
-    								rectangle.setFill(item);
-    								setGraphic(rectangle);
-    							}
-    						}
-    					};
-    				}
+    	settingsDetailSettingsColorComboBox.setButtonCell(new ListCell<Color>() {
+    		private final Rectangle rectangle;
+    		{
+    			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+    			rectangle = new Rectangle(180,26);
+    		}
+    		
+    		@Override
+    		protected void updateItem(Color item, boolean empty) {
+    			super.updateItem(item, empty);
+    			
+    			if(item==null || empty) {
+    				setGraphic(null);
+    			}else {
+    				rectangle.setFill(item);
+    				setGraphic(rectangle);
+    			}
+    		}			
+    		
     	});
+    	
+    	settingsDetailSettingsColorComboBox.setCellFactory(new Callback<ListView<Color>, ListCell<Color> > (){
+			@Override 
+			public ListCell<Color> call(ListView<Color> p){
+				return new ListCell<Color>() {
+					private final Rectangle rectangle;
+					{
+						setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+						rectangle = new Rectangle(180,26);
+						
+					}
+					
+					@Override
+					protected void updateItem(Color item, boolean empty) {
+						super.updateItem(item, empty);
+						
+						if(item==null || empty) {
+							setGraphic(null);
+						}else {
+							rectangle.setFill(item);
+							setGraphic(rectangle);
+						}
+					}
+				};
+			}
+    	});
+    	settingsDetailSettingsColorComboBox.setValue(fontColor);
     	
     	
     	settingsDetailSettingsFontComboBox = new ComboBox<Font>();
     	settingsDetailSettingsFontComboBox.setPrefHeight(31);
     	settingsDetailSettingsFontComboBox.setPrefWidth(221);
     	VBox.setMargin(settingsDetailSettingsFontComboBox, new Insets(4));
-    	settingsDetailSettingsFontComboBox.getItems().addAll(new Font("Arial",12),
-    														new Font("Helvetica",12),
-    														new Font("Times New Roman",12));
+    	settingsDetailSettingsFontComboBox.getItems().addAll(Font.font("Arial"),
+    														Font.font("Georgia"),
+    														Font.font("Tahoma"),
+    														Font.font("Lucida Bright"),
+    														Font.font("Verdana"));
+    	
+    	settingsDetailSettingsFontComboBox.setButtonCell(new ListCell<Font>() {
+    		private final Text text;
+			{
+				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+				text = new Text();
+			}
+			
+			@Override
+			protected void updateItem(Font item, boolean empty) {
+				super.updateItem(item, empty);
+				
+				if(item==null || empty) {
+					setGraphic(null);
+				}else {
+					text.setText(item.getName());
+					text.setFont(item);
+					setGraphic(text);
+				}
+			}
+    	});
+    	
+    	
     	settingsDetailSettingsFontComboBox.setCellFactory(new Callback<ListView<Font>, ListCell<Font> > (){
 			@Override 
 			public ListCell<Font> call(ListView<Font> p){
@@ -1266,9 +1341,9 @@ public class ChatClient extends Application {
 					}
 				};
 			}
-});
+    	});
+    	settingsDetailSettingsFontComboBox.setValue(chatFont);
     														
-    	
     	
     	settingsUpdateButton = new Button("Update Settings");
     	settingsUpdateButton.setLayoutX(152);
@@ -1310,5 +1385,13 @@ public class ChatClient extends Application {
     	rightSide.getChildren().clear();
     	rightSide.getChildren().add(settingsPane);
     }
-
+    
+    private void sendMessage(Message m) {
+    	try {
+    		oos.writeObject(m);
+    		oos.flush();
+    	}catch(IOException ioe) {
+    		System.out.println("ioe in sendMessage: "+ioe.getMessage());
+    	}
+    }
 }
