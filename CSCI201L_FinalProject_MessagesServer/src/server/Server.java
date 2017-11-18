@@ -3,8 +3,6 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,12 +75,15 @@ public class Server extends Thread {
 
 	//////// HardCoded End/////////
 
-	public Server(DataContainer data, int port) {
-		this.data = data;
-		// db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
+	public Server(int port) {
+		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
 		dataWriter = new DataWriter();
-		// ArrayList<User> foundUsers = db.getUsers();
-		// this.data = new DataContainer(foundUsers);
+		ArrayList<User> foundUsers = db.getUsers();
+		this.data = new DataContainer(foundUsers);
+		for (User user : this.data.getUsers()) {
+			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
+					+ user.getPassword());
+		}
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
 		InitializeConversations(data.getUsers());
@@ -91,20 +92,20 @@ public class Server extends Thread {
 		try {
 			ss = new ServerSocket(port);
 			while (true) {
-				System.out.println("waiting for connection...");
+				System.out.println("\nWaiting for connection...");
 				Socket s = ss.accept();
 				System.out.println("connection from " + s.getInetAddress());
 				ServerThread st = new ServerThread(s, this, db);
 				serverThreads.add(st);
 			}
 		} catch (IOException ioe) {
-			System.out.println("ioe: " + ioe.getMessage());
+			System.out.println("\nioe: " + ioe.getMessage());
 		} finally {
 			if (ss != null) {
 				try {
 					ss.close();
 				} catch (IOException ioe) {
-					System.out.println("ioe closing ss: " + ioe.getMessage());
+					System.out.println("\nioe closing ss: " + ioe.getMessage());
 				}
 			}
 		}
@@ -196,18 +197,18 @@ public class Server extends Thread {
 		System.out.println(" CS CALLED");
 		Integer chatID = conversationMap.size();
 		ArrayList<User> newUsers = new ArrayList<User>();
-		for(String username : message.getUsers()) {
-			System.out.println(username  + " CHECKED");
+		for (String username : message.getUsers()) {
+			System.out.println(username + " CHECKED");
 			User temp = data.findUserByUsername(username);
-			if(temp != null) {
+			if (temp != null) {
 				newUsers.add(temp);
 				System.out.println(temp.getUsername() + " ADDED");
 			}
-			
+
 		}
 		conversationMap.put(chatID, new Conversation(newUsers, chatID));
-		
-		for(ServerThread st : serverThreads) {
+
+		for (ServerThread st : serverThreads) {
 			st.updateConversation();
 		}
 	}

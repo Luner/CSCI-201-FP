@@ -24,9 +24,10 @@ public class Database {
 		this.password = password;
 		this.database = database;
 		if (connect()) {
-			System.out.println("Database initialized.");
+			System.out.println("Database initialized.\n");
 		} else {
 			System.out.println("Database connection error.");
+			System.exit(0);
 		}
 	}
 
@@ -36,7 +37,6 @@ public class Database {
 					+ "?useSSL=false&user=" + username + "&password=" + password);
 			return true;
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
 			return false;
 		}
 	}

@@ -17,12 +17,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -34,8 +35,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.ClientConversation;
-import objects.message.ChatStringMessage;
 import objects.message.ChatMessage;
+import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
@@ -63,7 +64,7 @@ public class ChatClient extends Application {
 
 	// TextFields
 	TextField username;
-	TextField password;
+	PasswordField password;
 	TextField guestUsername;
 
 	// Login Button
@@ -537,7 +538,7 @@ public class ChatClient extends Application {
 		username.setLayoutY(88.0);
 
 		// PasswordTextField
-		password = new TextField();
+		password = new PasswordField();
 		password.setLayoutX(265.0);
 		password.setLayoutY(129.0);
 
