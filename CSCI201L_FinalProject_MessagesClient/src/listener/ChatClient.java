@@ -170,6 +170,7 @@ public class ChatClient extends Application {
 	private Socket s;
 	private Integer selectedChat;
 	private Map<Button, Integer> chatsMap;
+	private String user_Username;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -194,6 +195,7 @@ public class ChatClient extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (login(username.getText(), password.getText())) {
+					user_Username = username.getText();
 					addFunctions();
 					primaryStage.setScene(chatScene);
 					Thread th = new Thread(task);
@@ -315,11 +317,11 @@ public class ChatClient extends Application {
 
 			// Creates a VerificationMessage with the username and password inputs
 			Message message = new VerificationMessage(username, password);
-
+			
 			// Sends the VerificationMessage Object to the server
 			oos.writeObject(message);
 			oos.flush();
-
+			
 			boolean response = verificationResponse();
 			return response;
 
@@ -383,7 +385,7 @@ public class ChatClient extends Application {
 	}
 
 	private void createConversation(String user1, String user2, String user3, String user4) {
-		Message message = new CreateConversationMessage(user1, user2, user3, user4);
+		Message message = new CreateConversationMessage(user_Username, user1, user2, user3, user4);
 		try {
 			oos.writeObject(message);
 			oos.flush();

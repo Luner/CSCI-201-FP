@@ -49,4 +49,13 @@ public class DataContainer {
 		Integer id = users.get(users.size() - 1).getUid() + 1;
 		return id;
 	}
+
+	public User findUserByUsername(String username) {
+		for (User user : users) {
+			if (user.getUsername().equals(username)) {
+				return user;
+			}
+		}
+		return null;
+	}
 }

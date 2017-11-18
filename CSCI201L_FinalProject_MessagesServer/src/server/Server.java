@@ -20,6 +20,7 @@ import objects.DataContainer;
 import objects.User;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
+import objects.message.CreateConversationMessage;
 import objects.message.Message;
 import parsing.DataWriter;
 
@@ -189,5 +190,25 @@ public class Server extends Thread {
 			}
 		}
 		return result;
+	}
+
+	public void createConversation(CreateConversationMessage message) {
+		System.out.println(" CS CALLED");
+		Integer chatID = conversationMap.size();
+		ArrayList<User> newUsers = new ArrayList<User>();
+		for(String username : message.getUsers()) {
+			System.out.println(username  + " CHECKED");
+			User temp = data.findUserByUsername(username);
+			if(temp != null) {
+				newUsers.add(temp);
+				System.out.println(temp.getUsername() + " ADDED");
+			}
+			
+		}
+		conversationMap.put(chatID, new Conversation(newUsers, chatID));
+		
+		for(ServerThread st : serverThreads) {
+			st.updateConversation();
+		}
 	}
 }
