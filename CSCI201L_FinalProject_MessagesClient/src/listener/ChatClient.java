@@ -17,25 +17,34 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import objects.ClientConversation;
-import objects.message.ChatStringMessage;
 import objects.message.ChatMessage;
+import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
@@ -160,6 +169,46 @@ public class ChatClient extends Application {
 
 	HBox addConversationButtonBox;
 	Button addConversationButton;
+	
+	
+	//////////Settings pane //////////////
+		
+	Pane settingsPane;
+	VBox settingsVBox;
+	
+	// title area
+	Pane settingsTitlePane;
+	Label settingsTitleLabel;
+	
+	Separator settingsTitleSeparator;
+	
+	// setting details
+	Pane settingsDetailPane;
+	
+	// account info
+	Label settingsInfoLabel;
+	HBox settingsInfoHBox;
+	VBox settingsInfoLabelVBox;
+	Label settingsInfoNewUsernameLabel;
+	Label settingsInfoNewPasswordLabel;
+	VBox settingsInfoFieldsVBox;
+	TextField settingsInfoNewUsernameField;
+	TextField settingsInfoNewPasswordField;
+	
+	// chat settings
+	Label settingsDetailSettingsLabel;
+	HBox settingsDetailSettingsHBox;
+	VBox settingsDetailSettingsLabelVBox;
+	Label settingsDetailSettingsColorLabel;
+	Label settingsDetailSettingsFontLabel;
+	VBox settingsDetailSettingsComboBoxVBox;
+	ComboBox<Color> settingsDetailSettingsColorComboBox;
+	ComboBox<Font> settingsDetailSettingsFontComboBox;
+	
+	// update button
+	Button settingsUpdateButton;
+
+	
 
 	// -------------------------------------------
 
@@ -188,6 +237,7 @@ public class ChatClient extends Application {
 		initializeChatWindow();
 		initializeProfileWindow();
 		initializeAddConversationWindow();
+		initializeSettingsPane();
 
 		// Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>() {
@@ -243,9 +293,7 @@ public class ChatClient extends Application {
 		});
 
 		settings.setOnMouseClicked(e -> {
-			chatText.setFont(new Font("Helvetica", 18));
-			chatText.setText("What color would you like");
-			chatName.setText("Settings");
+			setSettingsPane();
 		});
 
 		profile.setOnMouseClicked(e -> {
@@ -263,7 +311,8 @@ public class ChatClient extends Application {
 			send(typedMessage.getText());
 			typedMessage.setText("");
 		});
-
+		
+		
 		primaryStage.setScene(loginScene);
 		primaryStage.show();
 	}
@@ -1050,5 +1099,216 @@ public class ChatClient extends Application {
 		addConversationButtonBox.getChildren().add(addConversationButton);
 
 	}
+	
+
+
+
+    private void initializeSettingsPane() {
+    	// initialize components here
+    	settingsPane = new Pane();
+    	settingsPane.setPrefHeight(400);
+    	settingsPane.setPrefWidth(400);
+    	settingsVBox = new VBox();
+    	settingsVBox.setPrefHeight(400);
+    	settingsVBox.setPrefWidth(400);
+    	
+    	settingsTitlePane = new Pane();
+    	settingsTitlePane.setPrefHeight(27);
+    	settingsTitlePane.setPrefWidth(380);
+    	VBox.setMargin(settingsTitlePane,new Insets(10));
+    	settingsTitleLabel = new Label("Settings");
+    	settingsTitleLabel.setContentDisplay(ContentDisplay.CENTER);
+    	settingsTitleLabel.setLayoutX(161);
+    	settingsTitleLabel.setLayoutY(-3.0);
+    	settingsTitleLabel.setPrefHeight(35);
+    	settingsTitleLabel.setPrefWidth(70);
+    	settingsTitleLabel.setTextAlignment(TextAlignment.CENTER);
+    	settingsTitleLabel.setFont(new Font(18));
+    	
+    	settingsTitleSeparator = new Separator();
+    	settingsTitleSeparator.setPrefHeight(7);
+    	settingsTitleSeparator.setPrefWidth(400);
+    	
+    	settingsDetailPane = new Pane();
+    	settingsDetailPane.setPrefHeight(349);
+    	settingsDetailPane.setPrefWidth(400);
+    	
+    	settingsInfoLabel = new Label("Account Information");
+    	settingsInfoLabel.setLayoutX(152);
+    	settingsInfoLabel.setLayoutY(7);
+    	settingsInfoLabel.setPrefHeight(26);
+    	settingsInfoLabel.setPrefWidth(114);
+    	settingsInfoLabel.setTextAlignment(TextAlignment.CENTER);
+    	settingsInfoLabel.setUnderline(true);
+    	
+    	settingsInfoHBox = new HBox();
+    	settingsInfoHBox.setLayoutX(38);
+    	settingsInfoHBox.setLayoutY(46);
+    	settingsInfoHBox.setPrefHeight(53);
+    	settingsInfoHBox.setPrefWidth(324);
+    	
+    	settingsInfoLabelVBox = new VBox();
+    	settingsInfoLabelVBox.setPrefHeight(200);
+    	settingsInfoLabelVBox.setPrefHeight(100);
+    	
+    	settingsInfoNewUsernameLabel = new Label("New Username:");
+    	settingsInfoNewUsernameLabel.setPrefHeight(36);
+    	settingsInfoNewUsernameLabel.setPrefWidth(100);
+    	VBox.setMargin(settingsInfoNewUsernameLabel,new Insets(4));
+    	settingsInfoNewPasswordLabel = new Label("New Password:");
+    	settingsInfoNewPasswordLabel.setPrefHeight(36);
+    	settingsInfoNewPasswordLabel.setPrefWidth(100);
+    	VBox.setMargin(settingsInfoNewPasswordLabel, new Insets(4));
+    	
+    	settingsInfoFieldsVBox = new VBox();
+    	settingsInfoFieldsVBox.setPrefHeight(35);
+    	settingsInfoFieldsVBox.setPrefWidth(225);
+    	    	
+    	settingsInfoNewUsernameField = new TextField();
+    	VBox.setMargin(settingsInfoNewUsernameField, new Insets(4));
+    	
+    	settingsInfoNewPasswordField = new TextField();
+    	VBox.setMargin(settingsInfoNewPasswordField, new Insets(4));
+    	
+    	settingsDetailSettingsLabel = new Label("Chat Settings");
+    	settingsDetailSettingsLabel.setLayoutX(169);
+    	settingsDetailSettingsLabel.setLayoutY(118);
+    	settingsDetailSettingsLabel.setPrefHeight(26);
+    	settingsDetailSettingsLabel.setPrefWidth(81);
+    	settingsDetailSettingsLabel.setTextAlignment(TextAlignment.CENTER);
+    	settingsDetailSettingsLabel.setUnderline(true);
+    	
+    	settingsDetailSettingsHBox = new HBox();
+    	settingsDetailSettingsHBox.setLayoutX(38);
+    	settingsDetailSettingsHBox.setLayoutY(156);
+    	settingsDetailSettingsHBox.setPrefHeight(66);
+    	settingsDetailSettingsHBox.setPrefWidth(324);
+    	
+    	settingsDetailSettingsLabelVBox = new VBox();
+    	settingsDetailSettingsLabelVBox.setPrefHeight(82);
+    	settingsDetailSettingsLabelVBox.setPrefWidth(105);
+    	
+    	settingsDetailSettingsColorLabel = new Label("Text Color:");
+    	settingsDetailSettingsColorLabel.setPrefHeight(45);
+    	settingsDetailSettingsColorLabel.setPrefWidth(107);
+    	
+    	settingsDetailSettingsFontLabel = new Label("Font Style:");
+    	settingsDetailSettingsFontLabel.setPrefHeight(45);
+    	settingsDetailSettingsFontLabel.setPrefWidth(107);
+    	
+    	settingsDetailSettingsComboBoxVBox = new VBox();
+    	settingsDetailSettingsComboBoxVBox.setPrefHeight(82);
+    	settingsDetailSettingsComboBoxVBox.setPrefWidth(221);
+    	
+    	settingsDetailSettingsColorComboBox = new ComboBox<Color>();
+    	settingsDetailSettingsColorComboBox.setPrefHeight(31);
+    	settingsDetailSettingsColorComboBox.setPrefWidth(221);
+    	VBox.setMargin(settingsDetailSettingsColorComboBox, new Insets(4));
+    	settingsDetailSettingsColorComboBox.getItems().addAll(Color.BLACK,
+    															Color.CRIMSON,
+    															Color.ROYALBLUE);
+    	
+    	settingsDetailSettingsColorComboBox.setCellFactory(new Callback<ListView<Color>, ListCell<Color> > (){
+    				@Override 
+    				public ListCell<Color> call(ListView<Color> p){
+    					return new ListCell<Color>() {
+    						private final Rectangle rectangle;
+    						{
+    							setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+    							rectangle = new Rectangle(180,26);
+    							
+    						}
+    						
+    						@Override
+    						protected void updateItem(Color item, boolean empty) {
+    							super.updateItem(item, empty);
+    							
+    							if(item==null || empty) {
+    								setGraphic(null);
+    							}else {
+    								rectangle.setFill(item);
+    								setGraphic(rectangle);
+    							}
+    						}
+    					};
+    				}
+    	});
+    	
+    	
+    	settingsDetailSettingsFontComboBox = new ComboBox<Font>();
+    	settingsDetailSettingsFontComboBox.setPrefHeight(31);
+    	settingsDetailSettingsFontComboBox.setPrefWidth(221);
+    	VBox.setMargin(settingsDetailSettingsFontComboBox, new Insets(4));
+    	settingsDetailSettingsFontComboBox.getItems().addAll(new Font("Arial",12),
+    														new Font("Helvetica",12),
+    														new Font("Times New Roman",12));
+    	settingsDetailSettingsFontComboBox.setCellFactory(new Callback<ListView<Font>, ListCell<Font> > (){
+			@Override 
+			public ListCell<Font> call(ListView<Font> p){
+				return new ListCell<Font>() {
+					private final Text text;
+					{
+						setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+						text = new Text();
+					}
+					
+					@Override
+					protected void updateItem(Font item, boolean empty) {
+						super.updateItem(item, empty);
+						
+						if(item==null || empty) {
+							setGraphic(null);
+						}else {
+							text.setText(item.getName());
+							text.setFont(item);
+							setGraphic(text);
+						}
+					}
+				};
+			}
+});
+    														
+    	
+    	
+    	settingsUpdateButton = new Button("Update Settings");
+    	settingsUpdateButton.setLayoutX(152);
+    	settingsUpdateButton.setLayoutY(254);
+    	settingsUpdateButton.setMnemonicParsing(false);
+    	settingsUpdateButton.setPrefHeight(25);
+    	settingsUpdateButton.setPrefWidth(114);
+    	
+    	// set layout here
+    	settingsPane.getChildren().add(settingsVBox);
+    	settingsVBox.getChildren().addAll(settingsTitlePane,
+    										settingsTitleSeparator,
+    										settingsDetailPane);
+    	settingsTitlePane.getChildren().add(settingsTitleLabel);
+    	settingsDetailPane.getChildren().addAll(settingsInfoLabel,
+    											settingsInfoHBox,
+    											settingsDetailSettingsLabel,
+    											settingsDetailSettingsHBox,
+    											settingsUpdateButton);
+    	settingsInfoHBox.getChildren().addAll(settingsInfoLabelVBox,
+    											settingsInfoFieldsVBox);
+    	settingsInfoLabelVBox.getChildren().addAll(settingsInfoNewUsernameLabel,
+    												settingsInfoNewPasswordLabel);
+    	settingsInfoFieldsVBox.getChildren().addAll(settingsInfoNewUsernameField,
+    												settingsInfoNewPasswordField);
+    	settingsDetailSettingsHBox.getChildren().addAll(settingsDetailSettingsLabelVBox,
+    													settingsDetailSettingsComboBoxVBox);
+    	settingsDetailSettingsLabelVBox.getChildren().addAll(settingsDetailSettingsColorLabel,
+    														settingsDetailSettingsFontLabel);
+    	settingsDetailSettingsComboBoxVBox.getChildren().addAll(settingsDetailSettingsColorComboBox,
+    															settingsDetailSettingsFontComboBox);
+   
+    	
+    	
+    	
+    }
+    
+    private void setSettingsPane() {
+    	rightSide.getChildren().clear();
+    	rightSide.getChildren().add(settingsPane);
+    }
 
 }
