@@ -107,7 +107,7 @@ public class ServerThread extends Thread {
 							+ cs.getData().getNextID());
 					cs.addUser(new User(username, password, cs.getData().getNextID()), this);
 				} else {
-					// If the Message recieved was not an instance of Verification Messages
+					// If the Message received was not an instance of Verification Messages
 					System.out.println("Exception: Expecting an instanceof VerificationMessage!");
 				}
 			}

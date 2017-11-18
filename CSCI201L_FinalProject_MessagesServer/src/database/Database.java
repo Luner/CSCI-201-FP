@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import objects.Conversation;
+import objects.DataContainer;
 import objects.User;
 
 public class Database {
@@ -81,6 +84,34 @@ public class Database {
 		} catch (SQLException sqle) {
 			System.out.println("Failed to fetch users.");
 			return foundUsers;
+		}
+	}
+
+	public HashMap<Integer, Conversation> getConversations(DataContainer dc) {
+		String selectQuery = "SELECT * FROM CSCI201.conversations";
+		HashMap<Integer, Conversation> conversationMap = new HashMap<Integer, Conversation>();
+		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int conversationID = rs.getInt(1);
+				boolean active = rs.getBoolean(2);
+				String topic = rs.getString(3);
+				ArrayList<User> conversationUsers = new ArrayList<User>();
+				String userSelectQuery = "SELECT UserID FROM CSCI201.conversations_members WHERE ConversationID = ?";
+				PreparedStatement ps2 = conn.prepareStatement(userSelectQuery);
+				ps2.setInt(1, conversationID);
+				ResultSet rs2 = ps.executeQuery();
+				while (rs2.next()) {
+					conversationUsers.add(dc.findUserByUid(rs2.getInt(1)));
+				}
+				Conversation conversation = new Conversation(conversationUsers, conversationID);
+				// Set active, topic here!
+				conversationMap.put(conversationID, conversation);
+			}
+			return conversationMap;
+		} catch (SQLException sqle) {
+			System.out.println("Failed to fetch conversations.");
+			return conversationMap;
 		}
 	}
 
