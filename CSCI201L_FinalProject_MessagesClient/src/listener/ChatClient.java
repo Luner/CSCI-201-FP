@@ -38,6 +38,7 @@ import objects.message.ChatStringMessage;
 import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
+import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
 import objects.message.VerificationMessage;
@@ -202,6 +203,26 @@ public class ChatClient extends Application {
 			}
 		});
 
+		addConversationButton.setOnAction(e -> {
+			String user1 = User1Input.getText();
+			String user2 = User2Input.getText();
+			String user3 = User3Input.getText();
+			String user4 = User4Input.getText();
+
+			User1Input.setText("");
+			User2Input.setText("");
+			User3Input.setText("");
+			User4Input.setText("");
+		
+			createConversation(user1, user2, user3, user4);
+			chatText.setFont(new Font("Helvetica", 12));
+			chatText.setText("");
+
+			chatName.setText("Open Chat");
+			selectedChat = 0;
+			setChatWindow();
+		});
+		
 		guest.setOnAction(e -> {
 			if (login("Guest", "None")) {
 				primaryStage.setScene(chatScene);
@@ -361,6 +382,16 @@ public class ChatClient extends Application {
 		}
 	}
 
+	private void createConversation(String user1, String user2, String user3, String user4) {
+		Message message = new CreateConversationMessage(user1, user2, user3, user4);
+		try {
+			oos.writeObject(message);
+			oos.flush();
+		} catch (IOException e) {
+				System.out.println("ioe in createConversation");
+		}
+	}
+	
 	private void cleanUp() {
 		try {
 			if (s != null) {
