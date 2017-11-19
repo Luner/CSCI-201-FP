@@ -107,7 +107,7 @@ public class Database {
 			Iterator it = conversationMap.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry pair = (Map.Entry)it.next();
-				selectQuery = "SELECT UserID FROM CSCI201.conversations_members WHERE ConversationID = ?";
+				selectQuery = "SELECT UserID FROM CSCI201.conversation_members WHERE ConversationID = ?";
 				ps = conn.prepareStatement(selectQuery);
 				ps.setInt(1, ((Conversation)pair.getValue()).getConversationID());
 				rs = ps.executeQuery();
@@ -118,6 +118,7 @@ public class Database {
 			return conversationMap;
 		} catch (SQLException sqle) {
 			System.out.println("Failed to fetch conversations.");
+			sqle.printStackTrace();
 			return conversationMap;
 		}
 	}
