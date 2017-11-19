@@ -117,14 +117,12 @@ public class Database {
 		}
 	}
 
-	public void createConversation(ArrayList<User> users, String topic) {
-		String insertQuery = "INSERT conversations SET Topic = ?";
-		try (PreparedStatement ps = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+	public void createConversation(ArrayList<User> users, String topic, int conversationID) {
+		String insertQuery = "INSERT conversations SET Topic = ? AND ConversationID = ?";
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
 			ps.setString(1, topic);
-			ps.executeQuery();
-			ResultSet rs = ps.getGeneratedKeys();
-			rs.next();
-			int conversationID = rs.getInt(1);
+			ps.setInt(2, conversationID);
+			ps.execute();
 			for (User u : users) {
 				String userInsertQuery = "INSERT conversation_members SET ConversationID = ? AND UserID = ?";
 				PreparedStatement userPS = conn.prepareStatement(userInsertQuery);
