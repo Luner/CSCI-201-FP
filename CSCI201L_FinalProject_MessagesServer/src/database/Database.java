@@ -107,7 +107,7 @@ public class Database {
 			Iterator it = conversationMap.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry pair = (Map.Entry)it.next();
-				selectQuery = "SELECT UserID FROM CSCI201.conversations_members WHERE ConversationID = ?";
+				selectQuery = "SELECT UserID FROM CSCI201.conversation_members WHERE ConversationID = ?";
 				ps = conn.prepareStatement(selectQuery);
 				ps.setInt(1, ((Conversation)pair.getValue()).getConversationID());
 				rs = ps.executeQuery();
@@ -117,25 +117,29 @@ public class Database {
 			}
 			return conversationMap;
 		} catch (SQLException sqle) {
+			sqle.printStackTrace();
 			System.out.println("Failed to fetch conversations.");
 			return conversationMap;
 		}
 	}
 
 	public void createConversation(ArrayList<User> users, String topic, int conversationID) {
-		String insertQuery = "INSERT conversations SET Topic = ? AND ConversationID = ?";
-		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+		String insertQuery = "INSERT conversations SET Topic = ?, ConversationID = ?;";
+		try {
+			PreparedStatement ps = conn.prepareStatement(insertQuery);
 			ps.setString(1, topic);
 			ps.setInt(2, conversationID);
 			ps.execute();
 			for (User u : users) {
-				String userInsertQuery = "INSERT conversation_members SET ConversationID = ? AND UserID = ?";
-				PreparedStatement userPS = conn.prepareStatement(userInsertQuery);
-				userPS.setInt(1, conversationID);
-				userPS.setInt(2, u.getUid());
-				userPS.execute();
+				System.out.println("User: " + u.getUsername() + " with id: " + u.getUid() + " adding to converstaion " + conversationID);
+				insertQuery = "INSERT conversation_members SET ConversationID = ?, UserID = ?;";
+				ps = conn.prepareStatement(insertQuery);
+				ps.setInt(1, conversationID);
+				ps.setInt(2, u.getUid());
+				ps.execute();
 			}
 		} catch (SQLException sqle) {
+			sqle.printStackTrace();
 			System.out.println("Failed to create conversation.");
 		}
 	}

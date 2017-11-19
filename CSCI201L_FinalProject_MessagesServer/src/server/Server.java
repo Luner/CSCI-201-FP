@@ -32,15 +32,10 @@ public class Server extends Thread {
 	private Database db;
 
 	public Server(int port) {
-		System.out.println("break 1");
 		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
-		System.out.println("break 2");
 		dataWriter = new DataWriter();
-		System.out.println("break 3");
 		ArrayList<User> foundUsers = db.getUsers();
-		System.out.println("break 4");
 		this.data = new DataContainer(foundUsers);
-		System.out.println("break 5");
 		
 		for (User user : this.data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
@@ -136,13 +131,9 @@ public class Server extends Thread {
 		if (message instanceof ChatMessage) {
 			
 			int convesationID = ((ChatMessage) message).getCid();
-			String chatMessage = ((ChatMessage) message).getMessage();
-			int userID = ((ChatMessage) message).getUid();
 			
 			Conversation conversation = conversationMap.get(convesationID);
 			
-			
-			System.out.println(convesationID + " CID");
 			conversation.sendMessageToConversation(message);
 		}
 	}
@@ -232,6 +223,7 @@ public class Server extends Thread {
 		conversationMap.put(chatID, new Conversation(newUsers, chatID));
 
 		for (ServerThread st : serverThreads) {
+			conversationMap.get(chatID).addActiveUser(st.getUser());
 			st.updateConversation();
 		}
 	}
