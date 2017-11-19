@@ -182,7 +182,8 @@ public class ChatClient extends Application {
 		// 10.14.112.127
 
 		if (!setUpChatClient("localhost", 6789)) {
-			System.out.println("Failed to initialize object Streams");
+			System.out.println("Failed to connect to specified server.");
+			System.exit(0);
 		}
 		primaryStage.setTitle("Messaging Application");
 		chatsMap = new HashMap<Button, Integer>();
@@ -293,7 +294,7 @@ public class ChatClient extends Application {
 			// sender();
 
 		} catch (IOException ioe) {
-			System.out.println("ioe in set-up: " + ioe.getMessage());
+			//System.out.println("ioe in set-up: " + ioe.getMessage());
 		}
 		return false;
 	}
