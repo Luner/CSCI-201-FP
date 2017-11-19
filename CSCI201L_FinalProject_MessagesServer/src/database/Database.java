@@ -92,7 +92,8 @@ public class Database {
 	public HashMap<Integer, Conversation> getConversations(DataContainer dc) {
 		String selectQuery = "SELECT * FROM CSCI201.conversations";
 		HashMap<Integer, Conversation> conversationMap = new HashMap<Integer, Conversation>();
-		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+		try {
+			PreparedStatement ps = conn.prepareStatement(selectQuery);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int conversationID = rs.getInt(1);
