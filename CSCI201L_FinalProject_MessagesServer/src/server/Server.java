@@ -31,54 +31,60 @@ public class Server extends Thread {
 	DataWriter dataWriter;
 	private Database db;
 
-	////////// Currently Hardcoded/////////////
+	public Server(int port) {
+		System.out.println("break 1");
+		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
+		System.out.println("break 2");
+		dataWriter = new DataWriter();
+		System.out.println("break 3");
+		ArrayList<User> foundUsers = db.getUsers();
+		System.out.println("break 4");
+		this.data = new DataContainer(foundUsers);
+		System.out.println("break 5");
+		
+		for (User user : this.data.getUsers()) {
+			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
+					+ user.getPassword());
+		}
+		ServerSocket ss = null;
+		serverThreads = new Vector<ServerThread>();
+		InitializeConversations(data.getUsers());
+		this.start();
 
-	// Guest Must have Uid of 0
-	public void InitializeConversations(ArrayList<User> users) {
-
-		// The list users is the list of users who are a part of the conversation
-		// Mostly passing in all users for testing
-		ArrayList<User> userNoGuest = getUsersWithoutGuest(users);
-		conversationMap = new HashMap<Integer, Conversation>();
-
-		// ConversationMap.put([ConversationID], new Conversation([ArrayList of Users
-		// apart of Chat], [ConversationId])
-		conversationMap.put(new Integer(1), new Conversation(users, new Integer(1)));
-		conversationMap.put(new Integer(2), new Conversation(new ArrayList<User>(), new Integer(2)));
-		conversationMap.put(new Integer(3), new Conversation(userNoGuest, new Integer(3)));
-		conversationMap.put(new Integer(4), new Conversation(userNoGuest, new Integer(4)));
-		conversationMap.put(new Integer(5), new Conversation(userNoGuest, new Integer(5)));
-		conversationMap.put(new Integer(6), new Conversation(userNoGuest, new Integer(6)));
-		conversationMap.put(new Integer(7), new Conversation(userNoGuest, new Integer(7)));
-		conversationMap.put(new Integer(8), new Conversation(userNoGuest, new Integer(8)));
-		conversationMap.put(new Integer(9), new Conversation(userNoGuest, new Integer(9)));
-		conversationMap.put(new Integer(10), new Conversation(userNoGuest, new Integer(10)));
-		conversationMap.put(new Integer(11), new Conversation(userNoGuest, new Integer(11)));
-	}
-
-	// Removes Guest from list
-	public ArrayList<User> getUsersWithoutGuest(ArrayList<User> users) {
-		ArrayList<User> result = new ArrayList<User>(users);
-		User guest = null;
-		for (User user : result) {
-			if (user.getUid() == 0) {
-				guest = user;
+		try {
+			ss = new ServerSocket(port);
+			while (true) {
+				System.out.println("\nWaiting for connection...");
+				Socket s = ss.accept();
+				System.out.println("connection from " + s.getInetAddress());
+				ServerThread st = new ServerThread(s, this, db);
+				serverThreads.add(st);
+			}
+		} catch (IOException ioe) {
+			System.out.println("\nioe: " + ioe.getMessage());
+		} finally {
+			if (ss != null) {
+				try {
+					ss.close();
+				} catch (IOException ioe) {
+					System.out.println("\nioe closing ss: " + ioe.getMessage());
+				}
 			}
 		}
-
-		if (guest != null) {
-			result.remove(guest);
-		}
-		return result;
 	}
+	
 
-	//////// HardCoded End/////////
-
-	public Server(int port) {
-		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
+	public void InitializeConversations(ArrayList<User> users) {
+		conversationMap = db.getConversations(data);
+	}
+	
+	
+	//Constructor for TempMain
+	public Server(int port, DataContainer data) {
 		dataWriter = new DataWriter();
-		ArrayList<User> foundUsers = db.getUsers();
-		this.data = new DataContainer(foundUsers);
+		this.data = data;
+		ArrayList<User> foundUsers = data.getUsers();
+		
 		for (User user : this.data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
@@ -136,7 +142,7 @@ public class Server extends Thread {
 			Conversation conversation = conversationMap.get(convesationID);
 			
 			
-			
+			System.out.println(convesationID + " CID");
 			conversation.sendMessageToConversation(message);
 		}
 	}
@@ -215,7 +221,7 @@ public class Server extends Thread {
 			
 			User temp = data.findUserByUsername(username);
 			
-			if (temp != null) {
+			if (temp != null && !temp.getUsername().equals("Guest")) {
 				newUsers.add(temp);
 			}
 

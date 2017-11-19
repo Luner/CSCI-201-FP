@@ -223,7 +223,7 @@ public class ChatClient extends Application {
 			chatText.setText("");
 
 			chatName.setText("Global Chat");
-			selectedChat = 0;
+			selectedChat = 1;
 			setChatWindow();
 		});
 		
@@ -275,7 +275,7 @@ public class ChatClient extends Application {
 	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
-		selectedChat = 0; // default
+		selectedChat = 1; // default
 		try {
 			// Attempts to connect to the Socket
 			s = new Socket(hostname, port);
