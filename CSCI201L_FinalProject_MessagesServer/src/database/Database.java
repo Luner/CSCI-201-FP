@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.mysql.jdbc.Statement;
+
 import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
@@ -117,11 +119,18 @@ public class Database {
 
 	public void createConversation(ArrayList<User> users, String topic) {
 		String insertQuery = "INSERT conversations SET Topic = ?";
-		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setString(1, topic);
-			ps.execute();
+			ps.executeQuery();
+			ResultSet rs = ps.getGeneratedKeys();
+			rs.next();
+			int conversationID = rs.getInt(1);
 			for (User u : users) {
-				String userInsertQuery = "INSERT conversation_members SET "
+				String userInsertQuery = "INSERT conversation_members SET ConversationID = ? AND UserID = ?";
+				PreparedStatement userPS = conn.prepareStatement(userInsertQuery);
+				userPS.setInt(1, conversationID);
+				userPS.setInt(2, u.getUid());
+				userPS.execute();
 			}
 		} catch (SQLException sqle) {
 			System.out.println("Failed to create conversation.");
