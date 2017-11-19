@@ -105,13 +105,26 @@ public class Database {
 					conversationUsers.add(dc.findUserByUid(rs2.getInt(1)));
 				}
 				Conversation conversation = new Conversation(conversationUsers, conversationID);
-				// Set active, topic here!
+				// Set active status and topic here!
 				conversationMap.put(conversationID, conversation);
 			}
 			return conversationMap;
 		} catch (SQLException sqle) {
 			System.out.println("Failed to fetch conversations.");
 			return conversationMap;
+		}
+	}
+
+	public void createConversation(ArrayList<User> users, String topic) {
+		String insertQuery = "INSERT conversations SET Topic = ?";
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+			ps.setString(1, topic);
+			ps.execute();
+			for (User u : users) {
+				String userInsertQuery = "INSERT conversation_members SET "
+			}
+		} catch (SQLException sqle) {
+			System.out.println("Failed to create conversation.");
 		}
 	}
 
