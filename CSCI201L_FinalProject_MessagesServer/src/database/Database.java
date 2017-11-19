@@ -97,7 +97,7 @@ public class Database {
 			while (rs.next()) {
 				int conversationID = rs.getInt(1);
 				boolean active = rs.getBoolean(2);
-				String topic = rs.getString(3);
+				String conversationName = rs.getString(3);
 				ArrayList<User> conversationUsers = new ArrayList<User>();
 				String userSelectQuery = "SELECT UserID FROM CSCI201.conversations_members WHERE ConversationID = ?";
 				PreparedStatement ps2 = conn.prepareStatement(userSelectQuery);
@@ -106,7 +106,7 @@ public class Database {
 				while (rs2.next()) {
 					conversationUsers.add(dc.findUserByUid(rs2.getInt(1)));
 				}
-				Conversation conversation = new Conversation(conversationUsers, conversationID);
+				Conversation conversation = new Conversation(conversationUsers, conversationID, conversationName);
 				// Set active status and topic here!
 				conversationMap.put(conversationID, conversation);
 			}
