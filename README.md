@@ -3,10 +3,14 @@ This repository will serve as our CSCI-201 final project Eclipse workspace.
 
 ## TODO List
 - Database Exchange
-  - Fetching Data
+  - [ ] Pull messages from database
+  - [ ] Save all new data to db
 - Conversations
+  - [ ] Make new conversations display properly
 - Social Media Integration
 - Graphical User Interface
+- Bots
+  - [ ] More options?
 
 ## Project Links
 
