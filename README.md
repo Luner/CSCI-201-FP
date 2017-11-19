@@ -3,7 +3,7 @@ This repository will serve as our CSCI-201 final project Eclipse workspace.
 
 ## TODO List
 - Database Exchange
-- - Fetching Data
+  - Fetching Data
 - Conversations
 - Social Media Integration
 - Graphical User Interface
