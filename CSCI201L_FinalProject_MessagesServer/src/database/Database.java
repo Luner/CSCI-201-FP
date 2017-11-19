@@ -137,6 +137,24 @@ public class Database {
 		}
 	}
 
+	public ResultSet getMessages(int conversationID) {
+		String selectQuery = "SELECT * from messages WHERE ConversationID = ?";
+		ResultSet rs = null;
+		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+			ps.setInt(1, conversationID);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				int messageID = rs.getInt(1);
+				int userID = rs.getInt(3);
+				String message = rs.getString(4);
+				boolean file = rs.getBoolean(5);
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to retrieve messages for conversation.");
+		}
+		return rs;
+	}
+
 	public void updateUser(int userID) {
 		String updateQuery = "UPDATE users";
 		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {

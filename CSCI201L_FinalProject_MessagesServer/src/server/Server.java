@@ -177,6 +177,11 @@ public class Server extends Thread {
 				System.out.println("Commands: ");
 				System.out.println("\"add bot\" - begins the add bot process");
 				System.out.println("\"help\" - brings up the help menu\n\n");
+
+			} else if (command.equals("shutdown")) {
+				System.out.println("The server is now shutting down...");
+				// PUSH NEW DATA
+				System.exit(0);
 			} else {
 				System.out.println("SERVER :: INVALID COMMAND");
 			}
