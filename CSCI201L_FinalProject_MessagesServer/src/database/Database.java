@@ -119,6 +119,7 @@ public class Database {
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			System.out.println("Failed to fetch conversations.");
+			sqle.printStackTrace();
 			return conversationMap;
 		}
 	}
