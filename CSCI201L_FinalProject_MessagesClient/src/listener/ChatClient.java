@@ -49,6 +49,13 @@ public class ChatClient extends Application {
 
 	// GRAPHICAL USER INTERFACE ------------------
 
+	////////// IP SELECT/////////////
+	AnchorPane ipSelect;
+	Scene ipSelectScene;
+	TextField ipEntry;
+	Button ipEnter;
+	Text ipSelectTitle;
+	
 	////////// LOGIN WINDOW//////////
 	// LogInPage
 	Scene loginScene;
@@ -181,16 +188,25 @@ public class ChatClient extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// 10.14.112.127
 
-		if (!setUpChatClient("localhost", 6789)) {
-			System.out.println("Failed to connect to specified server.");
-			System.exit(0);
-		}
+		
 		primaryStage.setTitle("Messaging Application");
 		chatsMap = new HashMap<Button, Integer>();
+		initializeIPSelect();
 		initializeLoginPage();
 		initializeChatWindow();
 		initializeProfileWindow();
 		initializeAddConversationWindow();
+		ipEnter.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if (!setUpChatClient(ipEntry.getText(), 6789)) {
+					System.out.println("Failed to connect to specified server.");
+					System.exit(0);
+				}
+				else {
+					primaryStage.setScene(loginScene);
+				}
+			}
+		});
 
 		// Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>() {
@@ -267,9 +283,10 @@ public class ChatClient extends Application {
 			send(typedMessage.getText());
 			typedMessage.setText("");
 		});
-
-		primaryStage.setScene(loginScene);
+		
+		primaryStage.setScene(ipSelectScene);
 		primaryStage.show();
+		
 	}
 
 	private boolean setUpChatClient(String hostname, int port) {
@@ -479,7 +496,47 @@ public class ChatClient extends Application {
 
 		}
 	};
-
+	public void initializeIPSelect() {
+		//IP Pane
+		ipSelect = new AnchorPane();
+		ipSelect.setMaxHeight(Double.NEGATIVE_INFINITY);
+		ipSelect.setMaxWidth(Double.NEGATIVE_INFINITY);
+		ipSelect.setMinHeight(Double.NEGATIVE_INFINITY);
+		ipSelect.setMinWidth(Double.NEGATIVE_INFINITY);
+		ipSelect.setPrefHeight(400.0);
+		ipSelect.setPrefWidth(600.0);
+		
+		//IP Title
+		ipSelectTitle = new Text();
+		ipSelectTitle.setLayoutX(190.0);
+		ipSelectTitle.setLayoutY(84.0);
+		ipSelectTitle.setStrokeType(StrokeType.OUTSIDE);
+		ipSelectTitle.setStrokeWidth(0.0);
+		ipSelectTitle.setText("Server Connection");
+		ipSelectTitle.setFont(Font.font("Helvetica", 27));
+		
+		//IP Entry
+		ipEntry = new TextField();
+		ipEntry.setLayoutX(207.0);
+		ipEntry.setLayoutY(185.0);
+		ipEntry.setPromptText("Enter IP");
+		
+		//IP Submit
+		ipEnter = new Button();
+		ipEnter.setLayoutX(273.0);
+		ipEnter.setLayoutY(261.0);
+		ipEnter.setText("Enter");
+		ipEnter.setMnemonicParsing(false);
+		
+		//Finalization
+		ipSelect.getChildren().add(ipEnter);
+		ipSelect.getChildren().add(ipEntry);
+		ipSelect.getChildren().add(ipSelectTitle);
+		
+		//New Scene
+		ipSelectScene = new Scene(ipSelect);
+	}
+	
 	public void initializeLoginPage() {
 		// layout
 		loginLayout = new AnchorPane();
