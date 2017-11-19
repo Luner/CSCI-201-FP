@@ -43,9 +43,8 @@ public class Server extends Thread {
 
 		// ConversationMap.put([ConversationID], new Conversation([ArrayList of Users
 		// apart of Chat], [ConversationId])
-		conversationMap.put(new Integer(0), new Conversation(users, new Integer(0)));
-		conversationMap.put(new Integer(1), new Conversation(new ArrayList<User>(), new Integer(1)));
-		conversationMap.put(new Integer(2), new Conversation(userNoGuest, new Integer(2)));
+		conversationMap.put(new Integer(1), new Conversation(users, new Integer(1)));
+		conversationMap.put(new Integer(2), new Conversation(new ArrayList<User>(), new Integer(2)));
 		conversationMap.put(new Integer(3), new Conversation(userNoGuest, new Integer(3)));
 		conversationMap.put(new Integer(4), new Conversation(userNoGuest, new Integer(4)));
 		conversationMap.put(new Integer(5), new Conversation(userNoGuest, new Integer(5)));
@@ -129,11 +128,19 @@ public class Server extends Thread {
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
 		if (message instanceof ChatMessage) {
-			Conversation conversation = conversationMap.get(((ChatMessage) message).getCid());
+			
+			int convesationID = ((ChatMessage) message).getCid();
+			String chatMessage = ((ChatMessage) message).getMessage();
+			int userID = ((ChatMessage) message).getUid();
+			
+			Conversation conversation = conversationMap.get(convesationID);
+			
+			
+			
 			conversation.sendMessageToConversation(message);
 		}
 	}
-
+	
 	public DataContainer getData() {
 		return data;
 	}
@@ -194,18 +201,23 @@ public class Server extends Thread {
 	}
 
 	public void createConversation(CreateConversationMessage message) {
-		System.out.println(" CS CALLED");
-		Integer chatID = conversationMap.size();
+		
+		Integer chatID = conversationMap.size() + 1;
+		
 		ArrayList<User> newUsers = new ArrayList<User>();
+		
 		for (String username : message.getUsers()) {
-			System.out.println(username + " CHECKED");
+			
 			User temp = data.findUserByUsername(username);
+			
 			if (temp != null) {
 				newUsers.add(temp);
-				System.out.println(temp.getUsername() + " ADDED");
 			}
 
 		}
+		
+		db.createConversation(newUsers, "", chatID);
+		
 		conversationMap.put(chatID, new Conversation(newUsers, chatID));
 
 		for (ServerThread st : serverThreads) {
