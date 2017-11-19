@@ -221,7 +221,7 @@ public class ChatClient extends Application {
 			chatText.setFont(new Font("Helvetica", 12));
 			chatText.setText("");
 
-			chatName.setText("Open Chat");
+			chatName.setText("Global Chat");
 			selectedChat = 0;
 			setChatWindow();
 		});
@@ -449,7 +449,7 @@ public class ChatClient extends Application {
 										chatText.setText("");
 										int chatid = chatsMap.get(button);
 										if (chatid == 0) {
-											chatName.setText("Open Chat");
+											chatName.setText("Global Chat");
 										} else {
 											chatName.setText("Chat: " + chatid);
 										}
@@ -631,7 +631,7 @@ public class ChatClient extends Application {
 		chatName.setTextAlignment(TextAlignment.CENTER);
 		chatName.setWrappingWidth(416.0);
 		chatName.setFont(new Font("Helvetica", 20));
-		chatName.setText("Open Chat");
+		chatName.setText("Global Chat");
 
 		sendMessage = new Button();
 		sendMessage.setLayoutX(350.0);
@@ -736,7 +736,7 @@ public class ChatClient extends Application {
 			chatsButtons.get(i).setPrefWidth(174.0);
 
 			if (i == 0) {
-				chatsButtons.get(i).setText("Open Chat");
+				chatsButtons.get(i).setText("Global Chat");
 			} else {
 				chatsButtons.get(i).setText("Chat: " + chat.getConversationID());
 			}
