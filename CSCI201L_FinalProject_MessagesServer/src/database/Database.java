@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.mysql.jdbc.Statement;
+import java.util.Iterator;
+import java.util.Map;
 
 import objects.Conversation;
 import objects.DataContainer;
@@ -99,16 +99,20 @@ public class Database {
 				boolean active = rs.getBoolean(2);
 				String conversationName = rs.getString(3);
 				ArrayList<User> conversationUsers = new ArrayList<User>();
-				String userSelectQuery = "SELECT UserID FROM CSCI201.conversations_members WHERE ConversationID = ?";
-				PreparedStatement ps2 = conn.prepareStatement(userSelectQuery);
-				ps2.setInt(1, conversationID);
-				ResultSet rs2 = ps.executeQuery();
-				while (rs2.next()) {
-					conversationUsers.add(dc.findUserByUid(rs2.getInt(1)));
-				}
 				Conversation conversation = new Conversation(conversationUsers, conversationID, conversationName);
 				// Set active status and topic here!
 				conversationMap.put(conversationID, conversation);
+			}
+			Iterator it = conversationMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry)it.next();
+				selectQuery = "SELECT UserID FROM CSCI201.conversations_members WHERE ConversationID = ?";
+				ps = conn.prepareStatement(selectQuery);
+				ps.setInt(1, ((Conversation)pair.getValue()).getConversationID());
+				rs = ps.executeQuery();
+				while (rs.next()) {
+					((Conversation)pair.getValue()).getUsers().add(dc.findUserByUid(rs.getInt(1)));
+				}
 			}
 			return conversationMap;
 		} catch (SQLException sqle) {

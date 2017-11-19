@@ -38,6 +38,10 @@ public class Conversation {
 		}
 	}
 
+	public ArrayList<User> getUsers() {
+		return users;
+	}
+
 	public Integer getConversationID() {
 		return this.conversationID;
 	}
