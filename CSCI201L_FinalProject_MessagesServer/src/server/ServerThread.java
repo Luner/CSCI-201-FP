@@ -134,6 +134,7 @@ public class ServerThread extends Thread {
 
 						updateConversation();
 						cs.updateContacts();
+						return;
 					}
 					
 				} else if (message instanceof LogoutMessage) {
