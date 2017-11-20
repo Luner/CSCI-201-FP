@@ -632,11 +632,11 @@ public class ChatClient extends Application {
 										int chatid = chatsMap.get(button);
 										for (int j = 0; j < chatHistory.get(chatid).size(); j++) {
 											if (j == 0) {
-												chatText.setText(chatHistory.get(chatid).get(j));
+												chatText.setText(chatHistory.get(chatid).get(j).replace("!@#$%^&*()", user_Username));
 											} else {
 
 												chatText.setText(
-														chatText.getText() + "\n" + chatHistory.get(chatid).get(j));
+														chatText.getText() + "\n" + chatHistory.get(chatid).get(j).replace("!@#$%^&*()", user_Username));
 											}
 										}
 										if (chatid == 0) {
