@@ -1,27 +1,19 @@
 package server;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.Vector;
-
 import botThread.BotThread;
 import database.Database;
 import objects.ClientConversation;
 import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
-import objects.message.ChatMessage;
-import objects.message.CommandMessage;
-import objects.message.CreateConversationMessage;
-import objects.message.Message;
-import objects.message.MessagesMessage;
+import objects.message.*;
 import parsing.DataWriter;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Server extends Thread {
 
