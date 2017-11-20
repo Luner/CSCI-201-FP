@@ -599,10 +599,11 @@ public class ChatClient extends Application {
 									chatMessageString = chatMessageString.replace("!@#$%^&*()", user_Username);
 									if (chatText.getText().length() > 0) {
 										chatText.setText(chatText.getText() + "\n" + chatMessageString);
-										chatText.setScrollTop(Double.MAX_VALUE);
 									} else {
 										chatText.setText(chatMessageString);
 									}
+									chatText.selectEnd();
+									chatText.deselect();
 								}
 							}
 						});
