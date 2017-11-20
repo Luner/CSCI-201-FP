@@ -12,6 +12,14 @@ public class ContactsMessage implements Serializable{
 	}
 	
 	public ArrayList<String> getContacts() {
+		if(contacts.contains("Guest")) {
+			contacts.remove("Guest");
+		}
+		
+		if(contacts.contains("Bot")) {
+			contacts.remove("Bot");
+		}
 		return contacts;
+		
 	}
 }
