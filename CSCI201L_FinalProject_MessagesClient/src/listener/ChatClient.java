@@ -36,9 +36,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.ClientConversation;
-import objects.message.ChatMessage;
-import objects.message.ChatStringMessage;
+import objects.message.*;
 import objects.message.CommandMessage;
+import objects.message.ContactsMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
@@ -86,9 +86,9 @@ public class ChatClient extends Application {
 	//////////CONTACTS WINDOW//////////
 	ScrollPane contactsPane;
 	VBox contactsLayout;
-	ArrayList<HBox> contactsList;
+	//ArrayList<HBox> contactsList;
 	ArrayList<String> contactsFromServer;
-	ArrayList<Text> contactsTextList;
+	ArrayList<Button> contactsButtons;
 	
 	////////// Function Bar and Chats//////////
 	Scene chatScene;
@@ -204,6 +204,7 @@ public class ChatClient extends Application {
 		initializeLoginPage();
 		initializeChatWindow();
 		initializeProfileWindow();
+		initializeContactsWindow();
 		initializeAddConversationWindow();
 		ipEnter.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -283,8 +284,6 @@ public class ChatClient extends Application {
 		});
 
 		contacts.setOnMouseClicked(e -> {
-			chatText.setFont(new Font("Helvetica", 18));
-//			chatText.setText("Bot1 \nBot2");
 			chatName.setText("Contacts");
 			setContactsWindow();
 		});
@@ -507,7 +506,27 @@ public class ChatClient extends Application {
 								System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
 							}
 						}
-					} else {
+					}
+					else if(message instanceof ContactsMessage) {
+						contactsFromServer = ((ContactsMessage) message).getContacts();
+						updateContactsWind();
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								contactsLayout.getChildren().clear();
+								for (Button button : contactsButtons) {
+									contactsLayout.getChildren().add(button);
+								}
+								for (Integer i = 0; i < contactsButtons.size(); i++) {
+									Button button = contactsButtons.get(i);
+									button.setOnAction(e -> {
+										//contacts button function
+									});
+								}
+							}
+						});
+					}
+					else {
 						System.out.println("Exception in ChatClient run(): Expecting certain messages");
 					}
 
@@ -689,7 +708,7 @@ public class ChatClient extends Application {
 		rightSide = new AnchorPane();
 		rightSide.setMinHeight(0.0);
 		rightSide.setMinWidth(0.0);
-		leftSide.setPrefHeight(160.0);
+		rightSide.setPrefHeight(160.0);
 		rightSide.setPrefWidth(100.0);
 
 		chatLayout.getItems().add(leftSide);
@@ -1140,43 +1159,54 @@ public class ChatClient extends Application {
 
 	}
 	public void updateContactsWind() {
+		contactsButtons.clear();
+		//add new
+		
 		for(int i = 0; i < contactsFromServer.size(); i++) {
-			contactsList.add(new HBox());
-			contactsTextList.add(new Text());
+			contactsButtons.add(new Button());
+			contactsButtons.get(i).setMnemonicParsing(false);
+			contactsButtons.get(i).setPrefHeight(48.0);
+			contactsButtons.get(i).setPrefWidth(414.0);
+			contactsButtons.get(i).setText(contactsFromServer.get(i));
 		}
 		
-		for(int i = 0; i < contactsTextList.size(); i++) {
-			Text contactText = contactsTextList.get(i);
-			contactText.setLayoutY(25.0);
-			contactText.setStrokeType(StrokeType.OUTSIDE);
-			contactText.setStrokeWidth(0.0);
-			contactText.setText(contactsFromServer.get(i));
-			contactText.setTextAlignment(TextAlignment.CENTER);
-			contactText.setWrappingWidth(416);
-		}
+//		for(int i = 0; i < contactsTextList.size(); i++) {
+//			Text contactText = contactsTextList.get(i);
+//			contactText.setLayoutY(25.0);
+//			contactText.setStrokeType(StrokeType.OUTSIDE);
+//			contactText.setStrokeWidth(0.0);
+//			contactText.setText(contactsFromServer.get(i));
+//			contactText.setTextAlignment(TextAlignment.CENTER);
+//			contactText.setWrappingWidth(416.0);
+//		}
+//		
+//		for(int i = 0; i < contactsList.size(); i++) {
+//			HBox contactBox = contactsList.get(i);
+//			contactBox.setPrefHeight(48.0);
+//			contactBox.setPrefWidth(414.0);
+//			contactBox.getChildren().add(contactsTextList.get(i));
+//		}
 		
-		for(int i = 0; i < contactsList.size(); i++) {
-			HBox contactBox = contactsList.get(i);
-			contactBox.setPrefHeight(48.0);
-			contactBox.setPrefWidth(414.0);
-			contactBox.getChildren().add(contactsTextList.get(i));
-		}
-		
-		profileLayout.setPrefHeight(contactsList.size() * 50);
+		contactsLayout.setPrefHeight(contactsButtons.size() * 50);
 	}
 	public void initializeContactsWindow() {
 		contactsPane = new ScrollPane();
-		contactsPane.setLayoutX(-1.0);
-		contactsPane.setLayoutY(-1.0);
+		contactsPane.setLayoutX(2.0);
+		contactsPane.setLayoutY(33.0);
 		contactsPane.setPrefHeight(358.0);
 		contactsPane.setPrefWidth(416.0);
-
+		contactsButtons = new ArrayList<Button>();
+		//contactsList = new ArrayList<HBox>();
+		contactsFromServer = new ArrayList<String>();
 		contactsLayout = new VBox();
-		contactsLayout.setPrefHeight(contactsList.size() * 50);
+		//contactsLayout.setPrefHeight(contactsButtons.size() * 50);
 		contactsLayout.setPrefWidth(414.0);
+		contactsPane.setContent(contactsLayout);
 	}
 	
 	public void setContactsWindow() {
-		
+		rightSide.getChildren().clear();
+		rightSide.getChildren().add(contactsPane);
+		rightSide.getChildren().add(chatName);
 	}
 }

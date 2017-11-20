@@ -13,6 +13,7 @@ import objects.User;
 import objects.message.ChatMessage;
 import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
+import objects.message.ContactsMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
@@ -172,10 +173,36 @@ public class ServerThread extends Thread {
 
 		}
 	}
-
+	public void updateContacts() {
+		ArrayList<String> contacts = new ArrayList<String>();
+		ArrayList<User> temp = cs.getData().getUsers();
+		for(User u : temp) {
+			contacts.add(u.getUsername());
+		}
+		ContactsMessage cm = new ContactsMessage(contacts);
+		try {
+			oos.writeObject(cm);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	// Handles consistently listening for chatMessages from client
 	public void run() {
 		login();
+		ArrayList<String> contacts = new ArrayList<String>();
+		ArrayList<User> temp = cs.getData().getUsers();
+		for(User u : temp) {
+			contacts.add(u.getUsername());
+		}
+		ContactsMessage cm = new ContactsMessage(contacts);
+		try {
+			oos.writeObject(cm);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		try {
 
 			while (running) {
