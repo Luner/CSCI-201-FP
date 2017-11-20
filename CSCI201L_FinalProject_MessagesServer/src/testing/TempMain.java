@@ -29,7 +29,7 @@ public class TempMain {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
 		}
-		new Server(data, 6789);
+		new Server(6789, data);
 	}
 
 	// method that queries for an input file and parses it

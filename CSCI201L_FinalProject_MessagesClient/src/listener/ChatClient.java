@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -19,6 +20,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
@@ -45,6 +47,7 @@ import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
 import objects.message.ProfileMessage;
+import objects.message.MessagesMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
@@ -52,6 +55,13 @@ public class ChatClient extends Application {
 
 	// GRAPHICAL USER INTERFACE ------------------
 
+	////////// IP SELECT/////////////
+	AnchorPane ipSelect;
+	Scene ipSelectScene;
+	TextField ipEntry;
+	Button ipEnter;
+	Text ipSelectTitle;
+	
 	////////// LOGIN WINDOW//////////
 	// LogInPage
 	Scene loginScene;
@@ -67,7 +77,7 @@ public class ChatClient extends Application {
 
 	// TextFields
 	TextField username;
-	TextField password;
+	PasswordField password;
 	TextField guestUsername;
 
 	// Login Button
@@ -77,6 +87,13 @@ public class ChatClient extends Application {
 
 	Line devider;
 
+	//////////CONTACTS WINDOW//////////
+	ScrollPane contactsPane;
+	VBox contactsLayout;
+	ArrayList<HBox> contactsList;
+	ArrayList<String> contactsFromServer;
+	ArrayList<Text> contactsTextList;
+	
 	////////// Function Bar and Chats//////////
 	Scene chatScene;
 
@@ -196,7 +213,9 @@ public class ChatClient extends Application {
 	private String bio;
 	private String interests;
 	private boolean guest;
-	
+
+	private String user_Username;
+	private Map<Integer, ArrayList<String>> chatHistory;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -206,21 +225,31 @@ public class ChatClient extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// 10.14.112.127
 
-		if (!setUpChatClient("localhost", 6789)) {
-			System.out.println("Failed to initialize object Streams");
-		}
 		primaryStage.setTitle("Messaging Application");
 		chatsMap = new HashMap<Button, Integer>();
+		initializeIPSelect();
 		initializeLoginPage();
 		initializeChatWindow();
 		initializeProfileWindow();
 		initializeAddConversationWindow();
+		ipEnter.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if (!setUpChatClient(ipEntry.getText(), 6789)) {
+					System.out.println("Failed to connect to specified server.");
+					System.exit(0);
+				}
+				else {
+					primaryStage.setScene(loginScene);
+				}
+			}
+		});
 
 		// Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				if (login(username.getText(), password.getText())) {
+					user_Username = username.getText();
 					addFunctions();
 					primaryStage.setScene(chatScene);
 					guest = false;
@@ -246,8 +275,8 @@ public class ChatClient extends Application {
 			chatText.setFont(new Font("Helvetica", 12));
 			chatText.setText("");
 
-			chatName.setText("Open Chat");
-			selectedChat = 0;
+			chatName.setText("Global Chat");
+			selectedChat = 1;
 			setChatWindow();
 		});
 		
@@ -284,8 +313,9 @@ public class ChatClient extends Application {
 
 		contacts.setOnMouseClicked(e -> {
 			chatText.setFont(new Font("Helvetica", 18));
-			chatText.setText("Bot1 \nBot2");
+//			chatText.setText("Bot1 \nBot2");
 			chatName.setText("Contacts");
+			setContactsWindow();
 		});
 
 		sendMessage.setOnAction(e -> {
@@ -314,14 +344,16 @@ public class ChatClient extends Application {
 			
 		});
 
-		primaryStage.setScene(loginScene);
+
+		primaryStage.setScene(ipSelectScene);
 		primaryStage.show();
+		
 	}
 
 	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
-		selectedChat = 0; // default
+		selectedChat = 1; // default
 		try {
 			// Attempts to connect to the Socket
 			s = new Socket(hostname, port);
@@ -340,7 +372,7 @@ public class ChatClient extends Application {
 			// sender();
 
 		} catch (IOException ioe) {
-			System.out.println("ioe in set-up: " + ioe.getMessage());
+			//System.out.println("ioe in set-up: " + ioe.getMessage());
 		}
 		return false;
 	}
@@ -365,11 +397,11 @@ public class ChatClient extends Application {
 
 			// Creates a VerificationMessage with the username and password inputs
 			Message message = new VerificationMessage(username, password);
-
+			
 			// Sends the VerificationMessage Object to the server
 			oos.writeObject(message);
 			oos.flush();
-
+			
 			boolean response = verificationResponse();
 			return response;
 
@@ -433,7 +465,7 @@ public class ChatClient extends Application {
 	}
 
 	private void createConversation(String user1, String user2, String user3, String user4) {
-		Message message = new CreateConversationMessage(user1, user2, user3, user4);
+		Message message = new CreateConversationMessage(user_Username, user1, user2, user3, user4);
 		try {
 			oos.writeObject(message);
 			oos.flush();
@@ -495,8 +527,17 @@ public class ChatClient extends Application {
 										chatText.setFont(new Font("Helvetica", 12));
 										chatText.setText("");
 										int chatid = chatsMap.get(button);
+										for(int j = 0; j < chatHistory.get(chatid).size(); j++)
+										{
+											if(j == 0) {
+												chatText.setText(chatHistory.get(chatid).get(j));
+											} else {
+												
+												chatText.setText(chatText.getText() + "\n" + chatHistory.get(chatid).get(j));
+											}
+										}
 										if (chatid == 0) {
-											chatName.setText("Open Chat");
+											chatName.setText("Global Chat");
 										} else {
 											chatName.setText("Chat: " + chatid);
 										}
@@ -507,7 +548,6 @@ public class ChatClient extends Application {
 								}
 							}
 						});
-
 					} else if(message instanceof ProfileMessage){
 						ProfileMessage pm = (ProfileMessage)message;
 						fName = pm.getFName();
@@ -517,6 +557,15 @@ public class ChatClient extends Application {
 						bio = pm.getBio();
 						interests = pm.getInterests();
 						populateProfileWindow();
+					} else if(message instanceof MessagesMessage){
+						System.out.println("YES!!!!");
+						chatHistory = ((MessagesMessage) message).getMessage();
+						
+						for (Entry<Integer, ArrayList<String>> entry : chatHistory.entrySet()) {
+							for(String s : entry.getValue()) {
+								System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
+							}
+						}
 					} else {
 						System.out.println("Exception in ChatClient run(): Expecting certain messages");
 					}
@@ -534,7 +583,47 @@ public class ChatClient extends Application {
 
 		}
 	};
-
+	public void initializeIPSelect() {
+		//IP Pane
+		ipSelect = new AnchorPane();
+		ipSelect.setMaxHeight(Double.NEGATIVE_INFINITY);
+		ipSelect.setMaxWidth(Double.NEGATIVE_INFINITY);
+		ipSelect.setMinHeight(Double.NEGATIVE_INFINITY);
+		ipSelect.setMinWidth(Double.NEGATIVE_INFINITY);
+		ipSelect.setPrefHeight(400.0);
+		ipSelect.setPrefWidth(600.0);
+		
+		//IP Title
+		ipSelectTitle = new Text();
+		ipSelectTitle.setLayoutX(190.0);
+		ipSelectTitle.setLayoutY(84.0);
+		ipSelectTitle.setStrokeType(StrokeType.OUTSIDE);
+		ipSelectTitle.setStrokeWidth(0.0);
+		ipSelectTitle.setText("Server Connection");
+		ipSelectTitle.setFont(Font.font("Helvetica", 27));
+		
+		//IP Entry
+		ipEntry = new TextField();
+		ipEntry.setLayoutX(207.0);
+		ipEntry.setLayoutY(185.0);
+		ipEntry.setPromptText("Enter IP");
+		
+		//IP Submit
+		ipEnter = new Button();
+		ipEnter.setLayoutX(273.0);
+		ipEnter.setLayoutY(261.0);
+		ipEnter.setText("Enter");
+		ipEnter.setMnemonicParsing(false);
+		
+		//Finalization
+		ipSelect.getChildren().add(ipEnter);
+		ipSelect.getChildren().add(ipEntry);
+		ipSelect.getChildren().add(ipSelectTitle);
+		
+		//New Scene
+		ipSelectScene = new Scene(ipSelect);
+	}
+	
 	public void initializeLoginPage() {
 		// layout
 		loginLayout = new AnchorPane();
@@ -594,7 +683,7 @@ public class ChatClient extends Application {
 		username.setLayoutY(88.0);
 
 		// PasswordTextField
-		password = new TextField();
+		password = new PasswordField();
 		password.setLayoutX(265.0);
 		password.setLayoutY(129.0);
 
@@ -687,7 +776,7 @@ public class ChatClient extends Application {
 		chatName.setTextAlignment(TextAlignment.CENTER);
 		chatName.setWrappingWidth(416.0);
 		chatName.setFont(new Font("Helvetica", 20));
-		chatName.setText("Open Chat");
+		chatName.setText("Global Chat");
 
 		sendMessage = new Button();
 		sendMessage.setLayoutX(350.0);
@@ -792,7 +881,7 @@ public class ChatClient extends Application {
 			chatsButtons.get(i).setPrefWidth(174.0);
 
 			if (i == 0) {
-				chatsButtons.get(i).setText("Open Chat");
+				chatsButtons.get(i).setText("Global Chat");
 			} else {
 				chatsButtons.get(i).setText("Chat: " + chat.getConversationID());
 			}
@@ -1116,6 +1205,47 @@ public class ChatClient extends Application {
 		profilePhoneField.setText(number);
 		profileBioArea.setText(bio);
 		profileInterestsArea.setText(interests);		
+	}
+
+	public void updateContactsWind() {
+		for(int i = 0; i < contactsFromServer.size(); i++) {
+			contactsList.add(new HBox());
+			contactsTextList.add(new Text());
+		}
+		
+		for(int i = 0; i < contactsTextList.size(); i++) {
+			Text contactText = contactsTextList.get(i);
+			contactText.setLayoutY(25.0);
+			contactText.setStrokeType(StrokeType.OUTSIDE);
+			contactText.setStrokeWidth(0.0);
+			contactText.setText(contactsFromServer.get(i));
+			contactText.setTextAlignment(TextAlignment.CENTER);
+			contactText.setWrappingWidth(416);
+		}
+		
+		for(int i = 0; i < contactsList.size(); i++) {
+			HBox contactBox = contactsList.get(i);
+			contactBox.setPrefHeight(48.0);
+			contactBox.setPrefWidth(414.0);
+			contactBox.getChildren().add(contactsTextList.get(i));
+		}
+		
+		profileLayout.setPrefHeight(contactsList.size() * 50);
+	}
+	public void initializeContactsWindow() {
+		contactsPane = new ScrollPane();
+		contactsPane.setLayoutX(-1.0);
+		contactsPane.setLayoutY(-1.0);
+		contactsPane.setPrefHeight(358.0);
+		contactsPane.setPrefWidth(416.0);
+
+		contactsLayout = new VBox();
+		contactsLayout.setPrefHeight(contactsList.size() * 50);
+		contactsLayout.setPrefWidth(414.0);
+	}
+	
+	public void setContactsWindow() {
+		
 	}
 
 }

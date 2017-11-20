@@ -27,6 +27,7 @@ public class User {
 
 	public void logOn(ServerThread st) {
 		this.st = st;
+		
 	}
 
 	public void logOff() {

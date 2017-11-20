@@ -15,7 +15,15 @@ public class Conversation {
 	public Conversation(ArrayList<User> users, Integer conversationID) {
 		this.conversationID = conversationID;
 		this.users = users;
+		this.conversationName = "";
 		activeUsers = new ArrayList<User>();
+	}
+	
+	public Conversation(ArrayList<User> users, Integer conversationID, String conversationName) {
+		this.conversationID = conversationID;
+		this.users = users;
+		activeUsers = new ArrayList<User>();
+		this.conversationName = conversationName;
 	}
 
 	public void userOnline(User user) {
@@ -28,6 +36,10 @@ public class Conversation {
 		for (User user : activeUsers) {
 			user.getServerThread().sendChatStringMessage((ChatMessage) message);
 		}
+	}
+
+	public ArrayList<User> getUsers() {
+		return users;
 	}
 
 	public Integer getConversationID() {

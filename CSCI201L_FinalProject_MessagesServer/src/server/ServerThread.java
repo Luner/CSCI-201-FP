@@ -14,6 +14,7 @@ import objects.message.ChatMessage;
 import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
 import objects.message.ConversationsMessage;
+import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
 import objects.message.StringMessage;
@@ -25,12 +26,18 @@ public class ServerThread extends Thread {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private Server cs;
+	private User user;
 	String username;
 	int uid;
+	
 	boolean running = true;
 	@SuppressWarnings("unused")
 	private Database db;
 
+	
+	public User getUser() {
+		return user;
+	}
 	public ServerThread(Socket s, Server cs, Database db) {
 		// Initialize the Object streams for the socket
 		try {
@@ -59,27 +66,27 @@ public class ServerThread extends Thread {
 								((VerificationMessage) message).getPassword())) {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
-
-							// Tell Server User logged on
-							cs.logOn(user, this);
+							this.user = user;
 
 							// Send VerificationResponseMessage
 							VerificationResponseMessage response;
 
 							// Send a verificationResponseMessage with true and the corresponding User ID
 							response = new VerificationResponseMessage(true, uid);
-							try {
-								oos.writeObject(response);
-								oos.flush();
-								Log.sent(response);
-								ArrayList<ClientConversation> list = cs.getUserConversations(user);
-								oos.writeObject(new ConversationsMessage(list));
-								oos.flush();
-								// Log it?
-								return;
-							} catch (IOException ioe) {
-								System.out.println("ioe: " + ioe.getMessage());
-							}
+
+							oos.writeObject(response);
+							oos.flush();
+							
+
+							// Tell Server User logged on
+							cs.logOn(user, this);
+							
+							Log.sent(response);
+							
+							updateConversation();
+
+							// Log it?
+							return;
 						}
 					}
 					// If the user was not found, send a verificationResponseMessage with false and
@@ -103,7 +110,7 @@ public class ServerThread extends Thread {
 							+ cs.getData().getNextID());
 					cs.addUser(new User(username, password, cs.getData().getNextID()), this);
 				} else {
-					// If the Message recieved was not an instance of Verification Messages
+					// If the Message received was not an instance of Verification Messages
 					System.out.println("Exception: Expecting an instanceof VerificationMessage!");
 				}
 			}
@@ -114,6 +121,16 @@ public class ServerThread extends Thread {
 		}
 	}
 
+	public void updateConversation() {
+		try {
+			ArrayList<ClientConversation> list = cs.getUserConversations(user);
+			oos.writeObject(new ConversationsMessage(list));
+			oos.flush();
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
+		}
+	}
+	
 	public void sendMessage(Message message) {
 		try {
 			oos.writeObject(message);
@@ -170,6 +187,8 @@ public class ServerThread extends Thread {
 					cs.sendMessageToAllClients(message);
 				} else if (message instanceof CommandMessage) {
 					cs.receiveCommand((CommandMessage) message, this);
+				} else if (message instanceof CreateConversationMessage) {
+					cs.createConversation((CreateConversationMessage) message);
 				}
 			}
 		} catch (ClassNotFoundException cnfe) {

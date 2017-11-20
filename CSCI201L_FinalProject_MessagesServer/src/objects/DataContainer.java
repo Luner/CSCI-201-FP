@@ -27,14 +27,6 @@ public class DataContainer {
 		return null;
 	}
 
-	public boolean isAdmin(int uid) {
-		User user = findUserByUid(uid);
-		if (user.getType().equals("Admin")) {
-			return true;
-		}
-		return false;
-	}
-
 	public boolean addUser(User user) {
 		for (User user1 : users) {
 			if (user.getUsername().equals(user1.getUsername())) {
@@ -48,5 +40,14 @@ public class DataContainer {
 	public Integer getNextID() {
 		Integer id = users.get(users.size() - 1).getUid() + 1;
 		return id;
+	}
+
+	public User findUserByUsername(String username) {
+		for (User user : users) {
+			if (user.getUsername().equals(username)) {
+				return user;
+			}
+		}
+		return null;
 	}
 }
