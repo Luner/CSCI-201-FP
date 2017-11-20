@@ -28,6 +28,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -360,6 +362,14 @@ public class ChatClient extends Application {
 			chatName.setText("Contacts");
 			setContactsWindow();
 		});
+
+		typedMessage.setOnKeyPressed((e) -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				send(typedMessage.getText());
+				typedMessage.setText("");
+			}
+		});
+
 
 		sendMessage.setOnAction(e -> {
 			send(typedMessage.getText());
