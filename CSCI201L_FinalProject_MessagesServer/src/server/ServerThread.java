@@ -18,6 +18,7 @@ public class ServerThread extends Thread {
 	private ObjectOutputStream oos;
 	private Server cs;
 	private User user;
+	@SuppressWarnings("unused")
 	private String username;
 	int uid;
 

@@ -96,6 +96,7 @@ public class Database {
 		}
 	}
 
+	@SuppressWarnings({ "unused", "rawtypes" })
 	public HashMap<Integer, Conversation> getConversations(DataContainer dc) {
 		String selectQuery = "SELECT * FROM CSCI201.conversations";
 		HashMap<Integer, Conversation> conversationMap = new HashMap<>();
@@ -153,6 +154,7 @@ public class Database {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public ResultSet getMessages(int conversationID) {
 		String selectQuery = "SELECT * from messages WHERE ConversationID = ?";
 		ResultSet rs = null;

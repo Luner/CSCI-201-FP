@@ -22,9 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.SplitPane.Divider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -125,6 +123,7 @@ public class ChatClient extends Application {
 	private TextField typedMessage;
 	private TextArea chatText;
 	private Button sendMessage;
+	@SuppressWarnings("unused")
 	private Button sendFileButton;
 
 	////////// Settings pane //////////////
