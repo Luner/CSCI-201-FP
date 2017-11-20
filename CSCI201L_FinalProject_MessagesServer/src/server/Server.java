@@ -34,9 +34,9 @@ public class Server extends Thread {
 	private Database db;
 
 	public void initializeHistory() {
-		
+
 		chatHistory = new HashMap<Integer, ArrayList<String>>();
-		chatHistory = db.getMessagesMap();
+		// chatHistory = db.getMessagesMap();
 		for (int i = 1; i <= 11; i++) {
 			chatHistory.put(i, new ArrayList<String>());
 		}
@@ -139,22 +139,22 @@ public class Server extends Thread {
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
 		if (message instanceof ChatMessage) {
-			
-			///Add Message
+
+			/// Add Message
 			Integer chatID = ((ChatMessage) message).getCid();
 			String messageString = ((ChatMessage) message).getMessage();
 			Integer userID = ((ChatMessage) message).getUid();
-			
+
 			chatHistory.get(chatID).add(getData().findUserByUid(userID).getUsername() + ": " + messageString);
-			
-			//Add to database
-			db.addMessage(chatID, userID, messageString);
-			
+
+			// Add to database
+			// db.addMessage(chatID, userID, messageString);
+
 			for (ServerThread st : serverThreads) {
 				Message messages = new MessagesMessage(chatHistory);
 				st.sendMessage(messages);
 			}
-			
+
 			Conversation conversation = conversationMap.get(((ChatMessage) message).getCid());
 			conversation.sendMessageToConversation(message);
 		}
@@ -165,21 +165,22 @@ public class Server extends Thread {
 	}
 
 	public void receiveCommand(CommandMessage message, ServerThread st) {
-		if (data.isAdmin(message.getUid())) {
-			String command = message.getCommand();
-			Log.command(message);
-			if (command.startsWith("/add bot")) {
-				Integer number = Integer.parseInt(command.substring(9, 10));
-				new BotThread("localhost", 6789, number);
-			} else if (command.equals("/gamemode 0")) {
-				st.sendStringMessage("You are now in Creative Mode!");
-			} else if (command.equals("/gamemode 1")) {
-				st.sendStringMessage("You are now in Survival Mode!");
-			} else if (command.equals("/help")) {
-				st.sendStringMessage(
-						"--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
-			}
+		String command = message.getCommand();
+		Log.command(message);
+		if (command.startsWith("/add bot")) {
+			Integer number = Integer.parseInt(command.substring(9, 10));
+			String statement = command.substring(10, command.length());
+
+			new BotThread("localhost", 6789, number, statement);
+		} else if (command.equals("/gamemode 0")) {
+			st.sendStringMessage("You are now in Creative Mode!");
+		} else if (command.equals("/gamemode 1")) {
+			st.sendStringMessage("You are now in Survival Mode!");
+		} else if (command.equals("/help")) {
+			st.sendStringMessage(
+					"--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
 		}
+
 	}
 
 	// Allows for Server Commands
@@ -190,7 +191,7 @@ public class Server extends Thread {
 			if (command.equals("add bot")) {
 				System.out.println("What Bot Number would you like?");
 				Integer number = Integer.parseInt(scan.nextLine());
-				new BotThread("localhost", 6789, number);
+				// new BotThread("localhost", 6789, number);
 			} else if (command.equals("help")) {
 				System.out.println("\n\n///HELP MENU///");
 				System.out.println("Commands: ");
@@ -212,7 +213,7 @@ public class Server extends Thread {
 
 		Message messages = new MessagesMessage(chatHistory);
 		st.sendMessage(messages);
-		
+
 		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
 			entry.getValue().addActiveUser(user);
 		}
