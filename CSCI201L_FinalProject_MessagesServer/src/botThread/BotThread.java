@@ -55,6 +55,23 @@ public class BotThread extends Thread {
 		int counter = 0;
 		// An infinite loop that will constantly look for a line from the console
 		// And send a ChatMessage to the Server
+		if(words.equals(" time")) {
+			while(true) {
+				try {
+					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
+					oos.writeObject(message);
+					oos.flush();
+					Thread.sleep(30000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		while (true) {
 			try {
 				if (rand.nextInt(1000000000) < frequency) {

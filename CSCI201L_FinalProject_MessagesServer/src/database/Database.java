@@ -43,7 +43,7 @@ public class Database {
 	}
 
 	public void registerUser(String username, String password) {
-		String insertQuery = "INSERT users SET Username = ? , UserPassword = ?";
+		String insertQuery = "INSERT users SET Username = ?, UserPassword = ?";
 		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
 			ps.setString(1, username);
 			ps.setString(2, password);
@@ -197,6 +197,17 @@ public class Database {
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Failed to insert message: " + message);
+		}
+	}
+	
+	public void addUserToConversation(User u, Integer cid) {
+		String insertQuery = "INSERT conversation_members SET ConversationID = ?, UserID = ?;";
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+			ps.setInt(1, cid);
+			ps.setInt(2, u.getUid());
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Failed to add user " + u.getUsername() + " to a conversation.");
 		}
 	}
 

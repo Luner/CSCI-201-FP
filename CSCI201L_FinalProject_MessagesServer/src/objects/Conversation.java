@@ -12,18 +12,16 @@ public class Conversation {
 	ArrayList<User> activeUsers;
 
 	// requires list of users and a Conversation id
-	public Conversation(ArrayList<User> users, Integer conversationID) {
-		this.conversationID = conversationID;
-		this.users = users;
-		this.conversationName = "";
-		activeUsers = new ArrayList<User>();
-	}
 	
 	public Conversation(ArrayList<User> users, Integer conversationID, String conversationName) {
 		this.conversationID = conversationID;
 		this.users = users;
 		activeUsers = new ArrayList<User>();
 		this.conversationName = conversationName;
+	}
+	
+	public String getName() {
+		return this.conversationName;
 	}
 
 	public void userOnline(User user) {
@@ -59,5 +57,12 @@ public class Conversation {
 			return true;
 		}
 		return false;
+	}
+
+	public void addUser(User user) {
+		if (users.contains(user)) {
+			return;
+		}
+		users.add(user);
 	}
 }

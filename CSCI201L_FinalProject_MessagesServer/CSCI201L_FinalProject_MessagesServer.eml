@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component jdk="JavaSE-1.8" jdk_type="JavaSDK">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="gson.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/CSCI201L_FinalProject_MessagesServer/jars/gson.jar!/"/>
+	</lib>
+	<lib name="mysql.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/CSCI201L_FinalProject_MessagesServer/jars/mysql.jar!/"/>
+	</lib>
+</component>

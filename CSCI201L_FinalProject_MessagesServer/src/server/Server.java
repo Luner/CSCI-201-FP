@@ -115,11 +115,11 @@ public class Server extends Thread {
 	public void addUser(User user, ServerThread st) {
 		if (data.addUser(user)) {
 			System.out.println(data);
-			dataWriter.saveData(data, "JSON/Input.json");
-			st.sendStringMessage("User Created, Please Log In");
+			conversationMap.get(1).addUser(user);
+			conversationMap.get(1).addActiveUser(user);
+			db.registerUser(user.getUsername(), user.getPassword());
+			db.addUserToConversation(user, 1);
 			Log.log("User Created");
-		} else {
-			st.sendStringMessage("User Already Exists");
 		}
 	}
 
@@ -135,7 +135,7 @@ public class Server extends Thread {
 			chatHistory.get(chatID).add(getData().findUserByUid(userID).getUsername() + ": " + messageString);
 
 			// Add to database
-			 db.addMessage(chatID, userID, messageString);
+			db.addMessage(chatID, userID, messageString);
 
 			for (ServerThread st : serverThreads) {
 				Message messages = new MessagesMessage(chatHistory);
@@ -159,6 +159,13 @@ public class Server extends Thread {
 			String statement = command.substring(10, command.length());
 
 			new BotThread("localhost", 6789, number, statement);
+		} else if (command.startsWith("/addUser")) {
+			String username = command.substring(9, command.length() - 9);
+			String chatID = command.substring(command.length() - 9, command.length());
+			int cid = Integer.parseInt(chatID.substring(chatID.indexOf("J") + 1, chatID.length()));
+			
+			addUserToConversation(data.findUserByUsername(username), cid);
+			 
 		} else if (command.equals("/gamemode 0")) {
 			st.sendStringMessage("You are now in Creative Mode!");
 		} else if (command.equals("/gamemode 1")) {
@@ -167,7 +174,6 @@ public class Server extends Thread {
 			st.sendStringMessage(
 					"--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
 		}
-
 	}
 
 	// Allows for Server Commands
@@ -204,12 +210,21 @@ public class Server extends Thread {
 
 	public ArrayList<ClientConversation> getUserConversations(User user) {
 		ArrayList<ClientConversation> result = new ArrayList<ClientConversation>();
+		
 		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
 			if (entry.getValue().hasUser(user)) {
-				result.add(new ClientConversation(entry.getValue().getConversationID()));
+				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
 			}
 		}
+		System.out.println("REAL ZSIZE " + result.size() );
 		return result;
+	}
+	
+	public void addUserToConversation(User user, Integer cid) {
+
+		conversationMap.get(cid).addUser(user);
+		conversationMap.get(cid).addActiveUser(user);
+		db.addUserToConversation(user, cid);
 	}
 
 	public void createConversation(CreateConversationMessage message) {
@@ -218,8 +233,8 @@ public class Server extends Thread {
 
 		ArrayList<User> newUsers = new ArrayList<User>();
 		chatHistory.put(chatID, new ArrayList<String>());
-		
-		
+
+
 		for (String username : message.getUsers()) {
 
 			User temp = data.findUserByUsername(username);
@@ -230,10 +245,9 @@ public class Server extends Thread {
 
 		}
 
-		db.createConversation(newUsers, "", chatID);
+		db.createConversation(newUsers, ((CreateConversationMessage) message).getName(), chatID);
 
-		conversationMap.put(chatID, new Conversation(newUsers, chatID));
-		
+		conversationMap.put(chatID, new Conversation(newUsers, chatID, ((CreateConversationMessage) message).getName()));
 		
 		for (ServerThread st : serverThreads) {
 			conversationMap.get(chatID).addActiveUser(st.getUser());

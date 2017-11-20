@@ -14,12 +14,15 @@ public class CreateConversationMessage extends Message {
 	private String user3;
 	private String user4;
 
-	public CreateConversationMessage(String user0, String user1, String user2, String user3, String user4) {
+	private String name;
+	
+	public CreateConversationMessage(String user0, String user1, String user2, String user3, String user4, String name) {
 		this.user0 = user0;
 		this.user1 = user1;
 		this.user2 = user2;
 		this.user3 = user3;
 		this.user4 = user4;
+		this.name = name;
 	}
 
 	public ArrayList<String> getUsers(){
@@ -30,5 +33,9 @@ public class CreateConversationMessage extends Message {
 		result.add(user3);
 		result.add(user4);
 		return result;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

@@ -8,9 +8,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.GroupLayout.Alignment;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
@@ -20,7 +17,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,7 +40,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.ClientConversation;
-import objects.message.*;
 import objects.message.CommandMessage;
 import objects.message.ContactsMessage;
 import objects.message.ConversationsMessage;
@@ -90,7 +85,6 @@ public class ChatClient extends Application {
 	// TextFields
 	TextField username;
 	PasswordField password;
-	TextField guestUsername;
 
 	// Login Button
 	Button login;
@@ -217,6 +211,7 @@ public class ChatClient extends Application {
 	HBox addConversationspacing4;
 	HBox addConversationspacing5;
 	HBox addConversationspacing6;
+	HBox addConversationspacing7;
 
 	HBox User1Layout;
 	Text User1Label;
@@ -233,6 +228,10 @@ public class ChatClient extends Application {
 	HBox User4Layout;
 	Text User4Label;
 	TextField User4Input;
+	
+	HBox User5Layout;
+	Text User5Label;
+	TextField User5Input;
 
 	HBox addConversationBox;
 	Text addConversationText;
@@ -263,6 +262,7 @@ public class ChatClient extends Application {
 	
 	private String user_Username;
 	private Map<Integer, ArrayList<String>> chatHistory;
+	private Map<Integer, String> chatIDtoName;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -273,6 +273,7 @@ public class ChatClient extends Application {
 		// 10.14.112.127
 		primaryStage.setTitle("Messaging Application");
 		chatsMap = new HashMap<Button, Integer>();
+		chatIDtoName = new HashMap<Integer, String>();
 		initializeIPSelect();
 		initializeLoginPage();
 		initializeChatWindow();
@@ -312,13 +313,14 @@ public class ChatClient extends Application {
 			String user2 = User2Input.getText();
 			String user3 = User3Input.getText();
 			String user4 = User4Input.getText();
+			String name = User5Input.getText();
 
 			User1Input.setText("");
 			User2Input.setText("");
 			User3Input.setText("");
 			User4Input.setText("");
 
-			createConversation(user1, user2, user3, user4);
+			createConversation(user1, user2, user3, user4, name);
 			chatText.setFont(new Font("Helvetica", 12));
 			chatText.setText("");
 
@@ -495,7 +497,16 @@ public class ChatClient extends Application {
 			// Creates a ChatMessage with the input
 			Message message;
 			if (text.startsWith("/") || text.startsWith("\\")) {
+				if(text.startsWith("/addUser")) {
+					int max = 9 - selectedChat.toString().length();
+					for(int i = 0; i < max; i++) {
+						text += " ";
+					}
+					text += "J";
+					text += selectedChat.toString().length();
+				}
 				message = new CommandMessage(uid, text);
+				
 			} else {
 				message = new ChatMessage(uid, selectedChat, text);
 			}
@@ -508,8 +519,8 @@ public class ChatClient extends Application {
 		}
 	}
 
-	private void createConversation(String user1, String user2, String user3, String user4) {
-		Message message = new CreateConversationMessage(user_Username, user1, user2, user3, user4);
+	private void createConversation(String user1, String user2, String user3, String user4, String name) {
+		Message message = new CreateConversationMessage(user_Username, user1, user2, user3, user4, name);
 		try {
 			oos.writeObject(message);
 			oos.flush();
@@ -598,7 +609,7 @@ public class ChatClient extends Application {
 										if (chatid == 0) {
 											chatName.setText("Global Chat");
 										} else {
-											chatName.setText("Chat: " + chatid);
+											chatName.setText(chatIDtoName.get(chatid));
 										}
 										selectedChat = chatid;
 
@@ -615,16 +626,9 @@ public class ChatClient extends Application {
 						number = pm.getNumber();
 						bio = pm.getBio();
 						interests = pm.getInterests();
-						populateProfileWindow();
 					} else if (message instanceof MessagesMessage) {
-						System.out.println("YES!!!!");
 						chatHistory = ((MessagesMessage) message).getMessage();
 
-						for (Entry<Integer, ArrayList<String>> entry : chatHistory.entrySet()) {
-							for (String s : entry.getValue()) {
-								System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
-							}
-						}
 					} else if (message instanceof ContactsMessage) {
 						contactsFromServer = ((ContactsMessage) message).getContacts();
 						updateContactsWind();
@@ -765,10 +769,6 @@ public class ChatClient extends Application {
 		password.setLayoutX(265.0);
 		password.setLayoutY(129.0);
 
-		// PasswordTextField
-		guestUsername = new TextField();
-		guestUsername.setLayoutX(265.0);
-		guestUsername.setLayoutY(272.0);
 
 		// LoginButton
 		login = new Button();
@@ -798,7 +798,6 @@ public class ChatClient extends Application {
 		loginLayout.getChildren().add(devider);
 		loginLayout.getChildren().add(username);
 		loginLayout.getChildren().add(password);
-		loginLayout.getChildren().add(guestUsername);
 		loginLayout.getChildren().add(login);
 		loginLayout.getChildren().add(createUser);
 		loginLayout.getChildren().add(guestButton);
@@ -1212,9 +1211,12 @@ public class ChatClient extends Application {
 
 			if (i == 0) {
 				chatsButtons.get(i).setText("Global Chat");
+				chatIDtoName.put(chats.get(i).getConversationID(), "Global Chat");
 			} else {
-				chatsButtons.get(i).setText("Chat: " + chat.getConversationID());
+				chatsButtons.get(i).setText(chat.getName());
+				chatIDtoName.put(chats.get(i).getConversationID(), chat.getName());
 			}
+			
 			chatsMap.put(chatsButtons.get(i), chat.getConversationID());
 		}
 
@@ -1429,6 +1431,10 @@ public class ChatClient extends Application {
 		addConversationspacing6.setPrefHeight(20.0);
 		addConversationspacing6.setPrefWidth(414.0);
 
+		addConversationspacing7 = new HBox();
+		addConversationspacing7.setPrefHeight(20.0);
+		addConversationspacing7.setPrefWidth(414.0);
+
 		User1Layout = new HBox();
 		User1Layout.setPrefHeight(20.0);
 		User1Layout.setPrefWidth(414.0);
@@ -1484,6 +1490,20 @@ public class ChatClient extends Application {
 		User4Label.setFont(new Font("Helvetica", 18));
 
 		User4Input = new TextField();
+		
+		User5Layout = new HBox();
+		User5Layout.setPrefHeight(20.0);
+		User5Layout.setPrefWidth(414.0);
+
+		User5Label = new Text();
+		User5Label.setStrokeType(StrokeType.OUTSIDE);
+		User5Label.setStrokeWidth(0.0);
+		User5Label.setText("Chat Name:");
+		User5Label.setTextAlignment(TextAlignment.CENTER);
+		User5Label.setWrappingWidth(214.0);
+		User5Label.setFont(new Font("Helvetica", 18));
+
+		User5Input = new TextField();
 
 		addConversationBox = new HBox();
 		addConversationBox.setPrefHeight(20.0);
@@ -1532,25 +1552,18 @@ public class ChatClient extends Application {
 		User4Layout.getChildren().add(User4Label);
 		User4Layout.getChildren().add(User4Input);
 
-		addConversationLayout.getChildren().add(addConversationspacing5);
 
-		addConversationLayout.getChildren().add(addConversationBox);
-		addConversationBox.getChildren().add(addConversationText);
-
+		addConversationLayout.getChildren().add(addConversationspacing7);
+		
+		addConversationLayout.getChildren().add(User5Layout);
+		User5Layout.getChildren().add(User5Label);
+		User5Layout.getChildren().add(User5Input);
+		
 		addConversationLayout.getChildren().add(addConversationspacing6);
 
 		addConversationLayout.getChildren().add(addConversationButtonBox);
 		addConversationButtonBox.getChildren().add(addConversationButton);
 
-	}
-
-	private void populateProfileWindow() {
-		// profileFNameField.setText(fName);
-		// profileLNameField.setText(lName);
-		// profileEmailField.setText(email);
-		// profilePhoneField.setText(number);
-		// profileBioArea.setText(bio);
-		// profileInterestsArea.setText(interests);
 	}
 
 	public void updateContactsWind() {
