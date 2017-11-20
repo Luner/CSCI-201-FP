@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class DataContainer {
 
 	// An ArrayList of all registered users
-	ArrayList<User> users;
+	private ArrayList<User> users;
 
 	public DataContainer(ArrayList<User> users) {
 		this.users = users;
@@ -38,8 +38,7 @@ public class DataContainer {
 	}
 
 	public Integer getNextID() {
-		Integer id = users.get(users.size() - 1).getUid() + 1;
-		return id;
+		return users.get(users.size() - 1).getUid() + 1;
 	}
 
 	public User findUserByUsername(String username) {

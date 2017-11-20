@@ -27,7 +27,7 @@ public class User {
 
 	public void logOn(ServerThread st) {
 		this.st = st;
-		
+
 	}
 
 	public void logOff() {
@@ -69,22 +69,13 @@ public class User {
 
 		User user = (User) o;
 
-		if (this.username.equals(user.getUsername()) && this.password.equals(user.getPassword())
-				&& this.uid == user.getUid()) {
-			return true;
-		}
-
-		return false;
+		return this.username.equals(user.getUsername()) && this.password.equals(user.getPassword()) && this.uid == user.getUid();
 	}
 
 	// Will verify a user based on a given username and password
 	// returns true if 'verified'
 	public boolean verify(String username, String password) {
 
-		if (this.username.equals(username) && this.password.equals(password)) {
-			return true;
-		}
-
-		return false;
+		return this.username.equals(username) && this.password.equals(password);
 	}
 }
