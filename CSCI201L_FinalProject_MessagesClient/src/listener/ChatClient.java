@@ -24,6 +24,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.SplitPane.Divider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -133,9 +134,6 @@ public class ChatClient extends Application {
 
 	// title area
 	Pane settingsTitlePane;
-	Label settingsTitleLabel;
-
-	Separator settingsTitleSeparator;
 
 	// setting details
 	Pane settingsDetailPane;
@@ -215,6 +213,8 @@ public class ChatClient extends Application {
 	HBox addConversationspacing5;
 	HBox addConversationspacing6;
 	HBox addConversationspacing7;
+	HBox addConversationspacing8;
+	HBox addConversationspacing9;
 
 	HBox User1Layout;
 	Text User1Label;
@@ -279,11 +279,11 @@ public class ChatClient extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		loggedIn = false;
 		// 10.14.112.127
 		primaryStage.setTitle("Messaging Application");
 		primaryStage.initStyle(StageStyle.UTILITY);
-
+		primaryStage.setResizable(false);
+		
 		chatsMap = new HashMap<Button, Integer>();
 		chatIDtoName = new HashMap<Integer, String>();
 		initializeIPSelect();
@@ -308,6 +308,7 @@ public class ChatClient extends Application {
 					System.out.println("Failed to connect to specified server.");
 					System.exit(0);
 				} else {
+					loggedIn = true;
 					primaryStage.setScene(loginScene);
 				}
 			}
@@ -320,6 +321,7 @@ public class ChatClient extends Application {
 				if (login(username.getText(), password.getText())) {
 					loggedIn = true;
 					user_Username = username.getText();
+					addFunctions();
 					primaryStage.setScene(chatScene);
 					Thread th = new Thread(task);
 					th.setDaemon(true);
@@ -370,6 +372,7 @@ public class ChatClient extends Application {
 		});
 
 		settings.setOnMouseClicked(e -> {
+			chatName.setText("Settings");
 			setSettingsPane();
 		});
 
@@ -423,6 +426,14 @@ public class ChatClient extends Application {
 		primaryStage.show();
 
 	}
+	
+	private void addFunctions() {
+		leftSide.getChildren().add(settings);
+		leftSide.getChildren().add(contacts);
+		leftSide.getChildren().add(profile);
+		leftSide.getChildren().add(logOutButton);
+		leftSide.getChildren().add(add);
+	}
 
 	private void logout() {
 		if (loggedIn == true) {
@@ -436,6 +447,7 @@ public class ChatClient extends Application {
 			
 			loggedIn = false;
 		}
+		
 		System.exit(0);
 	}
 
@@ -825,7 +837,7 @@ public class ChatClient extends Application {
 		// create Guest Button
 		guestButton = new Button();
 		guestButton.setLayoutX(281.0);
-		guestButton.setLayoutY(316.0);
+		guestButton.setLayoutY(266.0);
 		guestButton.setMnemonicParsing(false);
 		guestButton.setText("Guest");
 
@@ -846,40 +858,28 @@ public class ChatClient extends Application {
 		// initialize components here
 		settingsPane = new Pane();
 		settingsPane.setPrefHeight(400);
-		settingsPane.setPrefWidth(400);
+		settingsPane.setPrefWidth(435);
 		settingsVBox = new VBox();
 		settingsVBox.setPrefHeight(400);
-		settingsVBox.setPrefWidth(400);
+		settingsVBox.setPrefWidth(435);
 
 		settingsTitlePane = new Pane();
 		settingsTitlePane.setPrefHeight(27);
-		settingsTitlePane.setPrefWidth(380);
+		settingsTitlePane.setPrefWidth(435);
 		VBox.setMargin(settingsTitlePane, new Insets(10));
-		settingsTitleLabel = new Label("Settings");
-		settingsTitleLabel.setContentDisplay(ContentDisplay.CENTER);
-		settingsTitleLabel.setLayoutX(161);
-		settingsTitleLabel.setLayoutY(-3.0);
-		settingsTitleLabel.setPrefHeight(35);
-		settingsTitleLabel.setPrefWidth(70);
-		settingsTitleLabel.setTextAlignment(TextAlignment.CENTER);
 
-		settingsTitleSeparator = new Separator();
-		settingsTitleSeparator.setPrefHeight(7);
-		settingsTitleSeparator.setPrefWidth(400);
 
 		settingsDetailPane = new Pane();
 		settingsDetailPane.setPrefHeight(349);
-		settingsDetailPane.setPrefWidth(400);
+		settingsDetailPane.setPrefWidth(435);
 
 		settingsInfoLabel = new Label("Account Information");
-		settingsInfoLabel.setLayoutX(152);
+		settingsInfoLabel.setLayoutX(122);
 		settingsInfoLabel.setLayoutY(7);
-		settingsInfoLabel.setFont(Font.font("Helvetica", 12));
+		settingsInfoLabel.setFont(Font.font("Helvetica", 18));
 		settingsInfoLabel.setPrefHeight(26);
-		settingsInfoLabel.setPrefWidth(114);
+		settingsInfoLabel.setPrefWidth(174);
 		settingsInfoLabel.setTextAlignment(TextAlignment.CENTER);
-		settingsInfoLabel.setUnderline(true);
-		settingsInfoLabel.setFont(Font.font("Helvetica", 12));
 
 		settingsInfoHBox = new HBox();
 		settingsInfoHBox.setLayoutX(38);
@@ -891,14 +891,14 @@ public class ChatClient extends Application {
 		settingsInfoLabelVBox.setPrefHeight(200);
 		settingsInfoLabelVBox.setPrefHeight(100);
 
-		settingsInfoNewUsernameLabel = new Label("New Username:");
-		settingsInfoNewUsernameLabel.setFont(Font.font("Helvetica", 12));
+		settingsInfoNewUsernameLabel = new Label("Username:");
+		settingsInfoNewUsernameLabel.setFont(Font.font("Helvetica", 16));
 		settingsInfoNewUsernameLabel.setPrefHeight(36);
 		settingsInfoNewUsernameLabel.setPrefWidth(100);
 		VBox.setMargin(settingsInfoNewUsernameLabel, new Insets(4));
 
-		settingsInfoNewPasswordLabel = new Label("New Password:");
-		settingsInfoNewUsernameLabel.setFont(Font.font("Helvetica", 12));
+		settingsInfoNewPasswordLabel = new Label("Password:");
+		settingsInfoNewPasswordLabel.setFont(Font.font("Helvetica", 16));
 		settingsInfoNewPasswordLabel.setPrefHeight(36);
 		settingsInfoNewPasswordLabel.setPrefWidth(100);
 		VBox.setMargin(settingsInfoNewPasswordLabel, new Insets(4));
@@ -914,13 +914,12 @@ public class ChatClient extends Application {
 		VBox.setMargin(settingsInfoNewPasswordField, new Insets(4));
 
 		settingsDetailSettingsLabel = new Label("Chat Settings");
-		settingsDetailSettingsLabel.setFont(Font.font("Helvetica", 12));
-		settingsDetailSettingsLabel.setLayoutX(169);
+		settingsDetailSettingsLabel.setFont(Font.font("Helvetica", 18));
+		settingsDetailSettingsLabel.setLayoutX(154);
 		settingsDetailSettingsLabel.setLayoutY(118);
 		settingsDetailSettingsLabel.setPrefHeight(26);
-		settingsDetailSettingsLabel.setPrefWidth(81);
+		settingsDetailSettingsLabel.setPrefWidth(131);
 		settingsDetailSettingsLabel.setTextAlignment(TextAlignment.CENTER);
-		settingsDetailSettingsLabel.setUnderline(true);
 
 		settingsDetailSettingsHBox = new HBox();
 		settingsDetailSettingsHBox.setLayoutX(38);
@@ -933,12 +932,12 @@ public class ChatClient extends Application {
 		settingsDetailSettingsLabelVBox.setPrefWidth(105);
 
 		settingsDetailSettingsColorLabel = new Label("Text Color:");
-		settingsDetailSettingsColorLabel.setFont(Font.font("Helvetica", 12));
+		settingsDetailSettingsColorLabel.setFont(Font.font("Helvetica", 16));
 		settingsDetailSettingsColorLabel.setPrefHeight(45);
 		settingsDetailSettingsColorLabel.setPrefWidth(107);
 
 		settingsDetailSettingsFontLabel = new Label("Font Style:");
-		settingsDetailSettingsFontLabel.setFont(Font.font("Helvetica", 12));
+		settingsDetailSettingsFontLabel.setFont(Font.font("Helvetica", 16));
 		settingsDetailSettingsFontLabel.setPrefHeight(45);
 		settingsDetailSettingsFontLabel.setPrefWidth(107);
 
@@ -1055,7 +1054,7 @@ public class ChatClient extends Application {
 		});
 		settingsDetailSettingsFontComboBox.setValue(chatFont);
 
-		settingsUpdateButton = new Button("Update Settings");
+		settingsUpdateButton = new Button("Update");
 		settingsUpdateButton.setLayoutX(152);
 		settingsUpdateButton.setLayoutY(254);
 		settingsUpdateButton.setMnemonicParsing(false);
@@ -1064,8 +1063,7 @@ public class ChatClient extends Application {
 
 		// set layout here
 		settingsPane.getChildren().add(settingsVBox);
-		settingsVBox.getChildren().addAll(settingsTitlePane, settingsTitleSeparator, settingsDetailPane);
-		settingsTitlePane.getChildren().add(settingsTitleLabel);
+		settingsVBox.getChildren().addAll(settingsTitlePane, settingsDetailPane);
 		settingsDetailPane.getChildren().addAll(settingsInfoLabel, settingsInfoHBox, settingsDetailSettingsLabel,
 				settingsDetailSettingsHBox, settingsUpdateButton);
 		settingsInfoHBox.getChildren().addAll(settingsInfoLabelVBox, settingsInfoFieldsVBox);
@@ -1083,30 +1081,32 @@ public class ChatClient extends Application {
 	private void setSettingsPane() {
 		rightSide.getChildren().clear();
 		rightSide.getChildren().add(settingsPane);
+		rightSide.getChildren().add(chatName);
 	}
 
 	public void initializeChatWindow() {
 
 		SplitPane chatLayout = new SplitPane();
-		chatLayout.setDividerPositions(0.354515);
+		chatLayout.setDividerPositions(0.335);
 		chatLayout.setMaxHeight(Double.NEGATIVE_INFINITY);
 		chatLayout.setMaxWidth(Double.NEGATIVE_INFINITY);
 		chatLayout.setMinHeight(Double.NEGATIVE_INFINITY);
 		chatLayout.setMinWidth(Double.NEGATIVE_INFINITY);
 		chatLayout.setPrefHeight(400.0);
-		chatLayout.setPrefWidth(600.0);
+		chatLayout.setPrefWidth(635.0);
+		
 
 		leftSide = new AnchorPane();
 		leftSide.setMinHeight(0.0);
 		leftSide.setMinWidth(0.0);
 		leftSide.setPrefHeight(398);
-		leftSide.setPrefWidth(300);
+		leftSide.setPrefWidth(200);
 
 		rightSide = new AnchorPane();
 		rightSide.setMinHeight(0.0);
 		rightSide.setMinWidth(0.0);
 		rightSide.setPrefHeight(400);
-		rightSide.setPrefWidth(374);
+		rightSide.setPrefWidth(435);
 
 		chatLayout.getItems().add(leftSide);
 		chatLayout.getItems().add(rightSide);
@@ -1115,29 +1115,30 @@ public class ChatClient extends Application {
 		typedMessage.setLayoutX(2.0);
 		typedMessage.setLayoutY(371.0);
 		typedMessage.setPrefHeight(25.0);
-		typedMessage.setPrefWidth(313.0);
+		typedMessage.setPrefWidth(348.0);
 
 		chatText = new TextArea();
 		chatText.setLayoutX(2.0);
 		chatText.setLayoutY(33.0);
 		chatText.setPrefHeight(336.0);
-		chatText.setPrefWidth(376.0);
+		chatText.setPrefWidth(412.0);
 		chatText.setEditable(false);
 		chatText.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
 
 		chatName = new Text();
 		chatName.setLayoutX(2.0);
-		chatName.setLayoutY(21.0);
+		chatName.setLayoutY(26.0);
 		chatName.setStrokeType(StrokeType.OUTSIDE);
 		chatName.setStrokeWidth(0.0);
 		chatName.setTextAlignment(TextAlignment.CENTER);
 		chatName.setWrappingWidth(416.0);
 		chatName.setFont(new Font("Helvetica", 20));
 		chatName.setText("Global Chat");
+		
 
 		sendMessage = new Button();
-		sendMessage.setLayoutX(315.0);
-		sendMessage.setLayoutY(371.0);
+		sendMessage.setLayoutX(352.0);
+		sendMessage.setLayoutY(370.0);
 		sendMessage.setMnemonicParsing(false);
 		sendMessage.setPrefHeight(25.0);
 		sendMessage.setPrefWidth(62.0);
@@ -1156,7 +1157,7 @@ public class ChatClient extends Application {
 
 		chatsButtonsLayout = new VBox();
 		chatsButtonsLayout.setPrefHeight(365.0);
-		chatsButtonsLayout.setPrefWidth(207.0);
+		chatsButtonsLayout.setPrefWidth(190.0);
 
 		chatsButtons = new ArrayList<Button>();
 
@@ -1218,11 +1219,6 @@ public class ChatClient extends Application {
 		chatsPane.setContent(chatsButtonsLayout);
 
 		leftSide.getChildren().add(chatsPane);
-		leftSide.getChildren().add(settings);
-		leftSide.getChildren().add(contacts);
-		leftSide.getChildren().add(profile);
-		leftSide.getChildren().add(logOutButton);
-		leftSide.getChildren().add(add);
 
 		chatScene = new Scene(chatLayout);
 	}
@@ -1240,6 +1236,7 @@ public class ChatClient extends Application {
 		rightSide.getChildren().clear();
 		rightSide.getChildren().add(profilePane);
 		rightSide.getChildren().add(chatName);
+		
 	}
 
 	private void updateClientChats(ArrayList<ClientConversation> chats) {
@@ -1253,7 +1250,7 @@ public class ChatClient extends Application {
 			chatsButtons.add(new Button());
 			chatsButtons.get(i).setMnemonicParsing(false);
 			chatsButtons.get(i).setPrefHeight(50.0);
-			chatsButtons.get(i).setPrefWidth(207);
+			chatsButtons.get(i).setPrefWidth(190);
 
 			if (i == 0) {
 				chatsButtons.get(i).setText("Global Chat");
@@ -1267,18 +1264,18 @@ public class ChatClient extends Application {
 		}
 
 		// change height of vbox
-		chatsButtonsLayout.setPrefHeight(chats.size() * 52.0);
+		chatsButtonsLayout.setPrefHeight(chats.size() * 50.0);
 	}
 
 	public void initializeProfileWindow() {
 		profilePane = new ScrollPane();
 		profilePane.setLayoutX(-1.0);
 		profilePane.setLayoutY(-1.0);
-		profilePane.setPrefHeight(358.0);
+		profilePane.setPrefHeight(398.0);
 		profilePane.setPrefWidth(416.0);
 
 		profileLayout = new VBox();
-		profileLayout.setPrefHeight(348.0);
+		profileLayout.setPrefHeight(378.0);
 		profileLayout.setPrefWidth(414.0);
 
 		spacing1 = new HBox();
@@ -1308,6 +1305,7 @@ public class ChatClient extends Application {
 		spacing7 = new HBox();
 		spacing7.setPrefHeight(20.0);
 		spacing7.setPrefWidth(414.0);
+		
 
 		firstNameLayout = new HBox();
 		firstNameLayout.setPrefHeight(20.0);
@@ -1390,9 +1388,9 @@ public class ChatClient extends Application {
 		facebookProfileIcon.setImage(new Image(file.toURI().toString()));
 
 		profilePane.setContent(profileLayout);
-
+		
 		profileLayout.getChildren().add(spacing1);
-
+		profileLayout.getChildren().add(spacing7);
 		profileLayout.getChildren().add(firstNameLayout);
 		firstNameLayout.getChildren().add(firstNameProfileLabel);
 		firstNameLayout.getChildren().add(firstNameProfileInput);
@@ -1446,7 +1444,7 @@ public class ChatClient extends Application {
 		addConversationPane = new ScrollPane();
 		addConversationPane.setLayoutX(-1.0);
 		addConversationPane.setLayoutY(-1.0);
-		addConversationPane.setPrefHeight(358.0);
+		addConversationPane.setPrefHeight(398.0);
 		addConversationPane.setPrefWidth(416.0);
 
 		addConversationLayout = new VBox();
@@ -1480,6 +1478,14 @@ public class ChatClient extends Application {
 		addConversationspacing7 = new HBox();
 		addConversationspacing7.setPrefHeight(20.0);
 		addConversationspacing7.setPrefWidth(414.0);
+
+		addConversationspacing8 = new HBox();
+		addConversationspacing8.setPrefHeight(20.0);
+		addConversationspacing8.setPrefWidth(414.0);
+		
+		addConversationspacing9 = new HBox();
+		addConversationspacing9.setPrefHeight(20.0);
+		addConversationspacing9.setPrefWidth(414.0);
 
 		User1Layout = new HBox();
 		User1Layout.setPrefHeight(20.0);
@@ -1575,6 +1581,7 @@ public class ChatClient extends Application {
 		addConversationPane.setContent(addConversationLayout);
 
 		addConversationLayout.getChildren().add(addConversationspacing1);
+		addConversationLayout.getChildren().add(addConversationspacing8);
 
 		addConversationLayout.getChildren().add(User1Layout);
 		User1Layout.getChildren().add(User1Label);
@@ -1599,6 +1606,7 @@ public class ChatClient extends Application {
 		User4Layout.getChildren().add(User4Input);
 
 		addConversationLayout.getChildren().add(addConversationspacing7);
+		addConversationLayout.getChildren().add(addConversationspacing9);
 
 		addConversationLayout.getChildren().add(User5Layout);
 		User5Layout.getChildren().add(User5Label);
@@ -1619,7 +1627,9 @@ public class ChatClient extends Application {
 			contactsButtons.add(new Button());
 			contactsButtons.get(i).setMnemonicParsing(false);
 			contactsButtons.get(i).setPrefHeight(48.0);
-			contactsButtons.get(i).setPrefWidth(414.0);
+			contactsButtons.get(i).setLayoutX(5);
+			VBox.setMargin(contactsButtons.get(i), new Insets(0, 0, 0, 5));
+			contactsButtons.get(i).setPrefWidth(400.0);
 			contactsButtons.get(i).setText(contactsFromServer.get(i));
 		}
 
@@ -1631,13 +1641,13 @@ public class ChatClient extends Application {
 		contactsPane.setLayoutX(2.0);
 		contactsPane.setLayoutY(33.0);
 		contactsPane.setPrefHeight(358.0);
-		contactsPane.setPrefWidth(416.0);
+		contactsPane.setPrefWidth(412.0);
 		contactsButtons = new ArrayList<Button>();
 		// contactsList = new ArrayList<HBox>();
 		contactsFromServer = new ArrayList<String>();
 		contactsLayout = new VBox();
 		// contactsLayout.setPrefHeight(contactsButtons.size() * 50);
-		contactsLayout.setPrefWidth(414.0);
+		contactsLayout.setPrefWidth(390.0);
 		contactsPane.setContent(contactsLayout);
 	}
 
@@ -1656,7 +1666,7 @@ public class ChatClient extends Application {
 		}
 	}
 
-	private void clearAllFields() {
+	public void clearAllFields() {
 		username.clear();
 		password.clear();
 		ipEntry.clear();
@@ -1672,7 +1682,6 @@ public class ChatClient extends Application {
 		User2Input.clear();
 		User3Input.clear();
 		User4Input.clear();
-
 	}
 
 }

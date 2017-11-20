@@ -20,15 +20,15 @@ public class ServerThread extends Thread {
 	private User user;
 	String username;
 	int uid;
-	
+
 	boolean running = true;
 	@SuppressWarnings("unused")
 	private Database db;
 
-	
 	public User getUser() {
 		return user;
 	}
+
 	public ServerThread(Socket s, Server cs, Database db) {
 		// Initialize the Object streams for the socket
 		try {
@@ -67,13 +67,12 @@ public class ServerThread extends Thread {
 
 							oos.writeObject(response);
 							oos.flush();
-							
 
 							// Tell Server User logged on
 							cs.logOn(user, this);
-							
+
 							Log.sent(response);
-							
+
 							updateConversation();
 
 							// Log it?
@@ -100,6 +99,9 @@ public class ServerThread extends Thread {
 					System.out.println("username: " + username + "  password: " + password + "  nextId: "
 							+ cs.getData().getNextID());
 					cs.addUser(new User(username, password, cs.getData().getNextID()), this);
+				} else if (message instanceof LogoutMessage) {
+					running = false;
+					break;
 				} else {
 					// If the Message received was not an instance of Verification Messages
 					System.out.println("Exception: Expecting an instanceof VerificationMessage!");
@@ -121,7 +123,7 @@ public class ServerThread extends Thread {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
-	
+
 	public void sendMessage(Message message) {
 		try {
 			oos.writeObject(message);
@@ -163,11 +165,11 @@ public class ServerThread extends Thread {
 
 		}
 	}
-	
+
 	public void updateContacts() {
 		ArrayList<String> contacts = new ArrayList<String>();
 		ArrayList<User> temp = cs.getData().getUsers();
-		for(User u : temp) {
+		for (User u : temp) {
 			contacts.add(u.getUsername());
 		}
 		ContactsMessage cm = new ContactsMessage(contacts);
@@ -178,22 +180,26 @@ public class ServerThread extends Thread {
 			e.printStackTrace();
 		}
 	}
+
 	// Handles consistently listening for chatMessages from client
 	public void run() {
 		login();
 		ArrayList<String> contacts = new ArrayList<String>();
 		ArrayList<User> temp = cs.getData().getUsers();
-		for(User u : temp) {
+		for (User u : temp) {
 			contacts.add(u.getUsername());
 		}
-		ContactsMessage cm = new ContactsMessage(contacts);
-		try {
-			oos.writeObject(cm);
-			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		if (running) {
+			ContactsMessage cm = new ContactsMessage(contacts);
+			try {
+				oos.writeObject(cm);
+				oos.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 		try {
 
 			while (running) {

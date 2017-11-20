@@ -6,4 +6,6 @@ public class LogoutMessage extends Message {
 
 	public LogoutMessage() {
 	}
+
+	
 }
