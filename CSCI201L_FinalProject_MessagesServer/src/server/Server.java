@@ -123,6 +123,9 @@ public class Server extends Thread {
 			db.registerUser(user.getUsername(), user.getPassword());
 			db.addUserToConversation(user, 1);
 			Log.log("User Created");
+			for(ServerThread serverThread : serverThreads) {
+				serverThread.updateContacts();
+			}
 		}
 	}
 

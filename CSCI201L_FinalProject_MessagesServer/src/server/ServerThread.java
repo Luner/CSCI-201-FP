@@ -163,6 +163,7 @@ public class ServerThread extends Thread {
 
 		}
 	}
+	
 	public void updateContacts() {
 		ArrayList<String> contacts = new ArrayList<String>();
 		ArrayList<User> temp = cs.getData().getUsers();
