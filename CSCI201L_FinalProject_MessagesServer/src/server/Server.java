@@ -156,7 +156,7 @@ public class Server extends Thread {
 		Log.command(message);
 		if (command.startsWith("/add bot")) {
 			Integer number = Integer.parseInt(command.substring(9, 10));
-			String statement = command.substring(10, command.length());
+			String statement = command.substring(11, command.length());
 
 			new BotThread("localhost", 6789, number, statement);
 		} else if (command.startsWith("/addUser")) {
