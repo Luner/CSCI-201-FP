@@ -343,6 +343,7 @@ public class ChatClient extends Application {
 
 		guestButton.setOnAction(e -> {
 			if (login("Guest", "None")) {
+				loggedIn = true;
 				primaryStage.setScene(chatScene);
 				Thread th = new Thread(task);
 				th.setDaemon(true);
