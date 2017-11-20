@@ -28,6 +28,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -80,7 +82,6 @@ public class ChatClient extends Application {
 	Text usernameLabel;
 	Text passwordLabel;
 	Text title;
-	Text guestUsernameLabel;
 
 	// TextFields
 	TextField username;
@@ -362,6 +363,14 @@ public class ChatClient extends Application {
 			chatName.setText("Contacts");
 			setContactsWindow();
 		});
+
+		typedMessage.setOnKeyPressed((e) -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				send(typedMessage.getText());
+				typedMessage.setText("");
+			}
+		});
+
 
 		sendMessage.setOnAction(e -> {
 			send(typedMessage.getText());
@@ -743,15 +752,6 @@ public class ChatClient extends Application {
 		passwordLabel.setText("Password:");
 		passwordLabel.setFont(Font.font("Helvetica", 18));
 
-		// guestUsername text
-		guestUsernameLabel = new Text();
-		guestUsernameLabel.setLayoutX(168.0);
-		guestUsernameLabel.setLayoutY(290.0);
-		guestUsernameLabel.setStrokeType(StrokeType.OUTSIDE);
-		guestUsernameLabel.setStrokeWidth(0.0);
-		guestUsernameLabel.setText("Username:");
-		guestUsernameLabel.setFont(Font.font("Helvetica", 18));
-
 		// Line
 		devider = new Line();
 		devider.setEndX(-200);
@@ -794,7 +794,6 @@ public class ChatClient extends Application {
 		// Add Children to Pane
 		loginLayout.getChildren().add(usernameLabel);
 		loginLayout.getChildren().add(passwordLabel);
-		loginLayout.getChildren().add(guestUsernameLabel);
 		loginLayout.getChildren().add(devider);
 		loginLayout.getChildren().add(username);
 		loginLayout.getChildren().add(password);
@@ -825,7 +824,6 @@ public class ChatClient extends Application {
 		settingsTitleLabel.setPrefHeight(35);
 		settingsTitleLabel.setPrefWidth(70);
 		settingsTitleLabel.setTextAlignment(TextAlignment.CENTER);
-		settingsTitleLabel.setFont(new Font(18));
 
 		settingsTitleSeparator = new Separator();
 		settingsTitleSeparator.setPrefHeight(7);
@@ -838,10 +836,12 @@ public class ChatClient extends Application {
 		settingsInfoLabel = new Label("Account Information");
 		settingsInfoLabel.setLayoutX(152);
 		settingsInfoLabel.setLayoutY(7);
+		settingsInfoLabel.setFont(Font.font("Helvetica", 12));
 		settingsInfoLabel.setPrefHeight(26);
 		settingsInfoLabel.setPrefWidth(114);
 		settingsInfoLabel.setTextAlignment(TextAlignment.CENTER);
 		settingsInfoLabel.setUnderline(true);
+		settingsInfoLabel.setFont(Font.font("Helvetica", 12));
 
 		settingsInfoHBox = new HBox();
 		settingsInfoHBox.setLayoutX(38);
@@ -854,10 +854,13 @@ public class ChatClient extends Application {
 		settingsInfoLabelVBox.setPrefHeight(100);
 
 		settingsInfoNewUsernameLabel = new Label("New Username:");
+		settingsInfoNewUsernameLabel.setFont(Font.font("Helvetica", 12));
 		settingsInfoNewUsernameLabel.setPrefHeight(36);
 		settingsInfoNewUsernameLabel.setPrefWidth(100);
 		VBox.setMargin(settingsInfoNewUsernameLabel, new Insets(4));
+		
 		settingsInfoNewPasswordLabel = new Label("New Password:");
+		settingsInfoNewUsernameLabel.setFont(Font.font("Helvetica", 12));
 		settingsInfoNewPasswordLabel.setPrefHeight(36);
 		settingsInfoNewPasswordLabel.setPrefWidth(100);
 		VBox.setMargin(settingsInfoNewPasswordLabel, new Insets(4));
@@ -873,6 +876,7 @@ public class ChatClient extends Application {
 		VBox.setMargin(settingsInfoNewPasswordField, new Insets(4));
 
 		settingsDetailSettingsLabel = new Label("Chat Settings");
+		settingsDetailSettingsLabel.setFont(Font.font("Helvetica", 12));
 		settingsDetailSettingsLabel.setLayoutX(169);
 		settingsDetailSettingsLabel.setLayoutY(118);
 		settingsDetailSettingsLabel.setPrefHeight(26);
@@ -891,10 +895,12 @@ public class ChatClient extends Application {
 		settingsDetailSettingsLabelVBox.setPrefWidth(105);
 
 		settingsDetailSettingsColorLabel = new Label("Text Color:");
+		settingsDetailSettingsColorLabel.setFont(Font.font("Helvetica", 12));
 		settingsDetailSettingsColorLabel.setPrefHeight(45);
 		settingsDetailSettingsColorLabel.setPrefWidth(107);
 
 		settingsDetailSettingsFontLabel = new Label("Font Style:");
+		settingsDetailSettingsFontLabel.setFont(Font.font("Helvetica", 12));
 		settingsDetailSettingsFontLabel.setPrefHeight(45);
 		settingsDetailSettingsFontLabel.setPrefWidth(107);
 

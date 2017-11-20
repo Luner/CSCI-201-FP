@@ -156,14 +156,15 @@ public class Server extends Thread {
 		Log.command(message);
 		if (command.startsWith("/add bot")) {
 			Integer number = Integer.parseInt(command.substring(9, 10));
-			String statement = command.substring(10, command.length());
+			String statement = command.substring(11, command.length());
 
 			new BotThread("localhost", 6789, number, statement);
 		} else if (command.startsWith("/addUser")) {
 			String username = command.substring(9, command.length() - 9);
 			String chatID = command.substring(command.length() - 9, command.length());
 			int cid = Integer.parseInt(chatID.substring(chatID.indexOf("J") + 1, chatID.length()));
-			
+
+			System.out.println("Adding User: " + data.findUserByUsername(username).getUid() + " to Conversation: " + cid);
 			addUserToConversation(data.findUserByUsername(username), cid);
 			 
 		} else if (command.equals("/gamemode 0")) {
@@ -216,7 +217,6 @@ public class Server extends Thread {
 				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
 			}
 		}
-		System.out.println("REAL ZSIZE " + result.size() );
 		return result;
 	}
 	
@@ -224,6 +224,7 @@ public class Server extends Thread {
 
 		conversationMap.get(cid).addUser(user);
 		conversationMap.get(cid).addActiveUser(user);
+		
 		db.addUserToConversation(user, cid);
 	}
 
