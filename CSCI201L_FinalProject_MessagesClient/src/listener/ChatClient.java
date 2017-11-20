@@ -448,12 +448,14 @@ public class ChatClient extends Application {
 							@Override
 							public void run() {
 								if (((ChatStringMessage) message).getChatID().equals(selectedChat)) {
+									String chatMessageString = ((ChatStringMessage) message).getMessage();
+									chatMessageString = chatMessageString.replace("!@#$%^&*()", user_Username);
 									if (chatText.getText().length() > 0) {
 										chatText.setText(
-												chatText.getText() + "\n" + ((ChatStringMessage) message).getMessage());
+												chatText.getText() + "\n" + chatMessageString);
 										chatText.setScrollTop(Double.MAX_VALUE);
 									} else {
-										chatText.setText(((ChatStringMessage) message).getMessage());
+										chatText.setText(chatMessageString);
 									}
 								}
 							}

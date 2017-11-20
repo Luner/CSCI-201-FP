@@ -183,11 +183,7 @@ public class Server extends Thread {
 		scan = new Scanner(System.in);
 		while (true) {
 			String command = scan.nextLine();
-			if (command.equals("add bot")) {
-				System.out.println("What Bot Number would you like?");
-				//Integer number = Integer.parseInt(scan.nextLine());
-				// new BotThread("localhost", 6789, number);
-			} else if (command.equals("help")) {
+			if (command.equals("help")) {
 				System.out.println("\n\n///HELP MENU///");
 				System.out.println("Commands: ");
 				System.out.println("\"add bot\" - begins the add bot process");
