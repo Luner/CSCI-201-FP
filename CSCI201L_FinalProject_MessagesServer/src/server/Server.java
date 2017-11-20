@@ -36,7 +36,7 @@ public class Server extends Thread {
 	public void initializeHistory() {
 
 		chatHistory = new HashMap<Integer, ArrayList<String>>();
-		// chatHistory = db.getMessagesMap();
+		 chatHistory = db.getMessagesMap(data);
 		for (int i = 1; i <= 11; i++) {
 			chatHistory.put(i, new ArrayList<String>());
 		}
@@ -148,7 +148,7 @@ public class Server extends Thread {
 			chatHistory.get(chatID).add(getData().findUserByUid(userID).getUsername() + ": " + messageString);
 
 			// Add to database
-			// db.addMessage(chatID, userID, messageString);
+			 db.addMessage(chatID, userID, messageString);
 
 			for (ServerThread st : serverThreads) {
 				Message messages = new MessagesMessage(chatHistory);
