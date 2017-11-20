@@ -200,10 +200,10 @@ public class Database {
 		}
 	}
 	
-	public void addUserToConversation(User u, Conversation c) {
+	public void addUserToConversation(User u, Integer cid) {
 		String insertQuery = "INSERT conversation_members SET ConversationID = ?, UserID = ?;";
 		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
-			ps.setInt(1, u.getUid());
+			ps.setInt(1, cid);
 			ps.setInt(2, u.getUid());
 			ps.execute();
 		} catch (SQLException e) {

@@ -115,11 +115,8 @@ public class Server extends Thread {
 	public void addUser(User user, ServerThread st) {
 		if (data.addUser(user)) {
 			System.out.println(data);
-			dataWriter.saveData(data, "JSON/Input.json");
-			st.sendStringMessage("User Created, Please Log In");
+			db.registerUser(user.getUsername(), user.getPassword());
 			Log.log("User Created");
-		} else {
-			st.sendStringMessage("User Already Exists");
 		}
 	}
 
@@ -221,6 +218,9 @@ public class Server extends Thread {
 	}
 	
 	public void addUserToConversation(User user, Integer cid) {
+
+		conversationMap.get(cid).addUser(user);
+		conversationMap.get(cid).addActiveUser(user);
 		db.addUserToConversation(user, cid);
 	}
 
