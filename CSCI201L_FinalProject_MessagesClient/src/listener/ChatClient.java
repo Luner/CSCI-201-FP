@@ -8,9 +8,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.swing.GroupLayout.Alignment;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
@@ -20,7 +17,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,7 +40,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.ClientConversation;
-import objects.message.*;
 import objects.message.CommandMessage;
 import objects.message.ContactsMessage;
 import objects.message.ConversationsMessage;
@@ -495,7 +490,16 @@ public class ChatClient extends Application {
 			// Creates a ChatMessage with the input
 			Message message;
 			if (text.startsWith("/") || text.startsWith("\\")) {
+				if(text.startsWith("/addUser")) {
+					int max = 9 - selectedChat.toString().length();
+					for(int i = 0; i < max; i++) {
+						text += " ";
+					}
+					text += "J";
+					text += selectedChat.toString().length();
+				}
 				message = new CommandMessage(uid, text);
+				
 			} else {
 				message = new ChatMessage(uid, selectedChat, text);
 			}
@@ -1183,10 +1187,10 @@ public class ChatClient extends Application {
 
 			if (i == 0) {
 				chatsButtons.get(i).setText("Global Chat");
-				chatIDtoName.put(i, "Global Chat");
+				chatIDtoName.put(chats.get(i).getConversationID(), "Global Chat");
 			} else {
 				chatsButtons.get(i).setText(chat.getName());
-				chatIDtoName.put(i, chat.getName());
+				chatIDtoName.put(chats.get(i).getConversationID(), chat.getName());
 			}
 			
 			chatsMap.put(chatsButtons.get(i), chat.getConversationID());

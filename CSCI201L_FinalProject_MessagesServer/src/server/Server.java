@@ -159,6 +159,13 @@ public class Server extends Thread {
 			String statement = command.substring(10, command.length());
 
 			new BotThread("localhost", 6789, number, statement);
+		} else if (command.startsWith("/addUser")) {
+			String username = command.substring(9, command.length() - 9);
+			String chatID = command.substring(command.length() - 9, command.length());
+			int cid = Integer.parseInt(chatID.substring(chatID.indexOf("J") + 1, chatID.length()));
+			
+			addUserToConversation(data.findUserByUsername(username), cid);
+			 
 		} else if (command.equals("/gamemode 0")) {
 			st.sendStringMessage("You are now in Creative Mode!");
 		} else if (command.equals("/gamemode 1")) {
@@ -167,7 +174,6 @@ public class Server extends Thread {
 			st.sendStringMessage(
 					"--Help Menu--\n Commands:\n  - \"/add bot #\" : adds a bot of the type of the designated number\n");
 		}
-
 	}
 
 	// Allows for Server Commands
@@ -212,6 +218,10 @@ public class Server extends Thread {
 		}
 		System.out.println("REAL ZSIZE " + result.size() );
 		return result;
+	}
+	
+	public void addUserToConversation(User user, Integer cid) {
+		db.addUserToConversation(user, cid);
 	}
 
 	public void createConversation(CreateConversationMessage message) {
