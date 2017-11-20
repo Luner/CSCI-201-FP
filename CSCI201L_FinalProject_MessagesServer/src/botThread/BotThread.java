@@ -1,16 +1,17 @@
 package botThread;
 
-import objects.message.ChatMessage;
-import objects.message.Message;
-import objects.message.VerificationMessage;
-import objects.message.VerificationResponseMessage;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+
+import objects.message.ChatMessage;
+import objects.message.Message;
+import objects.message.VerificationMessage;
+import objects.message.VerificationResponseMessage;
 
 public class BotThread extends Thread {
 
@@ -22,6 +23,7 @@ public class BotThread extends Thread {
 	Random rand;
 	Integer frequency;
 	String words;
+	private ArrayList<String> ytlinks;
 
 	public BotThread(String hostname, int port, int frequency, String words) {
 		rand = new Random();
@@ -71,7 +73,22 @@ public class BotThread extends Thread {
 				}
 			}
 		}
-		
+		else if(words.equals(" real")) {
+			while(true) {
+				try {
+					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
+					oos.writeObject(message);
+					oos.flush();
+					Thread.sleep(30000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		while (true) {
 			try {
 				if (rand.nextInt(1000000000) < frequency) {
