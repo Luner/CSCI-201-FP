@@ -279,9 +279,11 @@ public class ChatClient extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		loggedIn = false;
 		// 10.14.112.127
 		primaryStage.setTitle("Messaging Application");
-		primaryStage.initStyle(StageStyle.UNDECORATED);
+		primaryStage.initStyle(StageStyle.UTILITY);
+
 		chatsMap = new HashMap<Button, Integer>();
 		chatIDtoName = new HashMap<Integer, String>();
 		initializeIPSelect();
@@ -291,6 +293,14 @@ public class ChatClient extends Application {
 		initializeContactsWindow();
 		initializeAddConversationWindow();
 		initializeSettingsPane();
+
+		primaryStage.setOnCloseRequest(evt -> {
+			// prevent window from closing
+			evt.consume();
+
+			// execute own shutdown procedure
+			logout();
+		});
 
 		ipEnter.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -317,8 +327,6 @@ public class ChatClient extends Application {
 				}
 			}
 		});
-		
-		
 
 		addConversationButton.setOnAction(e -> {
 			String user1 = User1Input.getText();
@@ -364,7 +372,7 @@ public class ChatClient extends Application {
 		settings.setOnMouseClicked(e -> {
 			setSettingsPane();
 		});
-		
+
 		logOutButton.setOnMouseClicked(e -> {
 			logout();
 		});
@@ -415,19 +423,22 @@ public class ChatClient extends Application {
 		primaryStage.show();
 
 	}
-	
-	private void logout(){
-		try {
-			oos.writeObject(new LogoutMessage());
-			oos.flush();
-		} catch (IOException e) {
-			System.out.println("IOE in logout");
+
+	private void logout() {
+		if (loggedIn == true) {
+
+			try {
+				oos.writeObject(new LogoutMessage());
+				oos.flush();
+			} catch (IOException e) {
+				System.out.println("IOE in logout");
+			}
+			
+			loggedIn = false;
 		}
-		
-		loggedIn = false;
 		System.exit(0);
 	}
-	
+
 	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
@@ -634,11 +645,12 @@ public class ChatClient extends Application {
 										int chatid = chatsMap.get(button);
 										for (int j = 0; j < chatHistory.get(chatid).size(); j++) {
 											if (j == 0) {
-												chatText.setText(chatHistory.get(chatid).get(j).replace("!@#$%^&*()", user_Username));
+												chatText.setText(chatHistory.get(chatid).get(j).replace("!@#$%^&*()",
+														user_Username));
 											} else {
 
-												chatText.setText(
-														chatText.getText() + "\n" + chatHistory.get(chatid).get(j).replace("!@#$%^&*()", user_Username));
+												chatText.setText(chatText.getText() + "\n" + chatHistory.get(chatid)
+														.get(j).replace("!@#$%^&*()", user_Username));
 											}
 										}
 										if (chatid == 0) {
