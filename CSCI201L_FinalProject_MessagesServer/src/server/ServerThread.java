@@ -74,6 +74,7 @@ public class ServerThread extends Thread {
 							Log.sent(response);
 
 							updateConversation();
+							updateContacts();
 
 							// Log it?
 							return;
@@ -98,7 +99,44 @@ public class ServerThread extends Thread {
 					String password = ((CreateUserMessage) message).getPassword();
 					System.out.println("username: " + username + "  password: " + password + "  nextId: "
 							+ cs.getData().getNextID());
-					cs.addUser(new User(username, password, cs.getData().getNextID()), this);
+					User created = new User(username, password, cs.getData().getNextID());
+					boolean userCreated = cs.addUser(created, this);
+					VerificationResponseMessage response;
+					if(!userCreated) {
+						response = new VerificationResponseMessage(false, -1);
+						try {
+							oos.writeObject(response);
+							oos.flush();
+
+							// Log the message that was sent
+							Log.sent(response);
+						} catch (IOException ioe) {
+							System.out.println("ioe: " + ioe.getMessage());
+						}
+					} else {
+
+						response = new VerificationResponseMessage(true, created.getUid());
+						try {
+							oos.writeObject(response);
+							oos.flush();
+
+							// Log the message that was sent
+							Log.sent(response);
+						} catch (IOException ioe) {
+							System.out.println("ioe: " + ioe.getMessage());
+						}
+						this.username = created.getUsername();
+						this.uid = created.getUid();
+						this.user = created;
+						
+						// Tell Server User logged on
+						cs.logOn(user, this);
+
+						updateConversation();
+						cs.updateContacts();
+						return;
+					}
+					
 				} else if (message instanceof LogoutMessage) {
 					running = false;
 					break;
@@ -188,16 +226,6 @@ public class ServerThread extends Thread {
 		ArrayList<User> temp = cs.getData().getUsers();
 		for (User u : temp) {
 			contacts.add(u.getUsername());
-		}
-
-		if (running) {
-			ContactsMessage cm = new ContactsMessage(contacts);
-			try {
-				oos.writeObject(cm);
-				oos.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 
 		try {

@@ -114,7 +114,7 @@ public class Server extends Thread {
 		serverThreads.remove(st);
 	}
 
-	public void addUser(User user, ServerThread st) {
+	public boolean addUser(User user, ServerThread st) {
 		if (data.addUser(user)) {
 			System.out.println(data);
 			conversationMap.get(1).addUser(user);
@@ -122,9 +122,16 @@ public class Server extends Thread {
 			db.registerUser(user.getUsername(), user.getPassword());
 			db.addUserToConversation(user, 1);
 			Log.log("User Created");
-			for(ServerThread serverThread : serverThreads) {
-				serverThread.updateContacts();
-			}
+	
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void updateContacts() {
+		for(ServerThread serverThread : serverThreads) {
+			serverThread.updateContacts();
 		}
 	}
 

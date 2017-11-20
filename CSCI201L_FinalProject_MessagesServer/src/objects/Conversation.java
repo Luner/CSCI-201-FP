@@ -46,8 +46,10 @@ public class Conversation {
 
 	public boolean addActiveUser(User user) {
 		if (users.contains(user)) {
-			activeUsers.add(user);
-			return true;
+			if(!activeUsers.contains(user)) {
+				activeUsers.add(user);
+				return true;
+			}
 		}
 		return false;
 	}
