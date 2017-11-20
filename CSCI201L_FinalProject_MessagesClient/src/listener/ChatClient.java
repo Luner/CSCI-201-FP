@@ -314,6 +314,8 @@ public class ChatClient extends Application {
 				}
 			}
 		});
+		
+		
 
 		addConversationButton.setOnAction(e -> {
 			String user1 = User1Input.getText();
@@ -357,6 +359,10 @@ public class ChatClient extends Application {
 
 		settings.setOnMouseClicked(e -> {
 			setSettingsPane();
+		});
+		
+		logOutButton.setOnMouseClicked(e -> {
+			logout();
 		});
 
 		profile.setOnMouseClicked(e -> {
@@ -410,7 +416,11 @@ public class ChatClient extends Application {
 		primaryStage.show();
 
 	}
-
+	
+	private void logout(){
+		loggedIn = false;
+	}
+	
 	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
@@ -559,6 +569,7 @@ public class ChatClient extends Application {
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
+		System.exit(0);
 	}
 
 	Task<Void> task = new Task<Void>() {
