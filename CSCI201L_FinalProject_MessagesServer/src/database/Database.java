@@ -67,6 +67,17 @@ public class Database {
 		}
 	}
 
+	public void updateUser(User u) {
+		String updateQuery = "UPDATE users SET UserPassword = ? WHERE UserID = ?;";
+		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+			ps.setString(1,u.getPassword());
+			ps.setInt(2,u.getUid());
+			ps.execute();
+		} catch (SQLException sqle) {
+			System.out.println("Failed to update user with UID: " + u.getUid());
+		}
+	}
+
 	public ArrayList<User> getUsers() {
 		String selectQuery = "SELECT * FROM CSCI201.users";
 		ArrayList<User> foundUsers = new ArrayList<User>();
@@ -208,15 +219,6 @@ public class Database {
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Failed to add user " + u.getUsername() + " to a conversation.");
-		}
-	}
-
-	public void updateUser(int userID) {
-		String updateQuery = "UPDATE users";
-		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
-
-		} catch (SQLException sqle) {
-			System.out.println("Failed to update user with UID: " + userID);
 		}
 	}
 }
