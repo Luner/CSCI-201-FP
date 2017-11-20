@@ -34,12 +34,7 @@ public class Server extends Thread {
 	private Database db;
 
 	public void initializeHistory() {
-
-		chatHistory = new HashMap<Integer, ArrayList<String>>();
-		 chatHistory = db.getMessagesMap(data);
-		for (int i = 1; i <= 11; i++) {
-			chatHistory.put(i, new ArrayList<String>());
-		}
+		chatHistory = db.getMessagesMap(data);
 	}
 
 	public Server(int port) {
@@ -190,7 +185,7 @@ public class Server extends Thread {
 			String command = scan.nextLine();
 			if (command.equals("add bot")) {
 				System.out.println("What Bot Number would you like?");
-				Integer number = Integer.parseInt(scan.nextLine());
+				//Integer number = Integer.parseInt(scan.nextLine());
 				// new BotThread("localhost", 6789, number);
 			} else if (command.equals("help")) {
 				System.out.println("\n\n///HELP MENU///");
