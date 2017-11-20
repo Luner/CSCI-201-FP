@@ -4,6 +4,6 @@ import server.Server;
 
 public class RunServer {
 	public static void main(String[] args) {
-		 new Server (6789);
+		new Server(6789);
 	}
 }

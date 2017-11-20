@@ -1,27 +1,19 @@
 package server;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.Vector;
-
 import botThread.BotThread;
 import database.Database;
 import objects.ClientConversation;
 import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
-import objects.message.ChatMessage;
-import objects.message.CommandMessage;
-import objects.message.CreateConversationMessage;
-import objects.message.Message;
-import objects.message.MessagesMessage;
+import objects.message.*;
 import parsing.DataWriter;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Server extends Thread {
 
@@ -143,7 +135,7 @@ public class Server extends Thread {
 			chatHistory.get(chatID).add(getData().findUserByUid(userID).getUsername() + ": " + messageString);
 
 			// Add to database
-			 db.addMessage(chatID, userID, messageString);
+			db.addMessage(chatID, userID, messageString);
 
 			for (ServerThread st : serverThreads) {
 				Message messages = new MessagesMessage(chatHistory);
@@ -228,8 +220,8 @@ public class Server extends Thread {
 
 		ArrayList<User> newUsers = new ArrayList<User>();
 		chatHistory.put(chatID, new ArrayList<String>());
-		
-		
+
+
 		for (String username : message.getUsers()) {
 
 			User temp = data.findUserByUsername(username);
@@ -243,7 +235,6 @@ public class Server extends Thread {
 		db.createConversation(newUsers, ((CreateConversationMessage) message).getName(), chatID);
 
 		conversationMap.put(chatID, new Conversation(newUsers, chatID, ((CreateConversationMessage) message).getName()));
-		
 		
 		for (ServerThread st : serverThreads) {
 			conversationMap.get(chatID).addActiveUser(st.getUser());

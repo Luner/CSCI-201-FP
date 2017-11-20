@@ -1,16 +1,16 @@
 package botThread;
 
+import objects.message.ChatMessage;
+import objects.message.Message;
+import objects.message.VerificationMessage;
+import objects.message.VerificationResponseMessage;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
-
-import objects.message.ChatMessage;
-import objects.message.Message;
-import objects.message.VerificationMessage;
-import objects.message.VerificationResponseMessage;
 
 public class BotThread extends Thread {
 

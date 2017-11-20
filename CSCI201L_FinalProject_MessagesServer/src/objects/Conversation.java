@@ -1,9 +1,9 @@
 package objects;
 
-import java.util.ArrayList;
-
 import objects.message.ChatMessage;
 import objects.message.Message;
+
+import java.util.ArrayList;
 
 public class Conversation {
 	Integer conversationID;

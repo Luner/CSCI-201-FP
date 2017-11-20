@@ -1,14 +1,13 @@
 package testing;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import parsing.Parser;
-import server.Server;
+import com.google.gson.JsonSyntaxException;
 import objects.DataContainer;
 import objects.User;
+import parsing.Parser;
+import server.Server;
 
-import com.google.gson.JsonSyntaxException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class TempMain {
 

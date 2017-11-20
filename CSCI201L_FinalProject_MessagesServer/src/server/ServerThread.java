@@ -1,26 +1,16 @@
 package server;
 
+import database.Database;
+import objects.ClientConversation;
+import objects.User;
+import objects.message.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-
-import database.Database;
-import objects.ClientConversation;
-import objects.User;
-import objects.message.ChatMessage;
-import objects.message.ChatStringMessage;
-import objects.message.CommandMessage;
-import objects.message.ContactsMessage;
-import objects.message.ConversationsMessage;
-import objects.message.CreateConversationMessage;
-import objects.message.CreateUserMessage;
-import objects.message.Message;
-import objects.message.StringMessage;
-import objects.message.VerificationMessage;
-import objects.message.VerificationResponseMessage;
 
 public class ServerThread extends Thread {
 
