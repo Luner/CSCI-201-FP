@@ -6,17 +6,17 @@ import objects.message.Message;
 import java.util.ArrayList;
 
 public class Conversation {
-	Integer conversationID;
-	String conversationName;
-	ArrayList<User> users;
-	ArrayList<User> activeUsers;
+	private Integer conversationID;
+	private String conversationName;
+	private ArrayList<User> users;
+	private ArrayList<User> activeUsers;
 
 	// requires list of users and a Conversation id
 	
 	public Conversation(ArrayList<User> users, Integer conversationID, String conversationName) {
 		this.conversationID = conversationID;
 		this.users = users;
-		activeUsers = new ArrayList<User>();
+		activeUsers = new ArrayList<>();
 		this.conversationName = conversationName;
 	}
 	
