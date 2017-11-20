@@ -31,7 +31,19 @@ public class BotThread extends Thread {
 		scan = null;
 		uid = -10;
 		this.words = words;
+		ytlinks = new ArrayList<String>();
 		this.frequency = frequency;
+		ytlinks.add("https://www.youtube.com/watch?v=gy1B3agGNxw");
+		ytlinks.add("https://www.youtube.com/watch?v=XCiDuy4mrWU");
+		ytlinks.add("https://www.youtube.com/watch?v=k3jlviX88iw");
+		ytlinks.add("https://www.youtube.com/watch?v=y6120QOlsfU");
+		ytlinks.add("https://www.youtube.com/watch?v=feA64wXhbjo");
+		ytlinks.add("https://www.youtube.com/watch?v=2adAoJJB8Z0&feature=youtu.be");
+		ytlinks.add("https://www.youtube.com/watch?v=GVN17U3Vg34");
+		ytlinks.add("https://www.youtube.com/watch?v=vwaiyjh1dGk");
+		ytlinks.add("https://www.youtube.com/watch?v=pD_imYhNoQ4");
+		ytlinks.add("https://www.youtube.com/watch?v=KS7hkwbKmBM");
+		ytlinks.add("https://www.youtube.com/watch?v=L_jWHffIx5E");
 		try {
 			// Attempts to connect to the Socket
 			s = new Socket(hostname, port);
@@ -57,7 +69,7 @@ public class BotThread extends Thread {
 		int counter = 0;
 		// An infinite loop that will constantly look for a line from the console
 		// And send a ChatMessage to the Server
-		if(words.equals(" time")) {
+		if(words.equals("time")) {
 			while(true) {
 				try {
 					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
@@ -73,34 +85,33 @@ public class BotThread extends Thread {
 				}
 			}
 		}
-		else if(words.equals(" real")) {
-			while(true) {
+		else if(words.equals("youtube")) {
 				try {
-					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
+					int i = rand.nextInt();
+					Message message = new ChatMessage(uid, 1, ytlinks.get(i%11));
 					oos.writeObject(message);
 					oos.flush();
 					Thread.sleep(30000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
 		}
-		while (true) {
-			try {
-				if (rand.nextInt(1000000000) < frequency) {
-					// Creates a ChatMessage with the input
-					Message message = new ChatMessage(uid, 1, words);
+		else {
+			while (true) {
+				try {
+					if (rand.nextInt(1000000000) < frequency) {
+						// Creates a ChatMessage with the input
+						Message message = new ChatMessage(uid, 1, words);
 
-					// Sends the ChatMessage Object to the server
-					oos.writeObject(message);
-					oos.flush();
+						// Sends the ChatMessage Object to the server
+						oos.writeObject(message);
+						oos.flush();
+					}
+				} catch (IOException ioe) {
+					System.out.println("BOT :: ioe: " + ioe.getMessage());
 				}
-			} catch (IOException ioe) {
-				System.out.println("BOT :: ioe: " + ioe.getMessage());
 			}
 		}
 	}
