@@ -199,6 +199,17 @@ public class Database {
 			System.out.println("Failed to insert message: " + message);
 		}
 	}
+	
+	public void addUserToConversation(User u, Conversation c) {
+		String insertQuery = "INSERT conversation_members SET ConversationID = ?, UserID = ?;";
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+			ps.setInt(1, u.getUid());
+			ps.setInt(2, u.getUid());
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Failed to add user " + u.getUsername() + " to a conversation.");
+		}
+	}
 
 	public void updateUser(int userID) {
 		String updateQuery = "UPDATE users";
