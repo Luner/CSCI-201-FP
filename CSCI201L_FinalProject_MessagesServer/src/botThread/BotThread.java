@@ -12,12 +12,15 @@ import objects.message.ChatMessage;
 import objects.message.Message;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
+import server.Server;
 
 public class BotThread extends Thread {
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private int uid;
+	private boolean running;
+	private Server cs;
 	Socket s;
 	Scanner scan;
 	Random rand;
@@ -25,7 +28,9 @@ public class BotThread extends Thread {
 	String words;
 	private ArrayList<String> ytlinks;
 
-	public BotThread(String hostname, int port, int frequency, String words) {
+	public BotThread(String hostname, int port, int frequency, String words, Server cs) {
+		this.cs = cs;
+		running = true;
 		rand = new Random();
 		s = null;
 		scan = null;
@@ -63,14 +68,17 @@ public class BotThread extends Thread {
 		}
 	}
 
+	public void end() {
+		this.running = false;
+	}
+	
 	// handles the sending of information to the Server
 	public void sender() {
 
-		int counter = 0;
 		// An infinite loop that will constantly look for a line from the console
 		// And send a ChatMessage to the Server
 		if(words.equals("time")) {
-			while(true) {
+			while(running) {
 				try {
 					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
 					oos.writeObject(message);
@@ -99,7 +107,7 @@ public class BotThread extends Thread {
 				}
 		}
 		else {
-			while (true) {
+			while (running) {
 				try {
 					if (rand.nextInt(1000000000) < frequency) {
 						// Creates a ChatMessage with the input
@@ -114,6 +122,7 @@ public class BotThread extends Thread {
 				}
 			}
 		}
+		cs.removeBotThread(this);
 	}
 
 	private void login() {

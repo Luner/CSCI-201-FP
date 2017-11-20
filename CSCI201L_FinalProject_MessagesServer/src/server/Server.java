@@ -7,7 +7,6 @@ import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
 import objects.message.*;
-import parsing.DataWriter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,10 +18,10 @@ public class Server extends Thread {
 
 	private Map<Integer, Conversation> conversationMap;
 	private Vector<ServerThread> serverThreads;
+	private Vector<BotThread> botThreads;
 	private DataContainer data;
 	private Map<Integer, ArrayList<String>> chatHistory;
-	Scanner scan;
-	DataWriter dataWriter;
+	private Scanner scan;
 	private Database db;
 
 	public void initializeHistory() {
@@ -30,8 +29,8 @@ public class Server extends Thread {
 	}
 
 	public Server(int port) {
+		botThreads = new Vector<BotThread>();
 		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
-		dataWriter = new DataWriter();
 		ArrayList<User> foundUsers = db.getUsers();
 		this.data = new DataContainer(foundUsers);
 
@@ -73,8 +72,8 @@ public class Server extends Thread {
 
 	// Constructor for TempMain
 	public Server(int port, DataContainer data) {
+		botThreads = new Vector<BotThread>();
 		chatHistory = new HashMap<Integer, ArrayList<String>>();
-		dataWriter = new DataWriter();
 		this.data = data;
 
 		for (User user : this.data.getUsers()) {
@@ -123,15 +122,15 @@ public class Server extends Thread {
 			db.registerUser(user.getUsername(), user.getPassword());
 			db.addUserToConversation(user, 1);
 			Log.log("User Created");
-	
+
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public void updateContacts() {
-		for(ServerThread serverThread : serverThreads) {
+		for (ServerThread serverThread : serverThreads) {
 			serverThread.updateContacts();
 		}
 	}
@@ -164,6 +163,12 @@ public class Server extends Thread {
 		return data;
 	}
 
+	public void removeBotThread(BotThread bt) {
+		if (botThreads.contains(bt)) {
+			botThreads.remove(bt);
+		}
+	}
+
 	public void receiveCommand(CommandMessage message, ServerThread st) {
 		String command = message.getCommand();
 		Log.command(message);
@@ -171,15 +176,11 @@ public class Server extends Thread {
 			Integer number = Integer.parseInt(command.substring(9, 10));
 			String statement = command.substring(11, command.length());
 
-			new BotThread("localhost", 6789, number, statement);
-		} else if (command.startsWith("/addUser")) {
-			String username = command.substring(9, command.length() - 9);
-			String chatID = command.substring(command.length() - 9, command.length());
-			int cid = Integer.parseInt(chatID.substring(chatID.indexOf("J") + 1, chatID.length()));
-
-			System.out.println("Adding User: " + data.findUserByUsername(username).getUid() + " to Conversation: " + cid);
-			addUserToConversation(data.findUserByUsername(username), cid);
-			 
+			botThreads.add(new BotThread("localhost", 6789, number, statement, this));
+		} else if (command.startsWith("/remove bots")) {
+			for (BotThread bt : botThreads) {
+				bt.end();
+			}
 		} else if (command.equals("/gamemode 0")) {
 			st.sendStringMessage("You are now in Creative Mode!");
 		} else if (command.equals("/gamemode 1")) {
@@ -194,19 +195,24 @@ public class Server extends Thread {
 	public void run() {
 		scan = new Scanner(System.in);
 		while (true) {
-			String command = scan.nextLine();
-			if (command.equals("help")) {
-				System.out.println("\n\n///HELP MENU///");
-				System.out.println("Commands: ");
-				System.out.println("\"add bot\" - begins the add bot process");
-				System.out.println("\"help\" - brings up the help menu\n\n");
+			try {
+				String command = scan.nextLine();
 
-			} else if (command.equals("shutdown")) {
-				System.out.println("The server is now shutting down...");
-				// PUSH NEW DATA
-				System.exit(0);
-			} else {
-				System.out.println("SERVER :: INVALID COMMAND");
+				if (command.equals("help")) {
+					System.out.println("\n\n///HELP MENU///");
+					System.out.println("Commands: ");
+					System.out.println("\"add bot\" - begins the add bot process");
+					System.out.println("\"help\" - brings up the help menu\n\n");
+
+				} else if (command.equals("shutdown")) {
+					System.out.println("The server is now shutting down...");
+					// PUSH NEW DATA
+					System.exit(0);
+				} else {
+					System.out.println("SERVER :: INVALID COMMAND");
+				}
+			} catch (NoSuchElementException n) {
+				// do nothing
 			}
 		}
 	}
@@ -224,7 +230,7 @@ public class Server extends Thread {
 
 	public ArrayList<ClientConversation> getUserConversations(User user) {
 		ArrayList<ClientConversation> result = new ArrayList<ClientConversation>();
-		
+
 		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
 			if (entry.getValue().hasUser(user)) {
 				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
@@ -232,12 +238,12 @@ public class Server extends Thread {
 		}
 		return result;
 	}
-	
+
 	public void addUserToConversation(User user, Integer cid) {
 
 		conversationMap.get(cid).addUser(user);
 		conversationMap.get(cid).addActiveUser(user);
-		
+
 		db.addUserToConversation(user, cid);
 	}
 
@@ -247,7 +253,6 @@ public class Server extends Thread {
 
 		ArrayList<User> newUsers = new ArrayList<User>();
 		chatHistory.put(chatID, new ArrayList<String>());
-
 
 		for (String username : message.getUsers()) {
 
@@ -261,8 +266,9 @@ public class Server extends Thread {
 
 		db.createConversation(newUsers, ((CreateConversationMessage) message).getName(), chatID);
 
-		conversationMap.put(chatID, new Conversation(newUsers, chatID, ((CreateConversationMessage) message).getName()));
-		
+		conversationMap.put(chatID,
+				new Conversation(newUsers, chatID, ((CreateConversationMessage) message).getName()));
+
 		for (ServerThread st : serverThreads) {
 			conversationMap.get(chatID).addActiveUser(st.getUser());
 			st.updateConversation();
