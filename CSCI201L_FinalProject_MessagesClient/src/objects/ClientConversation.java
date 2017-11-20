@@ -7,8 +7,9 @@ public class ClientConversation implements Serializable {
 	Integer conversationID;
 	String conversationName;
 
-	public ClientConversation(Integer conversationID) {
+	public ClientConversation(Integer conversationID, String conversationName) {
 		this.conversationID = conversationID;
+		this.conversationName = conversationName;
 	}
 
 	public void userOnline(User user) {
@@ -16,5 +17,9 @@ public class ClientConversation implements Serializable {
 
 	public Integer getConversationID() {
 		return this.conversationID;
+	}
+	
+	public String getName() {
+		return conversationName;
 	}
 }

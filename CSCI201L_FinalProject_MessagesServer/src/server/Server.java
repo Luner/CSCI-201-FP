@@ -212,11 +212,13 @@ public class Server extends Thread {
 
 	public ArrayList<ClientConversation> getUserConversations(User user) {
 		ArrayList<ClientConversation> result = new ArrayList<ClientConversation>();
+		
 		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
 			if (entry.getValue().hasUser(user)) {
-				result.add(new ClientConversation(entry.getValue().getConversationID()));
+				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
 			}
 		}
+		System.out.println("REAL ZSIZE " + result.size() );
 		return result;
 	}
 
@@ -238,9 +240,9 @@ public class Server extends Thread {
 
 		}
 
-		db.createConversation(newUsers, "", chatID);
+		db.createConversation(newUsers, ((CreateConversationMessage) message).getName(), chatID);
 
-		conversationMap.put(chatID, new Conversation(newUsers, chatID));
+		conversationMap.put(chatID, new Conversation(newUsers, chatID, ((CreateConversationMessage) message).getName()));
 		
 		
 		for (ServerThread st : serverThreads) {
