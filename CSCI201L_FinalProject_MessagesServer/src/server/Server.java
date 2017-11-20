@@ -20,6 +20,7 @@ import objects.message.ChatMessage;
 import objects.message.CommandMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.Message;
+import objects.message.MessagesMessage;
 import parsing.DataWriter;
 
 public class Server extends Thread {
@@ -27,16 +28,24 @@ public class Server extends Thread {
 	private Map<Integer, Conversation> conversationMap;
 	private Vector<ServerThread> serverThreads;
 	private DataContainer data;
+	private Map<Integer, ArrayList<String>> chatHistory;
 	Scanner scan;
 	DataWriter dataWriter;
 	private Database db;
+
+	public void initializeHistory() {
+		chatHistory = new HashMap<Integer, ArrayList<String>>();
+		for (int i = 1; i <= 11; i++) {
+			chatHistory.put(i, new ArrayList<String>());
+		}
+	}
 
 	public Server(int port) {
 		db = new Database("localhost", 3306, "demo", "demo", "CSCI201");
 		dataWriter = new DataWriter();
 		ArrayList<User> foundUsers = db.getUsers();
 		this.data = new DataContainer(foundUsers);
-		
+
 		for (User user : this.data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
@@ -44,6 +53,7 @@ public class Server extends Thread {
 		ServerSocket ss = null;
 		serverThreads = new Vector<ServerThread>();
 		InitializeConversations(data.getUsers());
+		initializeHistory();
 		this.start();
 
 		try {
@@ -67,19 +77,17 @@ public class Server extends Thread {
 			}
 		}
 	}
-	
 
 	public void InitializeConversations(ArrayList<User> users) {
 		conversationMap = db.getConversations(data);
 	}
-	
-	
-	//Constructor for TempMain
+
+	// Constructor for TempMain
 	public Server(int port, DataContainer data) {
+		chatHistory = new HashMap<Integer, ArrayList<String>>();
 		dataWriter = new DataWriter();
 		this.data = data;
-		ArrayList<User> foundUsers = data.getUsers();
-		
+
 		for (User user : this.data.getUsers()) {
 			System.out.println("UID: " + user.getUid() + "  Username: " + user.getUsername() + "  Password: "
 					+ user.getPassword());
@@ -130,14 +138,22 @@ public class Server extends Thread {
 		Log.sent(message);
 		if (message instanceof ChatMessage) {
 			
-			int convesationID = ((ChatMessage) message).getCid();
+			chatHistory.get(((ChatMessage) message).getCid()).add(((ChatMessage) message).getMessage());
+			for (Entry<Integer, ArrayList<String>> entry : chatHistory.entrySet()) {
+				for(String s : entry.getValue()) {
+					System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
+				}
+			}
+			for (ServerThread st : serverThreads) {
+				Message messages = new MessagesMessage(chatHistory);
+				st.sendMessage(messages);
+			}
 			
-			Conversation conversation = conversationMap.get(convesationID);
-			
+			Conversation conversation = conversationMap.get(((ChatMessage) message).getCid());
 			conversation.sendMessageToConversation(message);
 		}
 	}
-	
+
 	public DataContainer getData() {
 		return data;
 	}
@@ -187,6 +203,10 @@ public class Server extends Thread {
 
 	public void logOn(User user, ServerThread st) {
 		user.logOn(st);
+
+		Message messages = new MessagesMessage(chatHistory);
+		st.sendMessage(messages);
+		
 		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
 			entry.getValue().addActiveUser(user);
 		}
@@ -203,23 +223,23 @@ public class Server extends Thread {
 	}
 
 	public void createConversation(CreateConversationMessage message) {
-		
+
 		Integer chatID = conversationMap.size() + 1;
-		
+
 		ArrayList<User> newUsers = new ArrayList<User>();
-		
+
 		for (String username : message.getUsers()) {
-			
+
 			User temp = data.findUserByUsername(username);
-			
+
 			if (temp != null && !temp.getUsername().equals("Guest")) {
 				newUsers.add(temp);
 			}
 
 		}
-		
+
 		db.createConversation(newUsers, "", chatID);
-		
+
 		conversationMap.put(chatID, new Conversation(newUsers, chatID));
 
 		for (ServerThread st : serverThreads) {

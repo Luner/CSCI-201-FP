@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,6 +43,7 @@ import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
 import objects.message.Message;
+import objects.message.MessagesMessage;
 import objects.message.VerificationMessage;
 import objects.message.VerificationResponseMessage;
 
@@ -179,6 +181,7 @@ public class ChatClient extends Application {
 	private Integer selectedChat;
 	private Map<Button, Integer> chatsMap;
 	private String user_Username;
+	private Map<Integer, ArrayList<String>> chatHistory;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -188,7 +191,6 @@ public class ChatClient extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// 10.14.112.127
 
-		
 		primaryStage.setTitle("Messaging Application");
 		chatsMap = new HashMap<Button, Integer>();
 		initializeIPSelect();
@@ -466,6 +468,15 @@ public class ChatClient extends Application {
 										chatText.setFont(new Font("Helvetica", 12));
 										chatText.setText("");
 										int chatid = chatsMap.get(button);
+										for(int j = 0; j < chatHistory.get(chatid).size(); j++)
+										{
+											if(j == 0) {
+												chatText.setText(chatHistory.get(chatid).get(j));
+											} else {
+												
+												chatText.setText(chatText.getText() + "\n" + chatHistory.get(chatid).get(j));
+											}
+										}
 										if (chatid == 0) {
 											chatName.setText("Global Chat");
 										} else {
@@ -479,6 +490,14 @@ public class ChatClient extends Application {
 							}
 						});
 
+					} else if(message instanceof MessagesMessage){
+						System.out.println("YES!!!!");
+						chatHistory = ((MessagesMessage) message).getMessage();
+						for (Entry<Integer, ArrayList<String>> entry : chatHistory.entrySet()) {
+							for(String s : entry.getValue()) {
+								System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
+							}
+						}
 					} else {
 						System.out.println("Exception in ChatClient run(): Expecting certain messages");
 					}

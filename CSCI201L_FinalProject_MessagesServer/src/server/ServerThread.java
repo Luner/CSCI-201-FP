@@ -67,8 +67,6 @@ public class ServerThread extends Thread {
 							this.username = user.getUsername();
 							this.uid = user.getUid();
 							this.user = user;
-							// Tell Server User logged on
-							cs.logOn(user, this);
 
 							// Send VerificationResponseMessage
 							VerificationResponseMessage response;
@@ -78,6 +76,11 @@ public class ServerThread extends Thread {
 
 							oos.writeObject(response);
 							oos.flush();
+							
+
+							// Tell Server User logged on
+							cs.logOn(user, this);
+							
 							Log.sent(response);
 							
 							updateConversation();
