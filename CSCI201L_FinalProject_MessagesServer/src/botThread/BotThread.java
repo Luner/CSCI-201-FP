@@ -20,13 +20,16 @@ public class BotThread extends Thread {
 	Socket s;
 	Scanner scan;
 	Random rand;
-	Integer amount;
+	Integer frequency;
+	String words;
 
-	public BotThread(String hostname, int port, Integer amount) {
+	public BotThread(String hostname, int port, int frequency, String words) {
 		rand = new Random();
 		s = null;
 		scan = null;
-		uid = -1;
+		uid = -10;
+		this.words = words;
+		this.frequency = frequency;
 		try {
 			// Attempts to connect to the Socket
 			s = new Socket(hostname, port);
@@ -39,8 +42,7 @@ public class BotThread extends Thread {
 			 */
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
-			this.amount = amount;
-			login(amount);
+			login();
 
 		} catch (IOException ioe) {
 			System.out.println("BOT :: ioe: " + ioe.getMessage());
@@ -55,26 +57,9 @@ public class BotThread extends Thread {
 		// And send a ChatMessage to the Server
 		while (true) {
 			try {
-				if (rand.nextInt(1000000000) == 1)
-					counter++;
-				if (counter == amount) {
-					String line = "";
-					if (amount == 1) {
-						line = "Hello!";
-						counter = 0;
-					} else if (amount == 2) {
-						line = "Whats up Everyone?";
-						counter = 0;
-					} else if (amount == 3) {
-						line = "Anything cool happening?";
-						counter = 0;
-					} else if (amount == 4) {
-						line = "How has your day been?";
-						counter = 0;
-					}
-
+				if (rand.nextInt(1000000000) < frequency) {
 					// Creates a ChatMessage with the input
-					Message message = new ChatMessage(uid, 0, line);
+					Message message = new ChatMessage(uid, 1, words);
 
 					// Sends the ChatMessage Object to the server
 					oos.writeObject(message);
@@ -86,11 +71,11 @@ public class BotThread extends Thread {
 		}
 	}
 
-	private void login(int number) {
+	private void login() {
 
 		try {
-			String usernameInput = "Bot" + number;
-			String passwordInput = "Bot" + number + "_password";
+			String usernameInput = "Bot";
+			String passwordInput = "Bot_password";
 
 			// Creates a VerificationMessage with the username and password inputs
 			Message message = new VerificationMessage(usernameInput, passwordInput);

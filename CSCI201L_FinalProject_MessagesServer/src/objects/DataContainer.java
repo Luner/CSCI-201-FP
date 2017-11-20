@@ -27,14 +27,6 @@ public class DataContainer {
 		return null;
 	}
 
-	public boolean isAdmin(int uid) {
-		User user = findUserByUid(uid);
-		if (user.getType().equals("Admin")) {
-			return true;
-		}
-		return false;
-	}
-
 	public boolean addUser(User user) {
 		for (User user1 : users) {
 			if (user.getUsername().equals(user1.getUsername())) {
