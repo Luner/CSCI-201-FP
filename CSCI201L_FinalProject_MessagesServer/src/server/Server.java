@@ -163,7 +163,8 @@ public class Server extends Thread {
 			String username = command.substring(9, command.length() - 9);
 			String chatID = command.substring(command.length() - 9, command.length());
 			int cid = Integer.parseInt(chatID.substring(chatID.indexOf("J") + 1, chatID.length()));
-			
+
+			System.out.println("Adding User: " + data.findUserByUsername(username).getUid() + " to Conversation: " + cid);
 			addUserToConversation(data.findUserByUsername(username), cid);
 			 
 		} else if (command.equals("/gamemode 0")) {
@@ -223,6 +224,7 @@ public class Server extends Thread {
 
 		conversationMap.get(cid).addUser(user);
 		conversationMap.get(cid).addActiveUser(user);
+		
 		db.addUserToConversation(user, cid);
 	}
 
