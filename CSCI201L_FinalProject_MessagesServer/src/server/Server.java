@@ -216,7 +216,6 @@ public class Server extends Thread {
 				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
 			}
 		}
-		System.out.println("REAL ZSIZE " + result.size() );
 		return result;
 	}
 	
