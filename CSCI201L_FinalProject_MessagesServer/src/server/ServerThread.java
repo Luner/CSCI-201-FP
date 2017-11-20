@@ -185,7 +185,6 @@ public class ServerThread extends Thread {
 				} else if (message instanceof CommandMessage) {
 					cs.receiveCommand((CommandMessage) message, this);
 				} else if (message instanceof CreateConversationMessage) {
-					System.out.println(" CS CALLED 1");
 					cs.createConversation((CreateConversationMessage) message);
 				}
 			}
