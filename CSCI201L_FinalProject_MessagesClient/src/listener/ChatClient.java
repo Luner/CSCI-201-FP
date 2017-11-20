@@ -362,7 +362,16 @@ public class ChatClient extends Application {
 		});
 
 		createUser.setOnAction(e -> {
-			createUser(username.getText(), password.getText());
+			if(createUser(username.getText(), password.getText())) {
+				System.out.println("User Created");
+				loggedIn = true;
+				user_Username = username.getText();
+				addFunctions();
+				primaryStage.setScene(chatScene);
+				Thread th = new Thread(task);
+				th.setDaemon(true);
+				th.start();
+			}
 		});
 
 		add.setOnMouseClicked(e -> {
@@ -478,7 +487,7 @@ public class ChatClient extends Application {
 		return false;
 	}
 
-	public void createUser(String username, String password) {
+	public boolean createUser(String username, String password) {
 		try {
 
 			// Creates a VerificationMessage with the username and password inputs
@@ -487,11 +496,16 @@ public class ChatClient extends Application {
 			// Sends the VerificationMessage Object to the server
 			oos.writeObject(message);
 			oos.flush();
+			
+			boolean response = verificationResponse();
+			return response;
 
 		} catch (IOException ioe) {
 			System.out.println("ioe in login : " + ioe.getMessage());
 		}
+		return false;
 	}
+
 
 	public boolean login(String username, String password) {
 		try {
@@ -534,6 +548,7 @@ public class ChatClient extends Application {
 				// Recieved a message that was not a VerificationResponseMessage
 				System.out.println(
 						"Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
+				System.out.println("GOT A: " +  message.getClass().getName());
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("cnfe: " + cnfe.getMessage());
