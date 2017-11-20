@@ -18,10 +18,10 @@ public class ServerThread extends Thread {
 	private ObjectOutputStream oos;
 	private Server cs;
 	private User user;
-	String username;
+	private String username;
 	int uid;
 
-	boolean running = true;
+	private boolean running = true;
 	@SuppressWarnings("unused")
 	private Database db;
 
@@ -48,7 +48,7 @@ public class ServerThread extends Thread {
 			while (true) {
 				Object message = ois.readObject();
 				if (message instanceof VerificationMessage) {
-					// if the message is a VerificationMessagessage, Log the message received
+					// if the message is a VerificationMessage, Log the message received
 					Log.recieved((Message) message);
 
 					// Check the information sent against every user that exists
@@ -204,7 +204,7 @@ public class ServerThread extends Thread {
 	}
 
 	public void updateContacts() {
-		ArrayList<String> contacts = new ArrayList<String>();
+		ArrayList<String> contacts = new ArrayList<>();
 		ArrayList<User> temp = cs.getData().getUsers();
 		for (User u : temp) {
 			contacts.add(u.getUsername());
@@ -221,7 +221,7 @@ public class ServerThread extends Thread {
 	// Handles consistently listening for chatMessages from client
 	public void run() {
 		login();
-		ArrayList<String> contacts = new ArrayList<String>();
+		ArrayList<String> contacts = new ArrayList<>();
 		ArrayList<User> temp = cs.getData().getUsers();
 		for (User u : temp) {
 			contacts.add(u.getUsername());
@@ -249,7 +249,7 @@ public class ServerThread extends Thread {
 		} catch (IOException ioe) {
 			System.out.println("ioe in run: " + ioe.getMessage());
 		} catch (ConcurrentModificationException cme) {
-
+			System.out.println("cme in run: " + cme.getMessage());
 		}
 		cs.removeServerThread(this);
 	}

@@ -11,11 +11,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Database {
-	private String hostname;
-	private int port;
-	private String username;
-	private String password;
-	private String database;
+	private final String hostname;
+	private final int port;
+	private final String username;
+	private final String password;
+	private final String database;
 	private Connection conn;
 
 	public Database(String hostname, int port, String username, String password, String database) {
@@ -32,7 +32,7 @@ public class Database {
 		}
 	}
 
-	public boolean connect() {
+	private boolean connect() {
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database
 					+ "?useSSL=false&user=" + username + "&password=" + password);
@@ -67,9 +67,20 @@ public class Database {
 		}
 	}
 
+	public void updateUser(User u) {
+		String updateQuery = "UPDATE users SET UserPassword = ? WHERE UserID = ?;";
+		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
+			ps.setString(1,u.getPassword());
+			ps.setInt(2,u.getUid());
+			ps.execute();
+		} catch (SQLException sqle) {
+			System.out.println("Failed to update user with UID: " + u.getUid());
+		}
+	}
+
 	public ArrayList<User> getUsers() {
 		String selectQuery = "SELECT * FROM CSCI201.users";
-		ArrayList<User> foundUsers = new ArrayList<User>();
+		ArrayList<User> foundUsers = new ArrayList<>();
 		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -87,7 +98,7 @@ public class Database {
 
 	public HashMap<Integer, Conversation> getConversations(DataContainer dc) {
 		String selectQuery = "SELECT * FROM CSCI201.conversations";
-		HashMap<Integer, Conversation> conversationMap = new HashMap<Integer, Conversation>();
+		HashMap<Integer, Conversation> conversationMap = new HashMap<>();
 		try {
 			PreparedStatement ps = conn.prepareStatement(selectQuery);
 			ResultSet rs = ps.executeQuery();
@@ -95,7 +106,7 @@ public class Database {
 				int conversationID = rs.getInt(1);
 				boolean active = rs.getBoolean(2);
 				String conversationName = rs.getString(3);
-				ArrayList<User> conversationUsers = new ArrayList<User>();
+				ArrayList<User> conversationUsers = new ArrayList<>();
 				Conversation conversation = new Conversation(conversationUsers, conversationID, conversationName);
 				// Set active status and topic here!
 				conversationMap.put(conversationID, conversation);
@@ -161,19 +172,19 @@ public class Database {
 	}
 
 	public Map<Integer, ArrayList<String>> getMessagesMap(DataContainer dc) {
-		Map<Integer, ArrayList<String>> chatHistory = new HashMap<Integer, ArrayList<String>>();
+		Map<Integer, ArrayList<String>> chatHistory = new HashMap<>();
 		String selectQuery = "SELECT ConversationID FROM CSCI201.conversations";
 		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int conversationID = rs.getInt(1);
-				chatHistory.put(conversationID, new ArrayList<String>());
+				chatHistory.put(conversationID, new ArrayList<>());
 			}
 		} catch (SQLException e) {
 			System.out.println("Failed to retrieve conversations to generate message list.");
 		}
 		selectQuery = "SELECT ConversationID,UserID,Message from messages;";
-		ResultSet rs = null;
+		ResultSet rs;
 		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -208,15 +219,6 @@ public class Database {
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Failed to add user " + u.getUsername() + " to a conversation.");
-		}
-	}
-
-	public void updateUser(int userID) {
-		String updateQuery = "UPDATE users";
-		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
-
-		} catch (SQLException sqle) {
-			System.out.println("Failed to update user with UID: " + userID);
 		}
 	}
 }
