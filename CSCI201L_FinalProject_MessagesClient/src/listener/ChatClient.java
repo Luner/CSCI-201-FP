@@ -1614,7 +1614,6 @@ public class ChatClient extends Application {
 	private void clearAllFields() {
 		username.clear();
 		password.clear();
-		guestUsername.clear();
 		ipEntry.clear();
 		typedMessage.clear();
 		chatText.clear();
