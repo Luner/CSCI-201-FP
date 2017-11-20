@@ -206,6 +206,8 @@ public class ServerThread extends Thread {
 					cs.receiveCommand((CommandMessage) message, this);
 				} else if (message instanceof CreateConversationMessage) {
 					cs.createConversation((CreateConversationMessage) message);
+				} else if (message instanceof LogoutMessage) {
+					break;
 				}
 			}
 		} catch (ClassNotFoundException cnfe) {
@@ -215,5 +217,6 @@ public class ServerThread extends Thread {
 		} catch (ConcurrentModificationException cme) {
 
 		}
+		cs.removeServerThread(this);
 	}
 }

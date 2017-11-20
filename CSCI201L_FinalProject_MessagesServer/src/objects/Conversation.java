@@ -65,4 +65,10 @@ public class Conversation {
 		}
 		users.add(user);
 	}
+
+	public void removeActiveUser(User user) {
+		if (users.contains(user)) {
+			activeUsers.remove(user);
+		}
+	}
 }

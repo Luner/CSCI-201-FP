@@ -40,12 +40,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import objects.ClientConversation;
 import objects.message.CommandMessage;
 import objects.message.ContactsMessage;
 import objects.message.ConversationsMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.CreateUserMessage;
+import objects.message.LogoutMessage;
 import objects.message.Message;
 import objects.message.ProfileMessage;
 import objects.message.MessagesMessage;
@@ -279,6 +281,7 @@ public class ChatClient extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// 10.14.112.127
 		primaryStage.setTitle("Messaging Application");
+		primaryStage.initStyle(StageStyle.UNDECORATED);
 		chatsMap = new HashMap<Button, Integer>();
 		chatIDtoName = new HashMap<Integer, String>();
 		initializeIPSelect();
@@ -407,19 +410,21 @@ public class ChatClient extends Application {
 			number = phoneProfileInput.getText();
 		});
 
-		logOutButton.setOnMouseClicked(e -> {
-			loggedIn = false;
-			clearAllFields();
-			primaryStage.setScene(ipSelectScene);
-		});
-
 		primaryStage.setScene(ipSelectScene);
 		primaryStage.show();
 
 	}
 	
 	private void logout(){
+		try {
+			oos.writeObject(new LogoutMessage());
+			oos.flush();
+		} catch (IOException e) {
+			System.out.println("IOE in logout");
+		}
+		
 		loggedIn = false;
+		System.exit(0);
 	}
 	
 	private boolean setUpChatClient(String hostname, int port) {
@@ -570,6 +575,7 @@ public class ChatClient extends Application {
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
+		System.out.println("Exitng");
 		System.exit(0);
 	}
 

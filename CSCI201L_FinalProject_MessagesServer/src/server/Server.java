@@ -109,6 +109,9 @@ public class Server extends Thread {
 	}
 
 	public void removeServerThread(ServerThread st) {
+		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
+			entry.getValue().removeActiveUser(st.getUser());
+		}
 		serverThreads.remove(st);
 	}
 
