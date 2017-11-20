@@ -106,13 +106,13 @@ public class Database {
 			}
 			Iterator it = conversationMap.entrySet().iterator();
 			while (it.hasNext()) {
-				Map.Entry pair = (Map.Entry)it.next();
+				Map.Entry pair = (Map.Entry) it.next();
 				selectQuery = "SELECT UserID FROM CSCI201.conversation_members WHERE ConversationID = ?";
 				ps = conn.prepareStatement(selectQuery);
-				ps.setInt(1, ((Conversation)pair.getValue()).getConversationID());
+				ps.setInt(1, ((Conversation) pair.getValue()).getConversationID());
 				rs = ps.executeQuery();
 				while (rs.next()) {
-					((Conversation)pair.getValue()).getUsers().add(dc.findUserByUid(rs.getInt(1)));
+					((Conversation) pair.getValue()).getUsers().add(dc.findUserByUid(rs.getInt(1)));
 				}
 			}
 			return conversationMap;
@@ -132,7 +132,8 @@ public class Database {
 			ps.setInt(2, conversationID);
 			ps.execute();
 			for (User u : users) {
-				System.out.println("User: " + u.getUsername() + " with id: " + u.getUid() + " adding to converstaion " + conversationID);
+				System.out.println("User: " + u.getUsername() + " with id: " + u.getUid() + " adding to converstaion "
+						+ conversationID);
 				insertQuery = "INSERT conversation_members SET ConversationID = ?, UserID = ?;";
 				ps = conn.prepareStatement(insertQuery);
 				ps.setInt(1, conversationID);
@@ -161,6 +162,39 @@ public class Database {
 			System.out.println("Failed to retrieve messages for conversation.");
 		}
 		return rs;
+	}
+
+	public Map<Integer, ArrayList<String>> getMessagesMap(DataContainer dc) {
+		Map<Integer, ArrayList<String>> chatHistory = new HashMap<Integer, ArrayList<String>>();
+		String selectQuery = "SELECT ConversationID,UserID,Message from messages;";
+		ResultSet rs = null;
+		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				int conversationID = rs.getInt(1);
+				int userID = rs.getInt(2);
+				String message = rs.getString(3);
+				if (chatHistory.get(conversationID) == null) {
+					chatHistory.put(conversationID, new ArrayList<String>());
+				}
+				chatHistory.get(conversationID).add(dc.findUserByUid(userID).getUsername() + ": " + message);
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to retrieve message map.");
+		}
+		return chatHistory;
+	}
+
+	public void addMessage(int chatID, int userID, String message) {
+		String insertQuery = "INSERT messages SET ConversationID = ?, UserID = ?, Message = ?;";
+		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+			ps.setInt(1, chatID);
+			ps.setInt(2, userID);
+			ps.setString(3, message);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Failed to insert message: " + message);
+		}
 	}
 
 	public void updateUser(int userID) {
