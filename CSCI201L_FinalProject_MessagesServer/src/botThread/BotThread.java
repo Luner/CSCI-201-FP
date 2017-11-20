@@ -57,9 +57,8 @@ public class BotThread extends Thread {
 		// And send a ChatMessage to the Server
 		if(words.equals(" time")) {
 			while(true) {
-				Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
-				
 				try {
+					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
 					oos.writeObject(message);
 					oos.flush();
 					Thread.sleep(30000);
