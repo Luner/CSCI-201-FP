@@ -1,18 +1,14 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import objects.Conversation;
+import objects.DataContainer;
+import objects.User;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import objects.Conversation;
-import objects.DataContainer;
-import objects.User;
 
 public class Database {
 	private String hostname;

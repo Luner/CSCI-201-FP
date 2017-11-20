@@ -1,8 +1,8 @@
 package objects.message;
 
-import java.util.ArrayList;
-
 import objects.ClientConversation;
+
+import java.util.ArrayList;
 
 public class ConversationsMessage extends Message {
 	private static final long serialVersionUID = 1L;

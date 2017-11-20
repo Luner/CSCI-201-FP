@@ -1,13 +1,12 @@
 package parsing;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import objects.DataContainer;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import objects.DataContainer;
 
 public class DataWriter {
 
