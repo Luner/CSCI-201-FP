@@ -1640,7 +1640,7 @@ public class ChatClient extends Application {
 		for (int i = 0; i < contactsFromServer.size(); i++) {
 			contactsButtons.add(new Button());
 			contactsButtons.get(i).setMnemonicParsing(false);
-			contactsButtons.get(i).setPrefHeight(48.0);
+			contactsButtons.get(i).setPrefHeight(50.0);
 			contactsButtons.get(i).setLayoutX(5);
 			VBox.setMargin(contactsButtons.get(i), new Insets(0, 0, 0, 5));
 			contactsButtons.get(i).setPrefWidth(400.0);
