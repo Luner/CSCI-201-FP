@@ -642,7 +642,7 @@ public class ChatClient extends Application {
 								for (Integer i = 0; i < contactsButtons.size(); i++) {
 									Button button = contactsButtons.get(i);
 									button.setOnAction(e -> {
-										createConversation(button.getText(), "", "" ,"", button.getText());
+										createConversation(button.getText(), "", "" ,"", button.getText() + "/" + user_Username);
 									});
 								}
 							}
