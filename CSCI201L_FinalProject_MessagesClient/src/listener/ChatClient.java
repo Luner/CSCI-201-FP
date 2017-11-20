@@ -29,7 +29,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -254,11 +253,17 @@ public class ChatClient extends Application {
 
 	// client properties
 	private int uid;
+	@SuppressWarnings("unused")
 	private String fName;
+	@SuppressWarnings("unused")
 	private String lName;
+	@SuppressWarnings("unused")
 	private String email;
+	@SuppressWarnings("unused")
 	private String number;
+	@SuppressWarnings("unused")
 	private String bio;
+	@SuppressWarnings("unused")
 	private String interests;
 	private volatile boolean loggedIn;
 	
@@ -652,7 +657,7 @@ public class ChatClient extends Application {
 								for (Integer i = 0; i < contactsButtons.size(); i++) {
 									Button button = contactsButtons.get(i);
 									button.setOnAction(e -> {
-										// contacts button function
+										createConversation(button.getText(), "", "" ,"", button.getText() + "/" + user_Username);
 									});
 								}
 							}
