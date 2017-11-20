@@ -229,7 +229,7 @@ public class ChatClient extends Application {
 	HBox User4Layout;
 	Text User4Label;
 	TextField User4Input;
-	
+
 	HBox User5Layout;
 	Text User5Label;
 	TextField User5Input;
@@ -266,7 +266,7 @@ public class ChatClient extends Application {
 	@SuppressWarnings("unused")
 	private String interests;
 	private volatile boolean loggedIn;
-	
+
 	private String user_Username;
 	private Map<Integer, ArrayList<String>> chatHistory;
 	private Map<Integer, String> chatIDtoName;
@@ -299,7 +299,7 @@ public class ChatClient extends Application {
 				}
 			}
 		});
-		
+
 		// Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -371,16 +371,17 @@ public class ChatClient extends Application {
 		});
 
 		typedMessage.setOnKeyPressed((e) -> {
-			if (e.getCode() == KeyCode.ENTER) {
+			if (e.getCode() == KeyCode.ENTER && !typedMessage.getText().equals("")) {
 				send(typedMessage.getText());
 				typedMessage.setText("");
 			}
 		});
 
-
 		sendMessage.setOnAction(e -> {
-			send(typedMessage.getText());
-			typedMessage.setText("");
+			if (!typedMessage.getText().equals("")) {
+				send(typedMessage.getText());
+				typedMessage.setText("");
+			}
 		});
 
 		settingsUpdateButton.setOnMouseClicked(e -> {
@@ -399,7 +400,7 @@ public class ChatClient extends Application {
 			email = emailProfileInput.getText();
 			number = phoneProfileInput.getText();
 		});
-		
+
 		logOutButton.setOnMouseClicked(e -> {
 			loggedIn = false;
 			clearAllFields();
@@ -512,16 +513,16 @@ public class ChatClient extends Application {
 			// Creates a ChatMessage with the input
 			Message message;
 			if (text.startsWith("/") || text.startsWith("\\")) {
-				if(text.startsWith("/addUser")) {
+				if (text.startsWith("/addUser")) {
 					int max = 9 - selectedChat.toString().length();
-					for(int i = 0; i < max; i++) {
+					for (int i = 0; i < max; i++) {
 						text += " ";
 					}
 					text += "J";
 					text += selectedChat.toString().length();
 				}
 				message = new CommandMessage(uid, text);
-				
+
 			} else {
 				message = new ChatMessage(uid, selectedChat, text);
 			}
@@ -546,10 +547,10 @@ public class ChatClient extends Application {
 
 	private void cleanUp() {
 		try {
-			if(ois != null) {
+			if (ois != null) {
 				ois.close();
 			}
-			if(oos != null) {
+			if (oos != null) {
 				oos.close();
 			}
 			if (s != null) {
@@ -657,7 +658,8 @@ public class ChatClient extends Application {
 								for (Integer i = 0; i < contactsButtons.size(); i++) {
 									Button button = contactsButtons.get(i);
 									button.setOnAction(e -> {
-										createConversation(button.getText(), "", "" ,"", button.getText() + "/" + user_Username);
+										createConversation(button.getText(), "", "", "",
+												button.getText() + "/" + user_Username);
 									});
 								}
 							}
@@ -672,8 +674,7 @@ public class ChatClient extends Application {
 			} catch (IOException ioe) {
 				System.out.println("ioe: " + ioe.getMessage());
 			}
-			
-			
+
 			// Close the Socket and the Scanner
 			cleanUp();
 			return null;
@@ -776,7 +777,6 @@ public class ChatClient extends Application {
 		password.setLayoutX(265.0);
 		password.setLayoutY(129.0);
 
-
 		// LoginButton
 		login = new Button();
 		login.setLayoutX(230.0);
@@ -865,7 +865,7 @@ public class ChatClient extends Application {
 		settingsInfoNewUsernameLabel.setPrefHeight(36);
 		settingsInfoNewUsernameLabel.setPrefWidth(100);
 		VBox.setMargin(settingsInfoNewUsernameLabel, new Insets(4));
-		
+
 		settingsInfoNewPasswordLabel = new Label("New Password:");
 		settingsInfoNewUsernameLabel.setFont(Font.font("Helvetica", 12));
 		settingsInfoNewPasswordLabel.setPrefHeight(36);
@@ -1116,7 +1116,7 @@ public class ChatClient extends Application {
 		rightSide.getChildren().add(chatText);
 		rightSide.getChildren().add(chatName);
 		rightSide.getChildren().add(sendMessage);
-		
+
 		sendFileButton = new Button("Send File");
 
 		chatsPane = new ScrollPane();
@@ -1161,7 +1161,7 @@ public class ChatClient extends Application {
 
 		file = new File("images/profile.png");
 		profile.setImage(new Image(file.toURI().toString()));
-	
+
 		logOutButton = new ImageView();
 		logOutButton.setFitHeight(30);
 		logOutButton.setFitWidth(40);
@@ -1169,7 +1169,7 @@ public class ChatClient extends Application {
 		logOutButton.setLayoutY(368);
 		logOutButton.setPickOnBounds(true);
 		logOutButton.setPreserveRatio(true);
-		
+
 		file = new File("images/logout.png");
 		logOutButton.setImage(new Image(file.toURI().toString()));
 
@@ -1185,14 +1185,14 @@ public class ChatClient extends Application {
 		add.setImage(new Image(file.toURI().toString()));
 
 		chatsPane.setContent(chatsButtonsLayout);
-		
+
 		leftSide.getChildren().add(chatsPane);
 		leftSide.getChildren().add(settings);
 		leftSide.getChildren().add(contacts);
 		leftSide.getChildren().add(profile);
 		leftSide.getChildren().add(logOutButton);
 		leftSide.getChildren().add(add);
-		
+
 		chatScene = new Scene(chatLayout);
 	}
 
@@ -1231,7 +1231,7 @@ public class ChatClient extends Application {
 				chatsButtons.get(i).setText(chat.getName());
 				chatIDtoName.put(chats.get(i).getConversationID(), chat.getName());
 			}
-			
+
 			chatsMap.put(chatsButtons.get(i), chat.getConversationID());
 		}
 
@@ -1505,7 +1505,7 @@ public class ChatClient extends Application {
 		User4Label.setFont(new Font("Helvetica", 18));
 
 		User4Input = new TextField();
-		
+
 		User5Layout = new HBox();
 		User5Layout.setPrefHeight(20.0);
 		User5Layout.setPrefWidth(414.0);
@@ -1567,13 +1567,12 @@ public class ChatClient extends Application {
 		User4Layout.getChildren().add(User4Label);
 		User4Layout.getChildren().add(User4Input);
 
-
 		addConversationLayout.getChildren().add(addConversationspacing7);
-		
+
 		addConversationLayout.getChildren().add(User5Layout);
 		User5Layout.getChildren().add(User5Label);
 		User5Layout.getChildren().add(User5Input);
-		
+
 		addConversationLayout.getChildren().add(addConversationspacing6);
 
 		addConversationLayout.getChildren().add(addConversationButtonBox);
@@ -1625,7 +1624,7 @@ public class ChatClient extends Application {
 			System.out.println("ioe in sendMessage: " + ioe.getMessage());
 		}
 	}
-	
+
 	private void clearAllFields() {
 		username.clear();
 		password.clear();
@@ -1642,8 +1641,7 @@ public class ChatClient extends Application {
 		User2Input.clear();
 		User3Input.clear();
 		User4Input.clear();
-		
-		
+
 	}
 
 }
