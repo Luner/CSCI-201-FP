@@ -118,6 +118,7 @@ public class ChatClient extends Application {
 	ImageView settings;
 	ImageView contacts;
 	ImageView profile;
+	ImageView logOutButton;
 	ImageView add;
 
 	AnchorPane rightSide;
@@ -258,7 +259,8 @@ public class ChatClient extends Application {
 	private String number;
 	private String bio;
 	private String interests;
-
+	private volatile boolean loggedIn;
+	
 	private String user_Username;
 	private Map<Integer, ArrayList<String>> chatHistory;
 
@@ -269,7 +271,6 @@ public class ChatClient extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// 10.14.112.127
-
 		primaryStage.setTitle("Messaging Application");
 		chatsMap = new HashMap<Button, Integer>();
 		initializeIPSelect();
@@ -290,14 +291,14 @@ public class ChatClient extends Application {
 				}
 			}
 		});
-
+		
 		// Set what happens on button press
 		login.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				if (login(username.getText(), password.getText())) {
+					loggedIn = true;
 					user_Username = username.getText();
-					addFunctions();
 					primaryStage.setScene(chatScene);
 					Thread th = new Thread(task);
 					th.setDaemon(true);
@@ -380,6 +381,12 @@ public class ChatClient extends Application {
 			lName = lastNameProfileInput.getText();
 			email = emailProfileInput.getText();
 			number = phoneProfileInput.getText();
+		});
+		
+		logOutButton.setOnMouseClicked(e -> {
+			loggedIn = false;
+			clearAllFields();
+			primaryStage.setScene(ipSelectScene);
 		});
 
 		primaryStage.setScene(ipSelectScene);
@@ -513,9 +520,16 @@ public class ChatClient extends Application {
 
 	private void cleanUp() {
 		try {
+			if(ois != null) {
+				ois.close();
+			}
+			if(oos != null) {
+				oos.close();
+			}
 			if (s != null) {
 				s.close();
 			}
+
 		} catch (IOException ioe) {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
@@ -526,7 +540,7 @@ public class ChatClient extends Application {
 		protected Void call() throws Exception {
 			try {
 				// Loop consistently looking for an object to be sent from the server
-				while (true) {
+				while (loggedIn) {
 					// Receives the object
 					Object message = ois.readObject();
 
@@ -1031,7 +1045,7 @@ public class ChatClient extends Application {
 	public void initializeChatWindow() {
 
 		SplitPane chatLayout = new SplitPane();
-		chatLayout.setDividerPositions(0.3);
+		chatLayout.setDividerPositions(0.354515);
 		chatLayout.setMaxHeight(Double.NEGATIVE_INFINITY);
 		chatLayout.setMaxWidth(Double.NEGATIVE_INFINITY);
 		chatLayout.setMinHeight(Double.NEGATIVE_INFINITY);
@@ -1042,14 +1056,14 @@ public class ChatClient extends Application {
 		leftSide = new AnchorPane();
 		leftSide.setMinHeight(0.0);
 		leftSide.setMinWidth(0.0);
-		leftSide.setPrefHeight(160.0);
-		leftSide.setPrefWidth(100.0);
+		leftSide.setPrefHeight(398);
+		leftSide.setPrefWidth(300);
 
 		rightSide = new AnchorPane();
 		rightSide.setMinHeight(0.0);
 		rightSide.setMinWidth(0.0);
-		rightSide.setPrefHeight(160.0);
-		rightSide.setPrefWidth(100.0);
+		rightSide.setPrefHeight(400);
+		rightSide.setPrefWidth(374);
 
 		chatLayout.getItems().add(leftSide);
 		chatLayout.getItems().add(rightSide);
@@ -1058,13 +1072,13 @@ public class ChatClient extends Application {
 		typedMessage.setLayoutX(2.0);
 		typedMessage.setLayoutY(371.0);
 		typedMessage.setPrefHeight(25.0);
-		typedMessage.setPrefWidth(345.0);
+		typedMessage.setPrefWidth(313.0);
 
 		chatText = new TextArea();
 		chatText.setLayoutX(2.0);
 		chatText.setLayoutY(33.0);
 		chatText.setPrefHeight(336.0);
-		chatText.setPrefWidth(416.0);
+		chatText.setPrefWidth(376.0);
 		chatText.setEditable(false);
 		chatText.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
 
@@ -1079,7 +1093,7 @@ public class ChatClient extends Application {
 		chatName.setText("Global Chat");
 
 		sendMessage = new Button();
-		sendMessage.setLayoutX(350.0);
+		sendMessage.setLayoutX(315.0);
 		sendMessage.setLayoutY(371.0);
 		sendMessage.setMnemonicParsing(false);
 		sendMessage.setPrefHeight(25.0);
@@ -1093,11 +1107,11 @@ public class ChatClient extends Application {
 
 		chatsPane = new ScrollPane();
 		chatsPane.setPrefHeight(367.0);
-		chatsPane.setPrefWidth(176.0);
+		chatsPane.setPrefWidth(209.0);
 
 		chatsButtonsLayout = new VBox();
 		chatsButtonsLayout.setPrefHeight(365.0);
-		chatsButtonsLayout.setPrefWidth(154.0);
+		chatsButtonsLayout.setPrefWidth(207.0);
 
 		chatsButtons = new ArrayList<Button>();
 
@@ -1126,18 +1140,29 @@ public class ChatClient extends Application {
 		profile = new ImageView();
 		profile.setFitHeight(30.0);
 		profile.setFitWidth(40.0);
-		profile.setLayoutX(94.0);
+		profile.setLayoutX(92.0);
 		profile.setLayoutY(368.0);
 		profile.setPickOnBounds(true);
 		profile.setPreserveRatio(true);
 
 		file = new File("images/profile.png");
 		profile.setImage(new Image(file.toURI().toString()));
+	
+		logOutButton = new ImageView();
+		logOutButton.setFitHeight(30);
+		logOutButton.setFitWidth(40);
+		logOutButton.setLayoutX(132);
+		logOutButton.setLayoutY(368);
+		logOutButton.setPickOnBounds(true);
+		logOutButton.setPreserveRatio(true);
+		
+		file = new File("images/logout.png");
+		logOutButton.setImage(new Image(file.toURI().toString()));
 
 		add = new ImageView();
 		add.setFitHeight(30.0);
 		add.setFitWidth(40.0);
-		add.setLayoutX(139.0);
+		add.setLayoutX(169.0);
 		add.setLayoutY(368.0);
 		add.setPickOnBounds(true);
 		add.setPreserveRatio(true);
@@ -1146,16 +1171,15 @@ public class ChatClient extends Application {
 		add.setImage(new Image(file.toURI().toString()));
 
 		chatsPane.setContent(chatsButtonsLayout);
-
+		
 		leftSide.getChildren().add(chatsPane);
-		chatScene = new Scene(chatLayout);
-	}
-
-	private void addFunctions() {
 		leftSide.getChildren().add(settings);
 		leftSide.getChildren().add(contacts);
 		leftSide.getChildren().add(profile);
+		leftSide.getChildren().add(logOutButton);
 		leftSide.getChildren().add(add);
+		
+		chatScene = new Scene(chatLayout);
 	}
 
 	private void setChatWindow() {
@@ -1184,7 +1208,7 @@ public class ChatClient extends Application {
 			chatsButtons.add(new Button());
 			chatsButtons.get(i).setMnemonicParsing(false);
 			chatsButtons.get(i).setPrefHeight(50.0);
-			chatsButtons.get(i).setPrefWidth(174.0);
+			chatsButtons.get(i).setPrefWidth(207);
 
 			if (i == 0) {
 				chatsButtons.get(i).setText("Global Chat");
@@ -1572,6 +1596,27 @@ public class ChatClient extends Application {
 		} catch (IOException ioe) {
 			System.out.println("ioe in sendMessage: " + ioe.getMessage());
 		}
+	}
+	
+	private void clearAllFields() {
+		username.clear();
+		password.clear();
+		guestUsername.clear();
+		ipEntry.clear();
+		typedMessage.clear();
+		chatText.clear();
+		settingsInfoNewUsernameField.clear();
+		settingsInfoNewPasswordField.clear();
+		firstNameProfileInput.clear();
+		lastNameProfileInput.clear();
+		emailProfileInput.clear();
+		phoneProfileInput.clear();
+		User1Input.clear();
+		User2Input.clear();
+		User3Input.clear();
+		User4Input.clear();
+		
+		
 	}
 
 }
