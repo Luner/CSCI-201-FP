@@ -135,7 +135,7 @@ public class Server extends Thread {
 			chatHistory.get(chatID).add(getData().findUserByUid(userID).getUsername() + ": " + messageString);
 
 			// Add to database
-			 db.addMessage(chatID, userID, messageString);
+			db.addMessage(chatID, userID, messageString);
 
 			for (ServerThread st : serverThreads) {
 				Message messages = new MessagesMessage(chatHistory);
@@ -218,8 +218,8 @@ public class Server extends Thread {
 
 		ArrayList<User> newUsers = new ArrayList<User>();
 		chatHistory.put(chatID, new ArrayList<String>());
-		
-		
+
+
 		for (String username : message.getUsers()) {
 
 			User temp = data.findUserByUsername(username);
@@ -233,8 +233,8 @@ public class Server extends Thread {
 		db.createConversation(newUsers, "", chatID);
 
 		conversationMap.put(chatID, new Conversation(newUsers, chatID));
-		
-		
+
+
 		for (ServerThread st : serverThreads) {
 			conversationMap.get(chatID).addActiveUser(st.getUser());
 			st.updateConversation();
