@@ -123,6 +123,7 @@ public class ChatClient extends Application {
 	TextField typedMessage;
 	TextArea chatText;
 	Button sendMessage;
+	Button sendFileButton;
 
 	////////// Settings pane //////////////
 
@@ -666,7 +667,8 @@ public class ChatClient extends Application {
 			} catch (IOException ioe) {
 				System.out.println("ioe: " + ioe.getMessage());
 			}
-
+			
+			
 			// Close the Socket and the Scanner
 			cleanUp();
 			return null;
@@ -1109,6 +1111,8 @@ public class ChatClient extends Application {
 		rightSide.getChildren().add(chatText);
 		rightSide.getChildren().add(chatName);
 		rightSide.getChildren().add(sendMessage);
+		
+		sendFileButton = new Button("Send File");
 
 		chatsPane = new ScrollPane();
 		chatsPane.setPrefHeight(367.0);
