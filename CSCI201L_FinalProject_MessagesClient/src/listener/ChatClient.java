@@ -346,7 +346,7 @@ public class ChatClient extends Application {
 			chatText.setText("");
 
 			chatName.setText("Global Chat");
-			selectedChat = 1;
+			selectedChat = 0;
 			setChatWindow();
 		});
 
@@ -401,15 +401,19 @@ public class ChatClient extends Application {
 
 		typedMessage.setOnKeyPressed((e) -> {
 			if (e.getCode() == KeyCode.ENTER && !typedMessage.getText().equals("")) {
-				send(typedMessage.getText());
-				typedMessage.setText("");
+				if(selectedChat != 0) {
+					send(typedMessage.getText());
+					typedMessage.setText("");
+				}
 			}
 		});
 
 		sendMessage.setOnAction(e -> {
 			if (!typedMessage.getText().equals("")) {
-				send(typedMessage.getText());
-				typedMessage.setText("");
+				if(selectedChat != 0) {
+					send(typedMessage.getText());
+					typedMessage.setText("");
+				}
 			}
 		});
 
@@ -462,7 +466,7 @@ public class ChatClient extends Application {
 	private boolean setUpChatClient(String hostname, int port) {
 		s = null;
 		uid = -1;
-		selectedChat = 1; // default
+		selectedChat = 0; // default
 		try {
 			// Attempts to connect to the Socket
 			s = new Socket(hostname, port);
@@ -1144,7 +1148,7 @@ public class ChatClient extends Application {
 		chatName.setTextAlignment(TextAlignment.CENTER);
 		chatName.setWrappingWidth(416.0);
 		chatName.setFont(new Font("Helvetica", 20));
-		chatName.setText("Global Chat");
+		chatName.setText("Select a Chat");
 
 		sendMessage = new Button();
 		sendMessage.setLayoutX(352.0);
