@@ -83,6 +83,13 @@ public class ChatClient extends Application {
 
 	Line devider;
 
+	//////////CONTACTS WINDOW//////////
+	ScrollPane contactsPane;
+	VBox contactsLayout;
+	ArrayList<HBox> contactsList;
+	ArrayList<String> contactsFromServer;
+	ArrayList<Text> contactsTextList;
+	
 	////////// Function Bar and Chats//////////
 	Scene chatScene;
 
@@ -277,8 +284,9 @@ public class ChatClient extends Application {
 
 		contacts.setOnMouseClicked(e -> {
 			chatText.setFont(new Font("Helvetica", 18));
-			chatText.setText("Bot1 \nBot2");
+//			chatText.setText("Bot1 \nBot2");
 			chatName.setText("Contacts");
+			setContactsWindow();
 		});
 
 		sendMessage.setOnAction(e -> {
@@ -1131,5 +1139,44 @@ public class ChatClient extends Application {
 		addConversationButtonBox.getChildren().add(addConversationButton);
 
 	}
+	public void updateContactsWind() {
+		for(int i = 0; i < contactsFromServer.size(); i++) {
+			contactsList.add(new HBox());
+			contactsTextList.add(new Text());
+		}
+		
+		for(int i = 0; i < contactsTextList.size(); i++) {
+			Text contactText = contactsTextList.get(i);
+			contactText.setLayoutY(25.0);
+			contactText.setStrokeType(StrokeType.OUTSIDE);
+			contactText.setStrokeWidth(0.0);
+			contactText.setText(contactsFromServer.get(i));
+			contactText.setTextAlignment(TextAlignment.CENTER);
+			contactText.setWrappingWidth(416);
+		}
+		
+		for(int i = 0; i < contactsList.size(); i++) {
+			HBox contactBox = contactsList.get(i);
+			contactBox.setPrefHeight(48.0);
+			contactBox.setPrefWidth(414.0);
+			contactBox.getChildren().add(contactsTextList.get(i));
+		}
+		
+		profileLayout.setPrefHeight(contactsList.size() * 50);
+	}
+	public void initializeContactsWindow() {
+		contactsPane = new ScrollPane();
+		contactsPane.setLayoutX(-1.0);
+		contactsPane.setLayoutY(-1.0);
+		contactsPane.setPrefHeight(358.0);
+		contactsPane.setPrefWidth(416.0);
 
+		contactsLayout = new VBox();
+		contactsLayout.setPrefHeight(contactsList.size() * 50);
+		contactsLayout.setPrefWidth(414.0);
+	}
+	
+	public void setContactsWindow() {
+		
+	}
 }
