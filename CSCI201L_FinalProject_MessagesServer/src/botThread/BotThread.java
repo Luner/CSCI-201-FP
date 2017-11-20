@@ -18,11 +18,11 @@ public class BotThread extends Thread {
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private int uid;
-	Socket s;
-	Scanner scan;
-	Random rand;
-	Integer frequency;
-	String words;
+	private Socket s;
+	private Scanner scan;
+	private Random rand;
+	private Integer frequency;
+	private String words;
 	private ArrayList<String> ytlinks;
 
 	public BotThread(String hostname, int port, int frequency, String words) {
@@ -31,7 +31,7 @@ public class BotThread extends Thread {
 		scan = null;
 		uid = -10;
 		this.words = words;
-		ytlinks = new ArrayList<String>();
+		ytlinks = new ArrayList<>();
 		this.frequency = frequency;
 		ytlinks.add("https://www.youtube.com/watch?v=gy1B3agGNxw");
 		ytlinks.add("https://www.youtube.com/watch?v=XCiDuy4mrWU");
@@ -64,55 +64,50 @@ public class BotThread extends Thread {
 	}
 
 	// handles the sending of information to the Server
-	public void sender() {
+	private void sender() {
 
 		int counter = 0;
 		// An infinite loop that will constantly look for a line from the console
 		// And send a ChatMessage to the Server
-		if(words.equals("time")) {
-			while(true) {
-				try {
-					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
-					oos.writeObject(message);
-					oos.flush();
-					Thread.sleep(30000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		else if(words.equals("youtube")) {
-				try {
-					int i = rand.nextInt();
-					Message message = new ChatMessage(uid, 1, ytlinks.get(i%11));
-					oos.writeObject(message);
-					oos.flush();
-					Thread.sleep(30000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
-		else {
-			while (true) {
-				try {
-					if (rand.nextInt(1000000000) < frequency) {
-						// Creates a ChatMessage with the input
-						Message message = new ChatMessage(uid, 1, words);
-
-						// Sends the ChatMessage Object to the server
+		switch (words) {
+			case "time":
+				while (true) {
+					try {
+						Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
 						oos.writeObject(message);
 						oos.flush();
+						Thread.sleep(30000);
+					} catch (InterruptedException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				} catch (IOException ioe) {
-					System.out.println("BOT :: ioe: " + ioe.getMessage());
 				}
-			}
+			case "youtube":
+				try {
+					int i = rand.nextInt();
+					Message message = new ChatMessage(uid, 1, ytlinks.get(i % 11));
+					oos.writeObject(message);
+					oos.flush();
+					Thread.sleep(30000);
+				} catch (InterruptedException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			default:
+				while (true) {
+					try {
+						if (rand.nextInt(1000000000) < frequency) {
+							// Creates a ChatMessage with the input
+							Message message = new ChatMessage(uid, 1, words);
+
+							// Sends the ChatMessage Object to the server
+							oos.writeObject(message);
+							oos.flush();
+						}
+					} catch (IOException ioe) {
+						System.out.println("BOT :: ioe: " + ioe.getMessage());
+					}
+				}
 		}
 	}
 
