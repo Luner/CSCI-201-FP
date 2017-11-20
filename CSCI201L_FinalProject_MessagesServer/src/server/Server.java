@@ -225,7 +225,7 @@ public class Server extends Thread {
 		Integer chatID = conversationMap.size() + 1;
 
 		ArrayList<User> newUsers = new ArrayList<User>();
-
+		chatHistory.put(chatID, new ArrayList<String>());
 		for (String username : message.getUsers()) {
 
 			User temp = data.findUserByUsername(username);
