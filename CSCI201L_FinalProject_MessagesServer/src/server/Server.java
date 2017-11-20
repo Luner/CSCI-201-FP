@@ -34,7 +34,9 @@ public class Server extends Thread {
 	private Database db;
 
 	public void initializeHistory() {
+		
 		chatHistory = new HashMap<Integer, ArrayList<String>>();
+		chatHistory = db.getMessagesMap();
 		for (int i = 1; i <= 11; i++) {
 			chatHistory.put(i, new ArrayList<String>());
 		}
