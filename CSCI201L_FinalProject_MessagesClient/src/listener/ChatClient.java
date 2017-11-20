@@ -92,7 +92,7 @@ public class ChatClient extends Application {
 	////////// CONTACTS WINDOW//////////
 	ScrollPane contactsPane;
 	VBox contactsLayout;
-	ArrayList<HBox> contactsList;
+	//ArrayList<HBox> contactsList;
 	ArrayList<String> contactsFromServer;
 	ArrayList<Text> contactsTextList;
 	ArrayList<Button> contactsButtons;
@@ -1230,29 +1230,18 @@ public class ChatClient extends Application {
 	}
 
 	public void updateContactsWind() {
-		for (int i = 0; i < contactsFromServer.size(); i++) {
-			contactsList.add(new HBox());
-			contactsTextList.add(new Text());
+		contactsButtons.clear();
+		//add new
+		
+		for(int i = 0; i < contactsFromServer.size(); i++) {
+			contactsButtons.add(new Button());
+			contactsButtons.get(i).setMnemonicParsing(false);
+			contactsButtons.get(i).setPrefHeight(48.0);
+			contactsButtons.get(i).setPrefWidth(414.0);
+			contactsButtons.get(i).setText(contactsFromServer.get(i));
 		}
-
-		for (int i = 0; i < contactsTextList.size(); i++) {
-			Text contactText = contactsTextList.get(i);
-			contactText.setLayoutY(25.0);
-			contactText.setStrokeType(StrokeType.OUTSIDE);
-			contactText.setStrokeWidth(0.0);
-			contactText.setText(contactsFromServer.get(i));
-			contactText.setTextAlignment(TextAlignment.CENTER);
-			contactText.setWrappingWidth(416);
-		}
-
-		for (int i = 0; i < contactsList.size(); i++) {
-			HBox contactBox = contactsList.get(i);
-			contactBox.setPrefHeight(48.0);
-			contactBox.setPrefWidth(414.0);
-			contactBox.getChildren().add(contactsTextList.get(i));
-		}
-
-		profileLayout.setPrefHeight(contactsList.size() * 50);
+		
+		contactsLayout.setPrefHeight(contactsButtons.size() * 50);
 	}
 
 	public void initializeContactsWindow() {
