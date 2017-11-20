@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayDeque;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -35,6 +36,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import objects.ClientConversation;
+import objects.message.ChatHistoryReply;
+import objects.message.ChatHistoryRequest;
 import objects.message.ChatMessage;
 import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
@@ -402,6 +405,7 @@ public class ChatClient extends Application {
 			System.out.println("ioe: " + ioe.getMessage());
 		}
 	}
+	
 
 	private void createConversation(String user1, String user2, String user3, String user4) {
 		Message message = new CreateConversationMessage(user_Username, user1, user2, user3, user4);
@@ -464,6 +468,32 @@ public class ChatClient extends Application {
 									Button button = chatsButtons.get(i);
 									button.setOnAction(e -> {
 										chatText.setFont(new Font("Helvetica", 12));
+//										ChatHistoryRequest request = new ChatHistoryRequest(chatsMap.get(button));
+//										try {
+//											oos.writeObject(request);
+//											oos.flush();
+//										} catch(IOException e1) {
+//											System.out.println("Error in Chat History Requesting" + e1.getMessage());
+//										}
+//										ChatHistoryReply reply = null;
+//										try {
+//											reply = (ChatHistoryReply) ois.readObject();
+//											System.out.println("Got Reply");
+//										} catch(ClassNotFoundException | IOException e1) {
+//											System.out.println("Error in Chat History Request" + e1.getMessage());
+//										}
+//										ArrayDeque<ChatStringMessage> history = reply.getHistory();
+//										String fullChat = new String("");
+//										while(!history.isEmpty()) {
+//											ChatStringMessage message = history.removeFirst();
+//											if (fullChat.length() > 0) {
+//												fullChat += "\n" + ((ChatStringMessage) message).getMessage();
+//												chatText.setScrollTop(Double.MAX_VALUE);
+//											} else {
+//												fullChat += ((ChatStringMessage) message).getMessage();
+//											}
+//										}
+//										chatText.setText(fullChat);
 										chatText.setText("");
 										int chatid = chatsMap.get(button);
 										if (chatid == 0) {

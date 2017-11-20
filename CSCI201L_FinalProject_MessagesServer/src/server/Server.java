@@ -17,6 +17,7 @@ import objects.Conversation;
 import objects.DataContainer;
 import objects.User;
 import objects.message.ChatMessage;
+import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
 import objects.message.CreateConversationMessage;
 import objects.message.Message;
@@ -128,8 +129,16 @@ public class Server extends Thread {
 
 	public void sendMessageToAllClients(Message message) {
 		Log.sent(message);
+		//boolean first = false;
 		if (message instanceof ChatMessage) {
 			Conversation conversation = conversationMap.get(((ChatMessage) message).getCid());
+//			ChatStringMessage sMessage = new ChatStringMessage(
+//					getData().findUserByUid(((ChatMessage) message).getUid()).getUsername() + ": " + ((ChatMessage) message).getMessage(),
+//					((ChatMessage) message).getCid());
+//			if(!first) {
+//				conversation.addMessage(sMessage);
+//				first = true;
+//			}
 			conversation.sendMessageToConversation(message);
 		}
 	}
@@ -196,6 +205,10 @@ public class Server extends Thread {
 			}
 		}
 		return result;
+	}
+	
+	public Conversation getConversation(int id) {
+		return conversationMap.get(id);
 	}
 
 	public void createConversation(CreateConversationMessage message) {

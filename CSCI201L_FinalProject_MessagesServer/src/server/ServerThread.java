@@ -6,10 +6,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.ArrayDeque;
 
 import database.Database;
 import objects.ClientConversation;
 import objects.User;
+import objects.message.ChatHistoryReply;
+import objects.message.ChatHistoryRequest;
 import objects.message.ChatMessage;
 import objects.message.ChatStringMessage;
 import objects.message.CommandMessage;
@@ -188,6 +191,10 @@ public class ServerThread extends Thread {
 					System.out.println(" CS CALLED 1");
 					cs.createConversation((CreateConversationMessage) message);
 				}
+//				else if(message instanceof ChatHistoryRequest) {
+//					ArrayDeque<ChatStringMessage> h = cs.getConversation(((ChatHistoryRequest) message).getCid()).getHistory();
+//					sendMessage(new ChatHistoryReply(h));
+//				}
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("cnfe in run: " + cnfe.getMessage());
