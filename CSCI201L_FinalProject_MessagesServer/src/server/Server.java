@@ -21,10 +21,11 @@ public class Server extends Thread {
 	private Vector<BotThread> botThreads;
 	private DataContainer data;
 	private Map<Integer, ArrayList<String>> chatHistory;
+	@SuppressWarnings("unused")
 	private Scanner scan;
 	private Database db;
 
-	public void initializeHistory() {
+	private void initializeHistory() {
 		chatHistory = db.getMessagesMap(data);
 	}
 
@@ -39,8 +40,8 @@ public class Server extends Thread {
 					+ user.getPassword());
 		}
 		ServerSocket ss = null;
-		serverThreads = new Vector<ServerThread>();
-		InitializeConversations(data.getUsers());
+		serverThreads = new Vector<>();
+		initializeConversations(data.getUsers());
 		initializeHistory();
 		this.start();
 
@@ -66,7 +67,7 @@ public class Server extends Thread {
 		}
 	}
 
-	public void InitializeConversations(ArrayList<User> users) {
+	private void initializeConversations(ArrayList<User> users) {
 		conversationMap = db.getConversations(data);
 	}
 
@@ -81,8 +82,8 @@ public class Server extends Thread {
 					+ user.getPassword());
 		}
 		ServerSocket ss = null;
-		serverThreads = new Vector<ServerThread>();
-		InitializeConversations(data.getUsers());
+		serverThreads = new Vector<>();
+		initializeConversations(data.getUsers());
 		this.start();
 
 		try {
@@ -193,27 +194,31 @@ public class Server extends Thread {
 
 	// Allows for Server Commands
 	public void run() {
-		scan = new Scanner(System.in);
-		while (true) {
-			try {
+		@SuppressWarnings("resource")
+		Scanner scan = new Scanner(System.in);
+		try {
+			while (true) {
 				String command = scan.nextLine();
-
-				if (command.equals("help")) {
+				switch (command) {
+				case "help":
 					System.out.println("\n\n///HELP MENU///");
 					System.out.println("Commands: ");
 					System.out.println("\"add bot\" - begins the add bot process");
 					System.out.println("\"help\" - brings up the help menu\n\n");
 
-				} else if (command.equals("shutdown")) {
+					// do nothing
+					break;
+				case "shutdown":
 					System.out.println("The server is now shutting down...");
 					// PUSH NEW DATA
 					System.exit(0);
-				} else {
+				default:
 					System.out.println("SERVER :: INVALID COMMAND");
+					break;
 				}
-			} catch (NoSuchElementException n) {
-				// do nothing
 			}
+
+		} catch (NoSuchElementException n) {
 		}
 	}
 
@@ -230,7 +235,6 @@ public class Server extends Thread {
 
 	public ArrayList<ClientConversation> getUserConversations(User user) {
 		ArrayList<ClientConversation> result = new ArrayList<ClientConversation>();
-
 		for (Entry<Integer, Conversation> entry : conversationMap.entrySet()) {
 			if (entry.getValue().hasUser(user)) {
 				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
@@ -239,20 +243,12 @@ public class Server extends Thread {
 		return result;
 	}
 
-	public void addUserToConversation(User user, Integer cid) {
-
-		conversationMap.get(cid).addUser(user);
-		conversationMap.get(cid).addActiveUser(user);
-
-		db.addUserToConversation(user, cid);
-	}
-
 	public void createConversation(CreateConversationMessage message) {
 
 		Integer chatID = conversationMap.size() + 1;
 
-		ArrayList<User> newUsers = new ArrayList<User>();
-		chatHistory.put(chatID, new ArrayList<String>());
+		ArrayList<User> newUsers = new ArrayList<>();
+		chatHistory.put(chatID, new ArrayList<>());
 
 		for (String username : message.getUsers()) {
 
@@ -264,11 +260,8 @@ public class Server extends Thread {
 
 		}
 
-		db.createConversation(newUsers, ((CreateConversationMessage) message).getName(), chatID);
-
-		conversationMap.put(chatID,
-				new Conversation(newUsers, chatID, ((CreateConversationMessage) message).getName()));
-
+		db.createConversation(newUsers, message.getName(), chatID);
+		conversationMap.put(chatID, new Conversation(newUsers, chatID, message.getName()));
 		for (ServerThread st : serverThreads) {
 			conversationMap.get(chatID).addActiveUser(st.getUser());
 			st.updateConversation();
