@@ -131,11 +131,11 @@ public class ChatClient extends Application {
 	
 
 	////////// CONTACTS WINDOW//////////
+	ScrollPane contactsPane;
 	VBox contactsLayout;
 	ArrayList<HBox> contactsList;
 	ArrayList<String> contactsFromServer;
 	ArrayList<Text> contactsTextList;
-	boolean updated;
 
 	// -------------------------------------------
 
@@ -197,8 +197,9 @@ public class ChatClient extends Application {
 
 		contacts.setOnMouseClicked(e -> {
 			chatText.setFont(new Font("Helvetica", 18));
-			chatText.setText("Bot1 \nBot2");
+//			chatText.setText("Bot1 \nBot2");
 			chatName.setText("Contacts");
+			setContactsWindow();
 		});
 
 		chatsButtons.get(0).setOnAction(e -> {
@@ -367,7 +368,7 @@ public class ChatClient extends Application {
 
 					} else if (message instanceof ContactsMessage){
 						contactsFromServer = ((ContactsMessage) message).getContacts();
-						updated = true;
+						updateContactsWind();
 					} else {
 						System.out.println("Exception in ChatClient run(): Expecting StringMessage");
 					}
@@ -639,6 +640,12 @@ public class ChatClient extends Application {
 		rightSide.getChildren().add(profilePane);
 		rightSide.getChildren().add(chatName);
 	}
+	
+	private void setContactsWindow() {
+		rightSide.getChildren().clear();
+		rightSide.getChildren().add(contactsPane);
+		rightSide.getChildren().add(chatName);
+	}
 
 	public void initializeProfileWindow() {
 		profilePane = new ScrollPane();
@@ -795,11 +802,6 @@ public class ChatClient extends Application {
 	}
 	
 	public void updateContactsWind() {
-		updated = false;
-		getContactsFromServer();
-		while(!updated) {	
-		}
-		
 		for(int i = 0; i < contactsFromServer.size(); i++) {
 			contactsList.add(new HBox());
 			contactsTextList.add(new Text());
@@ -826,14 +828,14 @@ public class ChatClient extends Application {
 	}
 	
 	public void initializeContactsWindow() {
-		profilePane = new ScrollPane();
-		profilePane.setLayoutX(-1.0);
-		profilePane.setLayoutY(-1.0);
-		profilePane.setPrefHeight(358.0);
-		profilePane.setPrefWidth(416.0);
+		contactsPane = new ScrollPane();
+		contactsPane.setLayoutX(-1.0);
+		contactsPane.setLayoutY(-1.0);
+		contactsPane.setPrefHeight(358.0);
+		contactsPane.setPrefWidth(416.0);
 
-		profileLayout = new VBox();
-		profileLayout.setPrefHeight(contactsList.size() * 50);
-		profileLayout.setPrefWidth(414.0);
+		contactsLayout = new VBox();
+		contactsLayout.setPrefHeight(contactsList.size() * 50);
+		contactsLayout.setPrefWidth(414.0);
 	}
 }
