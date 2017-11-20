@@ -34,3 +34,4 @@ local.properties
 #include for foo.dll
 !gson.jar  
 !mysql.jar
+.idea/
