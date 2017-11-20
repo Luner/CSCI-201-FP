@@ -12,14 +12,14 @@ public class Conversation {
 	private ArrayList<User> activeUsers;
 
 	// requires list of users and a Conversation id
-	
+
 	public Conversation(ArrayList<User> users, Integer conversationID, String conversationName) {
 		this.conversationID = conversationID;
 		this.users = users;
 		activeUsers = new ArrayList<>();
 		this.conversationName = conversationName;
 	}
-	
+
 	public String getName() {
 		return this.conversationName;
 	}
@@ -46,7 +46,7 @@ public class Conversation {
 
 	public boolean addActiveUser(User user) {
 		if (users.contains(user)) {
-			if(!activeUsers.contains(user)) {
+			if (!activeUsers.contains(user)) {
 				activeUsers.add(user);
 				return true;
 			}

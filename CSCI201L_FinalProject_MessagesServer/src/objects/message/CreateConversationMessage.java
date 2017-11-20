@@ -5,18 +5,19 @@ import java.util.ArrayList;
 public class CreateConversationMessage extends Message {
 	private static final long serialVersionUID = 1L;
 
-	//User who created the conversation
+	// User who created the conversation
 	private String user0;
-	
-	//User who supposed to enter the chat
+
+	// User who supposed to enter the chat
 	private String user1;
 	private String user2;
 	private String user3;
 	private String user4;
 
 	private String name;
-	
-	public CreateConversationMessage(String user0, String user1, String user2, String user3, String user4, String name) {
+
+	public CreateConversationMessage(String user0, String user1, String user2, String user3, String user4,
+			String name) {
 		this.user0 = user0;
 		this.user1 = user1;
 		this.user2 = user2;
@@ -25,7 +26,7 @@ public class CreateConversationMessage extends Message {
 		this.name = name;
 	}
 
-	public ArrayList<String> getUsers(){
+	public ArrayList<String> getUsers() {
 		ArrayList<String> result = new ArrayList<String>();
 		result.add(user0);
 		result.add(user1);
@@ -34,7 +35,7 @@ public class CreateConversationMessage extends Message {
 		result.add(user4);
 		return result;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

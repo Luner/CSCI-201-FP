@@ -71,7 +71,7 @@ public class BotThread extends Thread {
 	public void end() {
 		this.running = false;
 	}
-	
+
 	// handles the sending of information to the Server
 	private void sender() {
 
@@ -79,44 +79,44 @@ public class BotThread extends Thread {
 		// And send a ChatMessage to the Server
 
 		switch (words) {
-			case "time":
-				while (running) {
-					try {
-						Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
-						oos.writeObject(message);
-						oos.flush();
-						Thread.sleep(30000);
-					} catch (InterruptedException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			case "youtube":
+		case "time":
+			while (running) {
 				try {
-					int i = rand.nextInt();
-					Message message = new ChatMessage(uid, 1, ytlinks.get(i % 11));
+					Message message = new ChatMessage(uid, 1, "Welcome to global chat!");
 					oos.writeObject(message);
 					oos.flush();
 					Thread.sleep(30000);
 				} catch (InterruptedException | IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				break;
-			default:
-				while (running) {
-					try {
-						if (rand.nextInt(1000000000) < frequency) {
-							// Creates a ChatMessage with the input
-							Message message = new ChatMessage(uid, 1, words);
+			}
+		case "youtube":
+			try {
+				int i = rand.nextInt();
+				Message message = new ChatMessage(uid, 1, ytlinks.get(i % 11));
+				oos.writeObject(message);
+				oos.flush();
+				Thread.sleep(30000);
+			} catch (InterruptedException | IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		default:
+			while (running) {
+				try {
+					if (rand.nextInt(1000000000) < frequency) {
+						// Creates a ChatMessage with the input
+						Message message = new ChatMessage(uid, 1, words);
 
-							// Sends the ChatMessage Object to the server
-							oos.writeObject(message);
-							oos.flush();
-						}
-					} catch (IOException ioe) {
-						System.out.println("BOT :: ioe: " + ioe.getMessage());
+						// Sends the ChatMessage Object to the server
+						oos.writeObject(message);
+						oos.flush();
 					}
+				} catch (IOException ioe) {
+					System.out.println("BOT :: ioe: " + ioe.getMessage());
 				}
+			}
 		}
 		cs.removeBotThread(this);
 	}

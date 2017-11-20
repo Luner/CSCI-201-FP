@@ -282,7 +282,7 @@ public class ChatClient extends Application {
 		primaryStage.setTitle("Messaging Application");
 		primaryStage.initStyle(StageStyle.UTILITY);
 		primaryStage.setResizable(false);
-		
+
 		chatsMap = new HashMap<Button, Integer>();
 		chatIDtoName = new HashMap<Integer, String>();
 		initializeIPSelect();
@@ -361,7 +361,7 @@ public class ChatClient extends Application {
 		});
 
 		createUser.setOnAction(e -> {
-			if(createUser(username.getText(), password.getText())) {
+			if (createUser(username.getText(), password.getText())) {
 				System.out.println("User Created");
 				loggedIn = true;
 				user_Username = username.getText();
@@ -434,7 +434,7 @@ public class ChatClient extends Application {
 		primaryStage.show();
 
 	}
-	
+
 	private void addFunctions() {
 		leftSide.getChildren().add(settings);
 		leftSide.getChildren().add(contacts);
@@ -452,10 +452,10 @@ public class ChatClient extends Application {
 			} catch (IOException e) {
 				System.out.println("IOE in logout");
 			}
-			
+
 			loggedIn = false;
 		}
-		
+
 		System.exit(0);
 	}
 
@@ -495,7 +495,7 @@ public class ChatClient extends Application {
 			// Sends the VerificationMessage Object to the server
 			oos.writeObject(message);
 			oos.flush();
-			
+
 			boolean response = verificationResponse();
 			return response;
 
@@ -546,7 +546,7 @@ public class ChatClient extends Application {
 				// Recieved a message that was not a VerificationResponseMessage
 				System.out.println(
 						"Exception in ChatClient verificationResponse(): Expecting VerificationResponseMessage");
-				System.out.println("GOT A: " +  message.getClass().getName());
+				System.out.println("GOT A: " + message.getClass().getName());
 			}
 		} catch (ClassNotFoundException cnfe) {
 			System.out.println("cnfe: " + cnfe.getMessage());
@@ -881,7 +881,6 @@ public class ChatClient extends Application {
 		settingsTitlePane.setPrefWidth(435);
 		VBox.setMargin(settingsTitlePane, new Insets(10));
 
-
 		settingsDetailPane = new Pane();
 		settingsDetailPane.setPrefHeight(349);
 		settingsDetailPane.setPrefWidth(435);
@@ -1107,7 +1106,6 @@ public class ChatClient extends Application {
 		chatLayout.setMinWidth(Double.NEGATIVE_INFINITY);
 		chatLayout.setPrefHeight(400.0);
 		chatLayout.setPrefWidth(635.0);
-		
 
 		leftSide = new AnchorPane();
 		leftSide.setMinHeight(0.0);
@@ -1147,7 +1145,6 @@ public class ChatClient extends Application {
 		chatName.setWrappingWidth(416.0);
 		chatName.setFont(new Font("Helvetica", 20));
 		chatName.setText("Global Chat");
-		
 
 		sendMessage = new Button();
 		sendMessage.setLayoutX(352.0);
@@ -1249,7 +1246,7 @@ public class ChatClient extends Application {
 		rightSide.getChildren().clear();
 		rightSide.getChildren().add(profilePane);
 		rightSide.getChildren().add(chatName);
-		
+
 	}
 
 	private void updateClientChats(ArrayList<ClientConversation> chats) {
@@ -1318,7 +1315,6 @@ public class ChatClient extends Application {
 		spacing7 = new HBox();
 		spacing7.setPrefHeight(20.0);
 		spacing7.setPrefWidth(414.0);
-		
 
 		firstNameLayout = new HBox();
 		firstNameLayout.setPrefHeight(20.0);
@@ -1401,7 +1397,7 @@ public class ChatClient extends Application {
 		facebookProfileIcon.setImage(new Image(file.toURI().toString()));
 
 		profilePane.setContent(profileLayout);
-		
+
 		profileLayout.getChildren().add(spacing1);
 		profileLayout.getChildren().add(spacing7);
 		profileLayout.getChildren().add(firstNameLayout);
@@ -1495,7 +1491,7 @@ public class ChatClient extends Application {
 		addConversationspacing8 = new HBox();
 		addConversationspacing8.setPrefHeight(20.0);
 		addConversationspacing8.setPrefWidth(414.0);
-		
+
 		addConversationspacing9 = new HBox();
 		addConversationspacing9.setPrefHeight(20.0);
 		addConversationspacing9.setPrefWidth(414.0);

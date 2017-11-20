@@ -18,7 +18,7 @@ public class ClientConversation implements Serializable {
 	public Integer getConversationID() {
 		return this.conversationID;
 	}
-	
+
 	public String getName() {
 		return conversationName;
 	}

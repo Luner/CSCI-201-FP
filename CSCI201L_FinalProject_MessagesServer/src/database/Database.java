@@ -70,8 +70,8 @@ public class Database {
 	public void updateUser(User u) {
 		String updateQuery = "UPDATE users SET UserPassword = ? WHERE UserID = ?;";
 		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
-			ps.setString(1,u.getPassword());
-			ps.setInt(2,u.getUid());
+			ps.setString(1, u.getPassword());
+			ps.setInt(2, u.getUid());
 			ps.execute();
 		} catch (SQLException sqle) {
 			System.out.println("Failed to update user with UID: " + u.getUid());
@@ -212,7 +212,7 @@ public class Database {
 			System.out.println("Failed to insert message: " + message);
 		}
 	}
-	
+
 	public void addUserToConversation(User u, Integer cid) {
 		String insertQuery = "INSERT conversation_members SET ConversationID = ?, UserID = ?;";
 		try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {

@@ -103,7 +103,7 @@ public class ServerThread extends Thread {
 					User created = new User(username, password, cs.getData().getNextID());
 					boolean userCreated = cs.addUser(created, this);
 					VerificationResponseMessage response;
-					if(!userCreated) {
+					if (!userCreated) {
 						response = new VerificationResponseMessage(false, -1);
 						try {
 							oos.writeObject(response);
@@ -129,7 +129,7 @@ public class ServerThread extends Thread {
 						this.username = created.getUsername();
 						this.uid = created.getUid();
 						this.user = created;
-						
+
 						// Tell Server User logged on
 						cs.logOn(user, this);
 
@@ -137,7 +137,7 @@ public class ServerThread extends Thread {
 						cs.updateContacts();
 						return;
 					}
-					
+
 				} else if (message instanceof LogoutMessage) {
 					running = false;
 					break;
