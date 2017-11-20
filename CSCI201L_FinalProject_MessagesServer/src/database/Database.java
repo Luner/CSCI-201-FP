@@ -166,7 +166,17 @@ public class Database {
 
 	public Map<Integer, ArrayList<String>> getMessagesMap(DataContainer dc) {
 		Map<Integer, ArrayList<String>> chatHistory = new HashMap<Integer, ArrayList<String>>();
-		String selectQuery = "SELECT ConversationID,UserID,Message from messages;";
+		String selectQuery = "SELECT ConversationID FROM CSCI201.conversations";
+		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int conversationID = rs.getInt(1);
+				chatHistory.put(conversationID, new ArrayList<String>());
+			}
+		} catch (SQLException e) {
+			System.out.println("Failed to retrieve conversations to generate message list.");
+		}
+		selectQuery = "SELECT ConversationID,UserID,Message from messages;";
 		ResultSet rs = null;
 		try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
 			rs = ps.executeQuery();
@@ -174,9 +184,6 @@ public class Database {
 				int conversationID = rs.getInt(1);
 				int userID = rs.getInt(2);
 				String message = rs.getString(3);
-				if (chatHistory.get(conversationID) == null) {
-					chatHistory.put(conversationID, new ArrayList<String>());
-				}
 				chatHistory.get(conversationID).add(dc.findUserByUid(userID).getUsername() + ": " + message);
 			}
 		} catch (SQLException e) {
