@@ -115,7 +115,10 @@ public class Server extends Thread {
 	public void addUser(User user, ServerThread st) {
 		if (data.addUser(user)) {
 			System.out.println(data);
+			conversationMap.get(1).addUser(user);
+			conversationMap.get(1).addActiveUser(user);
 			db.registerUser(user.getUsername(), user.getPassword());
+			db.addUserToConversation(user, 1);
 			Log.log("User Created");
 		}
 	}
@@ -213,7 +216,6 @@ public class Server extends Thread {
 				result.add(new ClientConversation(entry.getValue().getConversationID(), entry.getValue().getName()));
 			}
 		}
-		System.out.println("REAL ZSIZE " + result.size() );
 		return result;
 	}
 	
