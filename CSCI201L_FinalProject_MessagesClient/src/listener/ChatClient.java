@@ -67,180 +67,180 @@ public class ChatClient extends Application {
 	// GRAPHICAL USER INTERFACE ------------------
 
 	////////// IP SELECT/////////////
-	AnchorPane ipSelect;
-	Scene ipSelectScene;
-	TextField ipEntry;
-	Button ipEnter;
-	Text ipSelectTitle;
+	private AnchorPane ipSelect;
+	private Scene ipSelectScene;
+	private TextField ipEntry;
+	private Button ipEnter;
+	private Text ipSelectTitle;
 
 	////////// LOGIN WINDOW//////////
 	// LogInPage
-	Scene loginScene;
+	private Scene loginScene;
 
 	// Pane
-	AnchorPane loginLayout;
+	private AnchorPane loginLayout;
 
 	// Labels
-	Text usernameLabel;
-	Text passwordLabel;
-	Text title;
+	private Text usernameLabel;
+	private Text passwordLabel;
+	private Text title;
 
 	// TextFields
-	TextField username;
-	PasswordField password;
+	private TextField username;
+	private PasswordField password;
 
 	// Login Button
-	Button login;
-	Button createUser;
-	Button guestButton;
+	private Button login;
+	private Button createUser;
+	private Button guestButton;
 
-	Line devider;
+	private Line devider;
 
 	////////// CONTACTS WINDOW//////////
-	ScrollPane contactsPane;
-	VBox contactsLayout;
+	private ScrollPane contactsPane;
+	private VBox contactsLayout;
 	// ArrayList<HBox> contactsList;
-	ArrayList<String> contactsFromServer;
+	private ArrayList<String> contactsFromServer;
 	ArrayList<Text> contactsTextList;
-	ArrayList<Button> contactsButtons;
+	private ArrayList<Button> contactsButtons;
 
 	////////// Function Bar and Chats//////////
-	Scene chatScene;
+	private Scene chatScene;
 
 	SplitPane chatLayout;
-	AnchorPane leftSide;
-	ScrollPane chatsPane;
-	VBox chatsButtonsLayout;
-	ArrayList<Button> chatsButtons;
-	ImageView settings;
-	ImageView contacts;
-	ImageView profile;
-	ImageView logOutButton;
-	ImageView add;
+	private AnchorPane leftSide;
+	private ScrollPane chatsPane;
+	private VBox chatsButtonsLayout;
+	private ArrayList<Button> chatsButtons;
+	private ImageView settings;
+	private ImageView contacts;
+	private ImageView profile;
+	private ImageView logOutButton;
+	private ImageView add;
 
-	AnchorPane rightSide;
-	Text chatName;
+	private AnchorPane rightSide;
+	private Text chatName;
 	////////// CHAT WINDOW//////////
 
-	TextField typedMessage;
-	TextArea chatText;
-	Button sendMessage;
-	Button sendFileButton;
+	private TextField typedMessage;
+	private TextArea chatText;
+	private Button sendMessage;
+	private Button sendFileButton;
 
 	////////// Settings pane //////////////
 
-	Pane settingsPane;
-	VBox settingsVBox;
+	private Pane settingsPane;
+	private VBox settingsVBox;
 
 	// title area
-	Pane settingsTitlePane;
+	private Pane settingsTitlePane;
 
 	// setting details
-	Pane settingsDetailPane;
+	private Pane settingsDetailPane;
 
 	// account info
-	Label settingsInfoLabel;
-	HBox settingsInfoHBox;
-	VBox settingsInfoLabelVBox;
-	Label settingsInfoNewUsernameLabel;
-	Label settingsInfoNewPasswordLabel;
-	VBox settingsInfoFieldsVBox;
-	TextField settingsInfoNewUsernameField;
-	TextField settingsInfoNewPasswordField;
+	private Label settingsInfoLabel;
+	private HBox settingsInfoHBox;
+	private VBox settingsInfoLabelVBox;
+	private Label settingsInfoNewUsernameLabel;
+	private Label settingsInfoNewPasswordLabel;
+	private VBox settingsInfoFieldsVBox;
+	private TextField settingsInfoNewUsernameField;
+	private TextField settingsInfoNewPasswordField;
 
 	// chat settings
-	Label settingsDetailSettingsLabel;
-	HBox settingsDetailSettingsHBox;
-	VBox settingsDetailSettingsLabelVBox;
-	Label settingsDetailSettingsColorLabel;
-	Label settingsDetailSettingsFontLabel;
-	VBox settingsDetailSettingsComboBoxVBox;
-	ComboBox<Color> settingsDetailSettingsColorComboBox;
-	ComboBox<Font> settingsDetailSettingsFontComboBox;
+	private Label settingsDetailSettingsLabel;
+	private HBox settingsDetailSettingsHBox;
+	private VBox settingsDetailSettingsLabelVBox;
+	private Label settingsDetailSettingsColorLabel;
+	private Label settingsDetailSettingsFontLabel;
+	private VBox settingsDetailSettingsComboBoxVBox;
+	private ComboBox<Color> settingsDetailSettingsColorComboBox;
+	private ComboBox<Font> settingsDetailSettingsFontComboBox;
 
 	// update button
-	Button settingsUpdateButton;
+	private Button settingsUpdateButton;
 
 	// -------------------------------------------
 
 	////////// PROFILE WINDOW//////////
 
-	ScrollPane profilePane;
-	VBox profileLayout;
-	HBox spacing1;
-	HBox spacing2;
-	HBox spacing3;
-	HBox spacing4;
-	HBox spacing5;
-	HBox spacing6;
-	HBox spacing7;
+	private ScrollPane profilePane;
+	private VBox profileLayout;
+	private HBox spacing1;
+	private HBox spacing2;
+	private HBox spacing3;
+	private HBox spacing4;
+	private HBox spacing5;
+	private HBox spacing6;
+	private HBox spacing7;
 
-	Pane facebookSpacing;
+	private Pane facebookSpacing;
 
-	HBox firstNameLayout;
-	Text firstNameProfileLabel;
-	TextField firstNameProfileInput;
+	private HBox firstNameLayout;
+	private Text firstNameProfileLabel;
+	private TextField firstNameProfileInput;
 
-	HBox lastNameLayout;
-	Text lastNameProfileLabel;
-	TextField lastNameProfileInput;
+	private HBox lastNameLayout;
+	private Text lastNameProfileLabel;
+	private TextField lastNameProfileInput;
 
-	HBox emailLayout;
-	Text emailProfileLabel;
-	TextField emailProfileInput;
+	private HBox emailLayout;
+	private Text emailProfileLabel;
+	private TextField emailProfileInput;
 
-	HBox phoneLayout;
-	Text phoneProfileLabel;
-	TextField phoneProfileInput;
+	private HBox phoneLayout;
+	private Text phoneProfileLabel;
+	private TextField phoneProfileInput;
 
-	HBox facebookLayout;
-	Text facebookProfileLabel;
-	ImageView facebookProfileIcon;
+	private HBox facebookLayout;
+	private Text facebookProfileLabel;
+	private ImageView facebookProfileIcon;
 
-	HBox profileUpdateLayout;
-	Button profileUpdateButton;
+	private HBox profileUpdateLayout;
+	private Button profileUpdateButton;
 
 	// -------------------------------------------
 
 	////////// ADD CHAT WINDOW//////////
 
-	ScrollPane addConversationPane;
-	VBox addConversationLayout;
-	HBox addConversationspacing1;
-	HBox addConversationspacing2;
-	HBox addConversationspacing3;
-	HBox addConversationspacing4;
-	HBox addConversationspacing5;
-	HBox addConversationspacing6;
-	HBox addConversationspacing7;
-	HBox addConversationspacing8;
-	HBox addConversationspacing9;
+	private ScrollPane addConversationPane;
+	private VBox addConversationLayout;
+	private HBox addConversationspacing1;
+	private HBox addConversationspacing2;
+	private HBox addConversationspacing3;
+	private HBox addConversationspacing4;
+	private HBox addConversationspacing5;
+	private HBox addConversationspacing6;
+	private HBox addConversationspacing7;
+	private HBox addConversationspacing8;
+	private HBox addConversationspacing9;
 
-	HBox User1Layout;
-	Text User1Label;
-	TextField User1Input;
+	private HBox User1Layout;
+	private Text User1Label;
+	private TextField User1Input;
 
-	HBox User2Layout;
-	Text User2Label;
-	TextField User2Input;
+	private HBox User2Layout;
+	private Text User2Label;
+	private TextField User2Input;
 
-	HBox User3Layout;
-	Text User3Label;
-	TextField User3Input;
+	private HBox User3Layout;
+	private Text User3Label;
+	private TextField User3Input;
 
-	HBox User4Layout;
-	Text User4Label;
-	TextField User4Input;
+	private HBox User4Layout;
+	private Text User4Label;
+	private TextField User4Input;
 
-	HBox User5Layout;
-	Text User5Label;
-	TextField User5Input;
+	private HBox User5Layout;
+	private Text User5Label;
+	private TextField User5Input;
 
-	HBox addConversationBox;
-	Text addConversationText;
+	private HBox addConversationBox;
+	private Text addConversationText;
 
-	HBox addConversationButtonBox;
-	Button addConversationButton;
+	private HBox addConversationButtonBox;
+	private Button addConversationButton;
 
 	// -------------------------------------------
 
@@ -478,7 +478,7 @@ public class ChatClient extends Application {
 		return false;
 	}
 
-	public void createUser(String username, String password) {
+	private void createUser(String username, String password) {
 		try {
 
 			// Creates a VerificationMessage with the username and password inputs
@@ -493,7 +493,7 @@ public class ChatClient extends Application {
 		}
 	}
 
-	public boolean login(String username, String password) {
+	private boolean login(String username, String password) {
 		try {
 
 			// Creates a VerificationMessage with the username and password inputs
@@ -545,7 +545,7 @@ public class ChatClient extends Application {
 		return false;
 	}
 
-	public void send(String text) {
+	private void send(String text) {
 
 		// And send a ChatMessage to the Server
 		try {
@@ -603,7 +603,7 @@ public class ChatClient extends Application {
 		System.exit(0);
 	}
 
-	Task<Void> task = new Task<Void>() {
+	private Task<Void> task = new Task<Void>() {
 		@Override
 		protected Void call() throws Exception {
 			try {
@@ -725,7 +725,7 @@ public class ChatClient extends Application {
 		}
 	};
 
-	public void initializeIPSelect() {
+	private void initializeIPSelect() {
 		// IP Pane
 		ipSelect = new AnchorPane();
 		ipSelect.setMaxHeight(Double.NEGATIVE_INFINITY);
@@ -766,7 +766,7 @@ public class ChatClient extends Application {
 		ipSelectScene = new Scene(ipSelect);
 	}
 
-	public void initializeLoginPage() {
+	private void initializeLoginPage() {
 		// layout
 		loginLayout = new AnchorPane();
 		loginLayout.setMaxHeight(Double.NEGATIVE_INFINITY);
@@ -1084,7 +1084,7 @@ public class ChatClient extends Application {
 		rightSide.getChildren().add(chatName);
 	}
 
-	public void initializeChatWindow() {
+	private void initializeChatWindow() {
 
 		SplitPane chatLayout = new SplitPane();
 		chatLayout.setDividerPositions(0.335);
@@ -1267,7 +1267,7 @@ public class ChatClient extends Application {
 		chatsButtonsLayout.setPrefHeight(chats.size() * 50.0);
 	}
 
-	public void initializeProfileWindow() {
+	private void initializeProfileWindow() {
 		profilePane = new ScrollPane();
 		profilePane.setLayoutX(-1.0);
 		profilePane.setLayoutY(-1.0);
@@ -1440,7 +1440,7 @@ public class ChatClient extends Application {
 		rightSide.getChildren().add(chatName);
 	}
 
-	public void initializeAddConversationWindow() {
+	private void initializeAddConversationWindow() {
 		addConversationPane = new ScrollPane();
 		addConversationPane.setLayoutX(-1.0);
 		addConversationPane.setLayoutY(-1.0);
@@ -1619,7 +1619,7 @@ public class ChatClient extends Application {
 
 	}
 
-	public void updateContactsWind() {
+	private void updateContactsWind() {
 		contactsButtons.clear();
 		// add new
 
@@ -1636,7 +1636,7 @@ public class ChatClient extends Application {
 		contactsLayout.setPrefHeight(contactsButtons.size() * 50);
 	}
 
-	public void initializeContactsWindow() {
+	private void initializeContactsWindow() {
 		contactsPane = new ScrollPane();
 		contactsPane.setLayoutX(2.0);
 		contactsPane.setLayoutY(33.0);
@@ -1651,7 +1651,7 @@ public class ChatClient extends Application {
 		contactsPane.setContent(contactsLayout);
 	}
 
-	public void setContactsWindow() {
+	private void setContactsWindow() {
 		rightSide.getChildren().clear();
 		rightSide.getChildren().add(contactsPane);
 		rightSide.getChildren().add(chatName);
