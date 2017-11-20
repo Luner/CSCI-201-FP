@@ -138,12 +138,16 @@ public class Server extends Thread {
 		Log.sent(message);
 		if (message instanceof ChatMessage) {
 			
-			chatHistory.get(((ChatMessage) message).getCid()).add(((ChatMessage) message).getMessage());
-			for (Entry<Integer, ArrayList<String>> entry : chatHistory.entrySet()) {
-				for(String s : entry.getValue()) {
-					System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
-				}
-			}
+			///Add Message
+			Integer chatID = ((ChatMessage) message).getCid();
+			String messageString = ((ChatMessage) message).getMessage();
+			Integer userID = ((ChatMessage) message).getUid();
+			
+			chatHistory.get(chatID).add(getData().findUserByUid(userID).getUsername() + ": " + messageString);
+			
+			//Add to database
+			db.addMessage(chatID, userID, messageString);
+			
 			for (ServerThread st : serverThreads) {
 				Message messages = new MessagesMessage(chatHistory);
 				st.sendMessage(messages);

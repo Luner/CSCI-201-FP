@@ -493,6 +493,7 @@ public class ChatClient extends Application {
 					} else if(message instanceof MessagesMessage){
 						System.out.println("YES!!!!");
 						chatHistory = ((MessagesMessage) message).getMessage();
+						
 						for (Entry<Integer, ArrayList<String>> entry : chatHistory.entrySet()) {
 							for(String s : entry.getValue()) {
 								System.out.println("Conversation: " + entry.getKey() + " Message: " + s);
