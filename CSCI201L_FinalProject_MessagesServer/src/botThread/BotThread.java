@@ -94,7 +94,7 @@ public class BotThread extends Thread {
 		case "youtube":
 			try {
 				int i = rand.nextInt();
-				Message message = new ChatMessage(uid, 1, ytlinks.get(i % 11));
+				Message message = new ChatMessage(uid, 1, ytlinks.get(i%10));
 				oos.writeObject(message);
 				oos.flush();
 				Thread.sleep(30000);
