@@ -1164,7 +1164,7 @@ public class ChatClient extends Application {
 		settings.setPickOnBounds(true);
 		settings.setPreserveRatio(true);
 
-		File file = new File("images/Settings.png");
+		File file = new File("src/images/Settings.png");
 		settings.setImage(new Image(file.toURI().toString()));
 
 		contacts = new ImageView();
@@ -1175,7 +1175,7 @@ public class ChatClient extends Application {
 		contacts.setPickOnBounds(true);
 		contacts.setPreserveRatio(true);
 
-		file = new File("images/contacts.png");
+		file = new File("src/images/contacts.png");
 		contacts.setImage(new Image(file.toURI().toString()));
 
 		profile = new ImageView();
@@ -1186,7 +1186,7 @@ public class ChatClient extends Application {
 		profile.setPickOnBounds(true);
 		profile.setPreserveRatio(true);
 
-		file = new File("images/profile.png");
+		file = new File("src/images/profile.png");
 		profile.setImage(new Image(file.toURI().toString()));
 
 		logOutButton = new ImageView();
@@ -1197,7 +1197,7 @@ public class ChatClient extends Application {
 		logOutButton.setPickOnBounds(true);
 		logOutButton.setPreserveRatio(true);
 
-		file = new File("images/logout.png");
+		file = new File("src/images/logout.png");
 		logOutButton.setImage(new Image(file.toURI().toString()));
 
 		add = new ImageView();
@@ -1208,7 +1208,7 @@ public class ChatClient extends Application {
 		add.setPickOnBounds(true);
 		add.setPreserveRatio(true);
 
-		file = new File("images/add.png");
+		file = new File("src/images/add.png");
 		add.setImage(new Image(file.toURI().toString()));
 
 		chatsPane.setContent(chatsButtonsLayout);
