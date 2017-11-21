@@ -1378,7 +1378,7 @@ public class ChatClient extends Application {
 		facebookProfileIcon.setPickOnBounds(true);
 		facebookProfileIcon.setPreserveRatio(true);
 
-		File file = new File("images/facebook.png");
+		File file = new File("src/images/facebook.png");
 		facebookProfileIcon.setImage(new Image(file.toURI().toString()));
 
 		profilePane.setContent(profileLayout);
