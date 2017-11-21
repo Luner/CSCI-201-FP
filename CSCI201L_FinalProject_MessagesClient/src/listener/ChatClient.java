@@ -2,12 +2,14 @@ package listener;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
@@ -1164,8 +1166,9 @@ public class ChatClient extends Application {
 		settings.setPickOnBounds(true);
 		settings.setPreserveRatio(true);
 
-		File file = new File("src/images/Settings.png");
-		settings.setImage(new Image(file.toURI().toString()));
+	
+				
+		settings.setImage(new Image( getClass().getResource("/images/Settings.png").toExternalForm()));
 
 		contacts = new ImageView();
 		contacts.setFitHeight(30.0);
@@ -1175,8 +1178,7 @@ public class ChatClient extends Application {
 		contacts.setPickOnBounds(true);
 		contacts.setPreserveRatio(true);
 
-		file = new File("src/images/contacts.png");
-		contacts.setImage(new Image(file.toURI().toString()));
+		contacts.setImage(new Image( getClass().getResource("/images/contacts.png").toExternalForm()));
 
 		profile = new ImageView();
 		profile.setFitHeight(30.0);
@@ -1186,8 +1188,7 @@ public class ChatClient extends Application {
 		profile.setPickOnBounds(true);
 		profile.setPreserveRatio(true);
 
-		file = new File("src/images/profile.png");
-		profile.setImage(new Image(file.toURI().toString()));
+		profile.setImage(new Image( getClass().getResource("/images/profile.png").toExternalForm()));
 
 		logOutButton = new ImageView();
 		logOutButton.setFitHeight(30);
@@ -1197,8 +1198,7 @@ public class ChatClient extends Application {
 		logOutButton.setPickOnBounds(true);
 		logOutButton.setPreserveRatio(true);
 
-		file = new File("src/images/logout.png");
-		logOutButton.setImage(new Image(file.toURI().toString()));
+		logOutButton.setImage(new Image( getClass().getResource("/images/logout.png").toExternalForm()));
 
 		add = new ImageView();
 		add.setFitHeight(30.0);
@@ -1208,8 +1208,7 @@ public class ChatClient extends Application {
 		add.setPickOnBounds(true);
 		add.setPreserveRatio(true);
 
-		file = new File("src/images/add.png");
-		add.setImage(new Image(file.toURI().toString()));
+		add.setImage(new Image( getClass().getResource("/images/add.png").toExternalForm()));
 
 		chatsPane.setContent(chatsButtonsLayout);
 
@@ -1378,8 +1377,7 @@ public class ChatClient extends Application {
 		facebookProfileIcon.setPickOnBounds(true);
 		facebookProfileIcon.setPreserveRatio(true);
 
-		File file = new File("src/images/facebook.png");
-		facebookProfileIcon.setImage(new Image(file.toURI().toString()));
+		facebookProfileIcon.setImage(new Image( getClass().getResource("/images/facebook.png").toExternalForm()));
 
 		profilePane.setContent(profileLayout);
 
