@@ -14,8 +14,6 @@ import javafx.scene.control.ListCell;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -283,8 +281,8 @@ public class ChatClient extends Application {
 		primaryStage.initStyle(StageStyle.UTILITY);
 		primaryStage.setResizable(false);
 
-		chatsMap = new HashMap<Button, Integer>();
-		chatIDtoName = new HashMap<Integer, String>();
+		chatsMap = new HashMap<>();
+		chatIDtoName = new HashMap<>();
 		initializeIPSelect();
 		initializeLoginPage();
 		initializeChatWindow();
@@ -301,31 +299,26 @@ public class ChatClient extends Application {
 			logout();
 		});
 
-		ipEnter.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				if (!setUpChatClient(ipEntry.getText(), 6789)) {
-					System.out.println("Failed to connect to specified server.");
-					System.exit(0);
-				} else {
-					loggedIn = true;
-					primaryStage.setScene(loginScene);
-				}
+		ipEnter.setOnAction(event -> {
+			if (!setUpChatClient(ipEntry.getText())) {
+				System.out.println("Failed to connect to specified server.");
+				System.exit(0);
+			} else {
+				loggedIn = true;
+				primaryStage.setScene(loginScene);
 			}
 		});
 
 		// Set what happens on button press
-		login.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (login(username.getText(), password.getText())) {
-					loggedIn = true;
-					user_Username = username.getText();
-					addFunctions();
-					primaryStage.setScene(chatScene);
-					Thread th = new Thread(task);
-					th.setDaemon(true);
-					th.start();
-				}
+		login.setOnAction(event -> {
+			if (login(username.getText(), password.getText())) {
+				loggedIn = true;
+				user_Username = username.getText();
+				addFunctions();
+				primaryStage.setScene(chatScene);
+				Thread th = new Thread(task);
+				th.setDaemon(true);
+				th.start();
 			}
 		});
 
@@ -385,9 +378,7 @@ public class ChatClient extends Application {
 			setSettingsPane();
 		});
 
-		logOutButton.setOnMouseClicked(e -> {
-			logout();
-		});
+		logOutButton.setOnMouseClicked(e -> logout());
 
 		profile.setOnMouseClicked(e -> {
 			chatName.setText("Profile");
@@ -449,7 +440,7 @@ public class ChatClient extends Application {
 	}
 
 	private void logout() {
-		if (loggedIn == true) {
+		if (loggedIn) {
 
 			try {
 				oos.writeObject(new LogoutMessage());
@@ -464,13 +455,13 @@ public class ChatClient extends Application {
 		System.exit(0);
 	}
 
-	private boolean setUpChatClient(String hostname, int port) {
+	private boolean setUpChatClient(String hostname) {
 		s = null;
 		uid = -1;
 		selectedChat = 0; // default
 		try {
 			// Attempts to connect to the Socket
-			s = new Socket(hostname, port);
+			s = new Socket(hostname, 6789);
 			// Creates a new scanner to receive information from the console
 
 			/*
@@ -491,7 +482,7 @@ public class ChatClient extends Application {
 		return false;
 	}
 
-	public boolean createUser(String username, String password) {
+	private boolean createUser(String username, String password) {
 		try {
 
 			// Creates a VerificationMessage with the username and password inputs
@@ -501,8 +492,7 @@ public class ChatClient extends Application {
 			oos.writeObject(message);
 			oos.flush();
 
-			boolean response = verificationResponse();
-			return response;
+			return verificationResponse();
 
 		} catch (IOException ioe) {
 			System.out.println("ioe in login : " + ioe.getMessage());
@@ -510,7 +500,7 @@ public class ChatClient extends Application {
 		return false;
 	}
 
-	public boolean login(String username, String password) {
+	private boolean login(String username, String password) {
 		try {
 
 			// Creates a VerificationMessage with the username and password inputs
@@ -520,8 +510,7 @@ public class ChatClient extends Application {
 			oos.writeObject(message);
 			oos.flush();
 
-			boolean response = verificationResponse();
-			return response;
+			return verificationResponse();
 
 		} catch (IOException ioe) {
 			System.out.println("ioe in login : " + ioe.getMessage());
@@ -621,7 +610,7 @@ public class ChatClient extends Application {
 		System.exit(0);
 	}
 
-	private Task<Void> task = new Task<Void>() {
+	private Task<Void> task = new Task<>() {
 		@Override
 		protected Void call() throws Exception {
 			try {
@@ -632,20 +621,17 @@ public class ChatClient extends Application {
 
 					// checks if the object is an instance of StringMessage and prints out
 					if (message instanceof ChatStringMessage) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								if (((ChatStringMessage) message).getChatID().equals(selectedChat)) {
-									String chatMessageString = ((ChatStringMessage) message).getMessage();
-									chatMessageString = chatMessageString.replace("!@#$%^&*()", user_Username);
-									if (chatText.getText().length() > 0) {
-										chatText.setText(chatText.getText() + "\n" + chatMessageString);
-									} else {
-										chatText.setText(chatMessageString);
-									}
-									chatText.selectEnd();
-									chatText.deselect();
+						Platform.runLater(() -> {
+							if (((ChatStringMessage) message).getChatID().equals(selectedChat)) {
+								String chatMessageString = ((ChatStringMessage) message).getMessage();
+								chatMessageString = chatMessageString.replace("!@#$%^&*()", user_Username);
+								if (chatText.getText().length() > 0) {
+									chatText.setText(chatText.getText() + "\n" + chatMessageString);
+								} else {
+									chatText.setText(chatMessageString);
 								}
+								chatText.selectEnd();
+								chatText.deselect();
 							}
 						});
 
@@ -660,39 +646,35 @@ public class ChatClient extends Application {
 						ArrayList<ClientConversation> chats = ((ConversationsMessage) message).getChats();
 						updateClientChats(chats);
 
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								chatsButtonsLayout.getChildren().clear();
-								for (Button button : chatsButtons) {
-									chatsButtonsLayout.getChildren().add(button);
-								}
-								for (Integer i = 0; i < chatsButtons.size(); i++) {
-									Button button = chatsButtons.get(i);
-									button.setOnAction(e -> {
-										chatText.setFont(new Font("Helvetica", 12));
-										chatText.setText("");
-										int chatid = chatsMap.get(button);
-										for (int j = 0; j < chatHistory.get(chatid).size(); j++) {
-											if (j == 0) {
-												chatText.setText(chatHistory.get(chatid).get(j).replace("!@#$%^&*()",
-														user_Username));
-											} else {
-
-												chatText.setText(chatText.getText() + "\n" + chatHistory.get(chatid)
-														.get(j).replace("!@#$%^&*()", user_Username));
-											}
-										}
-										if (chatid == 0) {
-											chatName.setText("Global Chat");
+						Platform.runLater(() -> {
+							chatsButtonsLayout.getChildren().clear();
+							for (Button button : chatsButtons) {
+								chatsButtonsLayout.getChildren().add(button);
+							}
+							for (Button button : chatsButtons) {
+								button.setOnAction(e -> {
+									chatText.setFont(new Font("Helvetica", 12));
+									chatText.setText("");
+									int chatid = chatsMap.get(button);
+									for (int j = 0; j < chatHistory.get(chatid).size(); j++) {
+										if (j == 0) {
+											chatText.setText(chatHistory.get(chatid).get(j).replace("!@#$%^&*()",
+													user_Username));
 										} else {
-											chatName.setText(chatIDtoName.get(chatid));
-										}
-										selectedChat = chatid;
 
-										setChatWindow();
-									});
-								}
+											chatText.setText(chatText.getText() + "\n" + chatHistory.get(chatid)
+													.get(j).replace("!@#$%^&*()", user_Username));
+										}
+									}
+									if (chatid == 0) {
+										chatName.setText("Global Chat");
+									} else {
+										chatName.setText(chatIDtoName.get(chatid));
+									}
+									selectedChat = chatid;
+
+									setChatWindow();
+								});
 							}
 						});
 					} else if (message instanceof ProfileMessage) {
@@ -709,20 +691,14 @@ public class ChatClient extends Application {
 					} else if (message instanceof ContactsMessage) {
 						contactsFromServer = ((ContactsMessage) message).getContacts();
 						updateContactsWind();
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								contactsLayout.getChildren().clear();
-								for (Button button : contactsButtons) {
-									contactsLayout.getChildren().add(button);
-								}
-								for (Integer i = 0; i < contactsButtons.size(); i++) {
-									Button button = contactsButtons.get(i);
-									button.setOnAction(e -> {
-										createConversation(button.getText(), "", "", "",
-												button.getText() + "/" + user_Username);
-									});
-								}
+						Platform.runLater(() -> {
+							contactsLayout.getChildren().clear();
+							for (Button button : contactsButtons) {
+								contactsLayout.getChildren().add(button);
+							}
+							for (Button button : contactsButtons) {
+								button.setOnAction(e -> createConversation(button.getText(), "", "", "",
+										button.getText() + "/" + user_Username));
 							}
 						});
 					} else {
@@ -962,14 +938,15 @@ public class ChatClient extends Application {
 		settingsDetailSettingsComboBoxVBox.setPrefHeight(82);
 		settingsDetailSettingsComboBoxVBox.setPrefWidth(221);
 
-		settingsDetailSettingsColorComboBox = new ComboBox<Color>();
+		settingsDetailSettingsColorComboBox = new ComboBox<>();
 		settingsDetailSettingsColorComboBox.setPrefHeight(31);
 		settingsDetailSettingsColorComboBox.setPrefWidth(221);
 		VBox.setMargin(settingsDetailSettingsColorComboBox, new Insets(4));
 		settingsDetailSettingsColorComboBox.getItems().addAll(Color.BLACK, Color.CRIMSON, Color.ROYALBLUE);
 
-		settingsDetailSettingsColorComboBox.setButtonCell(new ListCell<Color>() {
+		settingsDetailSettingsColorComboBox.setButtonCell(new ListCell<>() {
 			private final Rectangle rectangle;
+
 			{
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 				rectangle = new Rectangle(180, 26);
@@ -989,11 +966,12 @@ public class ChatClient extends Application {
 
 		});
 
-		settingsDetailSettingsColorComboBox.setCellFactory(new Callback<ListView<Color>, ListCell<Color>>() {
+		settingsDetailSettingsColorComboBox.setCellFactory(new Callback<>() {
 			@Override
 			public ListCell<Color> call(ListView<Color> p) {
-				return new ListCell<Color>() {
+				return new ListCell<>() {
 					private final Rectangle rectangle;
+
 					{
 						setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 						rectangle = new Rectangle(180, 26);
@@ -1016,15 +994,16 @@ public class ChatClient extends Application {
 		});
 		settingsDetailSettingsColorComboBox.setValue(fontColor);
 
-		settingsDetailSettingsFontComboBox = new ComboBox<Font>();
+		settingsDetailSettingsFontComboBox = new ComboBox<>();
 		settingsDetailSettingsFontComboBox.setPrefHeight(31);
 		settingsDetailSettingsFontComboBox.setPrefWidth(221);
 		VBox.setMargin(settingsDetailSettingsFontComboBox, new Insets(4));
 		settingsDetailSettingsFontComboBox.getItems().addAll(Font.font("Arial"), Font.font("Georgia"),
 				Font.font("Tahoma"), Font.font("Lucida Bright"), Font.font("Verdana"));
 
-		settingsDetailSettingsFontComboBox.setButtonCell(new ListCell<Font>() {
+		settingsDetailSettingsFontComboBox.setButtonCell(new ListCell<>() {
 			private final Text text;
+
 			{
 				setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 				text = new Text();
@@ -1044,11 +1023,12 @@ public class ChatClient extends Application {
 			}
 		});
 
-		settingsDetailSettingsFontComboBox.setCellFactory(new Callback<ListView<Font>, ListCell<Font>>() {
+		settingsDetailSettingsFontComboBox.setCellFactory(new Callback<>() {
 			@Override
 			public ListCell<Font> call(ListView<Font> p) {
-				return new ListCell<Font>() {
+				return new ListCell<>() {
 					private final Text text;
+
 					{
 						setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 						text = new Text();
@@ -1174,7 +1154,7 @@ public class ChatClient extends Application {
 		chatsButtonsLayout.setPrefHeight(365.0);
 		chatsButtonsLayout.setPrefWidth(190.0);
 
-		chatsButtons = new ArrayList<Button>();
+		chatsButtons = new ArrayList<>();
 
 		settings = new ImageView();
 		settings.setFitHeight(30.0);
@@ -1656,9 +1636,9 @@ public class ChatClient extends Application {
 		contactsPane.setLayoutY(33.0);
 		contactsPane.setPrefHeight(358.0);
 		contactsPane.setPrefWidth(412.0);
-		contactsButtons = new ArrayList<Button>();
+		contactsButtons = new ArrayList<>();
 		// contactsList = new ArrayList<HBox>();
-		contactsFromServer = new ArrayList<String>();
+		contactsFromServer = new ArrayList<>();
 		contactsLayout = new VBox();
 		// contactsLayout.setPrefHeight(contactsButtons.size() * 50);
 		contactsLayout.setPrefWidth(390.0);
