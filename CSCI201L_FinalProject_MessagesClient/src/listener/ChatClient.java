@@ -610,7 +610,7 @@ public class ChatClient extends Application {
 		System.exit(0);
 	}
 
-	private Task<Void> task = new Task<>() {
+	private Task<Void> task = new Task<Void>() {
 		@Override
 		protected Void call() throws Exception {
 			try {
@@ -944,7 +944,7 @@ public class ChatClient extends Application {
 		VBox.setMargin(settingsDetailSettingsColorComboBox, new Insets(4));
 		settingsDetailSettingsColorComboBox.getItems().addAll(Color.BLACK, Color.CRIMSON, Color.ROYALBLUE);
 
-		settingsDetailSettingsColorComboBox.setButtonCell(new ListCell<>() {
+		settingsDetailSettingsColorComboBox.setButtonCell(new ListCell<Color>() {
 			private final Rectangle rectangle;
 
 			{
@@ -966,10 +966,10 @@ public class ChatClient extends Application {
 
 		});
 
-		settingsDetailSettingsColorComboBox.setCellFactory(new Callback<>() {
+		settingsDetailSettingsColorComboBox.setCellFactory(new Callback<ListView<Color>, ListCell<Color>>() {
 			@Override
 			public ListCell<Color> call(ListView<Color> p) {
-				return new ListCell<>() {
+				return new ListCell<Color>() {
 					private final Rectangle rectangle;
 
 					{
@@ -1001,7 +1001,7 @@ public class ChatClient extends Application {
 		settingsDetailSettingsFontComboBox.getItems().addAll(Font.font("Arial"), Font.font("Georgia"),
 				Font.font("Tahoma"), Font.font("Lucida Bright"), Font.font("Verdana"));
 
-		settingsDetailSettingsFontComboBox.setButtonCell(new ListCell<>() {
+		settingsDetailSettingsFontComboBox.setButtonCell(new ListCell<Font>() {
 			private final Text text;
 
 			{
@@ -1023,10 +1023,10 @@ public class ChatClient extends Application {
 			}
 		});
 
-		settingsDetailSettingsFontComboBox.setCellFactory(new Callback<>() {
+		settingsDetailSettingsFontComboBox.setCellFactory(new Callback<ListView<Font>, ListCell<Font>>() {
 			@Override
 			public ListCell<Font> call(ListView<Font> p) {
-				return new ListCell<>() {
+				return new ListCell<Font>() {
 					private final Text text;
 
 					{
